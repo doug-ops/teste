@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formNextCode" name="formNextCode" th:action="@{/adm/common/nextCode}" method="post" autocomplete="off">		
+			<input type="hidden" id="tableName" name="tableName"/>
+			<input type="hidden" id="initialCode" name="initialCode"/>
+		</form>
+		<form id="formInactive" name="formInactive" th:action="@{/adm/financial-sub-group/inactive}" method="post" autocomplete="off">		
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="inactive" name="inactive"/>
+		</form>
+		<form id="formDetail" name="formDetail" th:action="@{/adm/financial-sub-group/detail}" method="post" autocomplete="off">		
+			<input type="hidden" id="id" name="id"/>
+		</form>
+	</th:block>
+</html>

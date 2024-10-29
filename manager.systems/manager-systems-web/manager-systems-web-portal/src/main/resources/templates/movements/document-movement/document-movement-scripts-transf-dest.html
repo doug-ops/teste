@@ -1,0 +1,283 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+    	<style type="text/css">
+			.titele-origin.titele-Destination{
+            font-weight: bold;
+            color: black;
+        	}
+		</style>
+			
+	    <script>    
+	    
+	    (function() {
+	    'use strict';
+	    	
+        $('form#formNewDocumentTransf select#companyTransfDest')
+        .select2({
+  			theme: "bootstrap",
+  			dropdownParent: $('#new-document-modal-transf'),
+  			placeholder: "SELECIONE...",
+		    allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'COM'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  			//$(this).valid();
+  		  	//console.log(this.value);
+  	    	searchBankAccountByCompany('formNewDocumentTransfDest');
+  		}).on('select2:close', function (e) 
+  		{
+  			//console.log(this.value);
+  		})
+/*
+        $('form#formNewDocumentTransf select#providerTransfDest')
+        .select2({
+  			theme: "bootstrap",
+  			dropdownParent: $('#new-document-modal-transf'),
+  			placeholder: "SELECIONE...",
+		    allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'FOR'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  			//$(this).valid();
+  		  	//console.log(this.value);
+  		}).on('select2:close', function (e) 
+  		{
+  			//console.log(this.value);
+  		})
+*/
+  		$('form#formNewDocumentTransf input#documentNumberTransfDest').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13')
+            {
+            	if(''==$.trim($('form#formNewDocument input#documentNumberTransfDest').val()))
+            	{
+                	$('form#formNewDocumentTransf input#documentNumberTransfDest').val(moment().format('YYYYMMDDHHmmss'));  
+                	$('form#formNewDocumentTransf').bootstrapValidator('revalidateField', 'documentNumberTransfDest');
+                	$('form#formNewDocumentTransf textarea#documentNoteTransfDest').focus();   
+            	}
+            }
+            event.stopPropagation();
+        });
+		/*
+        $('form#formNewDocumentTransf select#financialGroupTransfDest')
+        .select2({ 
+        	//tags : true,
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal-transf'),
+            placeholder: "SELECIONE...",
+		    allowClear: true, 
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewFinancialGroup('formNewDocumentTransfDest')">+ Adicionar Grupo Financeiro</button>
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        }).on('change', function (e)
+        {
+        	if(isSetFinancialGroup)
+        	{
+        		 isSetFinancialGroup = false;
+        		 return;
+        	}
+        	if(''!=this.value && !isNaN(this.value))
+			{
+	        	$('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+	        	searchFinancialSubGroup('formNewDocumentTransfDest');
+			}
+        });
+
+        $('form#formNewDocumentTransf select#financialSubGroupTransfDest')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal-transf'),
+            placeholder: "SELECIONE...",
+		    allowClear: true, 
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewFinancialSubGroup('formNewDocumentTransfDest')">+ Adicionar Sub-Grupo Financeiro</button>
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        });
+        */
+        $('form#formNewDocumentTransf select#bankAccountTransfDest')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal-transf'),
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        }).on('change', function (e)
+        {
+        	if(isSetFinancialGroup)
+        	{
+        		 isSetFinancialGroup = false;
+        		 return;
+        	}
+        	var optionSelected = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected');
+        	if(optionSelected)
+			{
+        		const optionSelectedAttrib = optionSelected.attr('data-bankBalanceAvailable');
+        		if(optionSelectedAttrib){
+        			$('form#formNewDocumentTransf input#bankAccountValueTransfDest').val(optionSelectedAttrib);
+        		}
+			}
+        });
+	
+        const openModalQuery = window.location.search;
+        if('?openmodal=1' == openModalQuery){
+        	showModalNewDocument();
+        } else if('?openmodal=2' == openModalQuery){
+        	showModalTransferAccount();
+        }
+	    })();
+	    </script>
+	</th:block>
+</html>

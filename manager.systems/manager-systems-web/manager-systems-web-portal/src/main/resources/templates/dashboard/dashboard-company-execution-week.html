@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org">
+		<th:block th:fragment="content">
+		 <div class="col-md-12">
+			<div class="card">
+	            <div class="card-body" style="padding: 5px;"> 
+	                <div class="col-md-12"> 
+		                <!-- Tab panes -->
+		                <div class="tab-content tabcontent-border">
+			                <!-- Filter Form -->
+	 						<form id="formFilter" name="formFilter" th:action="@{/dashboard/filterDashboardCompanyExecutionWeek}" method="post" autocomplete="off" target="_blank">         
+								<div class="row">
+									<div class="col-md-12">
+										<div class="card card-hover">
+											<div class="card-body">
+												<div class="row" id="itens-dashboard">																
+				                				</div>
+				                		    </div>
+		                			    </div>
+		                			</div>				               				
+								</div>																																															                   								 
+							 </form>
+						</div>
+					 </div>
+		      	</div>
+		   	</div>
+ 		</div>                		            												                                   
+	</th:block>
+</html>

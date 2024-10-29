@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formNextCode" name="formNextCode" th:action="@{/adm/common/nextCode}" method="post" autocomplete="off">		
+			<input type="hidden" id="tableName" name="tableName"/>
+			<input type="hidden" id="initialCode" name="initialCode"/>
+			<input type="hidden" id="objectType" name="objectType"/>
+		</form>
+		<form id="formAddress" name="formAddress" th:action="@{/address/seachByZipCode}" method="post" autocomplete="off">		
+			<input type="hidden" id="zipCode" name="zipCode"/>
+		</form>
+		<form id="formInactive" name="formInactive" th:action="@{/adm/person/inactive}" method="post" autocomplete="off">		
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="inactive" name="inactive"/>
+			<input type="hidden" id="objectType" name="objectType"/>
+			<input type="hidden" id="companyDestiny" name="companyDestiny" value="0"/>
+		</form>
+		<form id="formDetail" name="formDetail" th:action="@{/adm/person/detail}" method="post" autocomplete="off">		
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="objectType" name="objectType"/>
+		</form>
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off">		
+		</form>
+		<form id="formAutocompleteFinancialSubGroup" name="formAutocompleteFinancialSubGroup" th:action="@{/adm/financial-sub-group/autocomplete}" method="post" autocomplete="off">		
+			<input type="hidden" id="financialGroup" name="financialGroup"/>
+		</form>		
+		<form id="formAutocompleteBankAccount" name="formAutocompleteBankAccount" th:action="@{/adm/bank-account/autocomplete}" method="post" autocomplete="off">
+		</form>	
+		<form id="formSavePersonType" name="formSavePersonType" th:action="@{/adm/personType/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+			<input type="hidden" id="objectType" name="objectType"/>
+		</form>
+		<form id="formSaveEstablishmentType" name="formSaveEstablishmentType" th:action="@{/adm/establishmentType/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+		</form>
+		<form id="formLogSystemFilter" name="formLogSystemFilter" th:action="@{/logsystem/filter}" method="post" autocomplete="off">
+			<input type="hidden" id="systemId" name="systemId" />
+			<input type="hidden" id="objectId" name="objectId" />
+		</form>
+		<form id="formUserParent" name="formUserParent" th:action="@{adm/userParent/save}" method="post" autocomplete="off">	
+		</form>
+		<form id="formSaveFinancialCostCenter" name="formSaveFinancialCostCenter" th:action="@{/financial/financialCostCenter/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+		</form>
+	</th:block>
+</html>

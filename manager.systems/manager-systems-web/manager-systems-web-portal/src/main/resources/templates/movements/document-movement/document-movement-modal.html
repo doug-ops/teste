@@ -1,0 +1,245 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="modal">
+	<!-- ============================================================== -->
+    <!--Modals-->
+    <!-- ============================================================== -->
+    <div id="new-document-modal" class="modal long-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable full-screen" style="max-width: 1140px;">
+            <div class="modal-content" style="height:600px;">
+                <div class="modal-header">
+                    <div class="col-md-12">
+                    	<h4 class="modal-title" id="titleModalDocument">Lan&ccedil;amento de Novo Documento</h4>
+                        <div style="float: right;">
+		                    <a type="button" class="btn btn-success waves-effect waves-light" id="btnSaveNewDocument" href="javascript:saveNewDocument();">Gravar</a>
+		                    <a type="button" class="btn btn-success waves-effect waves-light" id="btnChangeDocument" href="javascript:saveChangeDocument();">Gravar</a>
+		                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form id="formNewDocument" name="formNewDocument" th:action="@{/financial/document/save}" method="post" autocomplete="off">
+                    	<input type="hidden" id="documentId" name="documentId"/>
+						<input type="hidden" id="documentParentId" name="documentParentId"/>
+						<input type="hidden" id="documentType" name="documentType"/>
+						<input type="hidden" id="documentNoteEncoded" name="documentNoteEncoded"/>
+						
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="company">Empresa</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="company" name="company" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    </select>
+                                </div>                
+                            </div>
+                            <div class="col-md-4 mb-4">
+	                        	<label for="bankAccount">Conta Banc&aacute;ria</label>
+	                         	<select class="m-b-20 m-r-10 custom-select" id="bankAccount" name="bankAccount">
+						         	<!-- 
+						         	<option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                           		 -->
+	                           </select>
+	                        </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="provider">Fornecedor</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="provider" name="provider" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    </select>
+                                </div>                
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="financialGroup">Grupo Financeiro</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="financialGroup" name="financialGroup" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+	                                    <option value="" selected="selected">SELECIONE...</option>
+                                        <option th:each="item : ${financialGroups}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                    </select>
+                                </div>            
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="financialSubGroup">Sub-Grupo Financeiro</label> 
+                                    <select class="m-b-20 m-r-10 custom-select" id="financialSubGroup" name="financialSubGroup" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    </select>
+                                </div>            
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="financialCostCenter">Centro de Custo</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="financialCostCenter" name="financialCostCenter">
+                                    	<option th:each="item : ${financialCostCenters}"
+												th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                           </select>
+	                        </div>
+                            </div>
+                            <div class="col-md-2 mb-4">
+                                <label for="movimentType">Tipo Documento</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="movementType" name="movementType" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="1" selected>Cr&eacute;dito</option>
+                                    <option value="0" selected>D&eacute;bito</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-4" id="divDocumentNumberTranf">
+                                <label for="documentNumber">Num. Documento</label>
+                                <input type="text" class="form-control text-center" id="documentNumber" name="documentNumber" maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                            </div>
+                            <div class="col-md-2 mb-4">
+                                <label for="movimentType">Status Documento</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="documentStatus" name="documentStatus" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="1">Aberto</option>
+                                    <option value="2" selected>Baixado</option>
+                                    <option value="3">Conferido</option>
+                                    <option value="4">Pendente</option>
+                                    <option value="5">Provisionado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 mb-4">
+                                <label for="paymentType">Pagamento</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="paymentStatus" name="paymentStatus" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="1" selected>Selecione...</option>
+                                    <option value="2">&Agrave; Vista</option>                                    
+                                    <option value="3">&Agrave; Prazo</option>
+                                    <option value="4">Bonificado</option>
+                                    <option value="5">Pendente</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 mb-4" id="divInstallment">
+                                <label for="installment">Parcelas</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="installment" name="installment" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="1">1x</option>
+                                    <option value="2">2x</option>                                    
+                                    <option value="3">3x</option>
+                                    <option value="4">4x</option>
+                                    <option value="5">5x</option>
+                                    <option value="6">6x</option>
+                                    <option value="7">7x</option>
+                                    <option value="8">8x</option>
+                                    <option value="9">9x</option>
+                                    <option value="10">10x</option>
+                                    <option value="11">11x</option>
+                                    <option value="12">12x</option>
+                                    <option value="13">13x</option>
+                                    <option value="14">14x</option>
+                                    <option value="15">15x</option>
+                                    <option value="16">16x</option>
+                                    <option value="17">17x</option>
+                                    <option value="18">18x</option>
+                                    <option value="19">19x</option>
+                                    <option value="20">20x</option>
+                                    <option value="21">21x</option>
+                                    <option value="22">22x</option>
+                                    <option value="23">23x</option>
+                                    <option value="24">24x</option>
+                                    <option value="25">25x</option>
+                                    <option value="26">26x</option>
+                                    <option value="27">27x</option>
+                                    <option value="28">28x</option>
+                                    <option value="29">29x</option>
+                                    <option value="30">30x</option>
+                                    <option value="31">31x</option>
+                                    <option value="32">32x</option>
+                                    <option value="33">33x</option>
+                                    <option value="34">34x</option>
+                                    <option value="35">35x</option>
+                                    <option value="36">36x</option>
+                                    <option value="37">37x</option>
+                                    <option value="38">38x</option>
+                                    <option value="39">39x</option>
+                                    <option value="40">40x</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-4" id="divDocumentValue">
+                                <label for="documentValue">Valor Total Documento</label>
+                                <input type="text" class="form-control money text-center force-numeric-only" id="documentValue" name="documentValue" maxlength="15" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                            </div>
+                            <!--  
+                            <div class="col-md-2 mb-4" id="divPaymentValue">
+                                <label for="paymentValue">Valor de Pagamento</label>
+                                <input type="text" class="form-control money text-center" id="paymentValue" name="paymentValue" maxlength="15" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                            </div> -->                           
+                            <div class="col-md-4 mb-4" id="divPaymentExpiryDate">
+                                <label for="paymentDate">Data Vencimento</label>
+                                <div class="input-group date">
+                                    <input type="text" class="form-control text-center" id="paymentExpiryDate" name="paymentExpiryDate" maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                                    <span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mb-4" id="divInstallmentType">
+                                <label for="installmentType">Tipo Parcela</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="installmentType" name="installmentType" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="1">Di&aacute;ria</option>
+                                    <option value="2">Semanal</option>                                    
+                                    <option value="3">Quinzenal</option>
+                                    <option value="4" selected="selected">Mensal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 mb-4" id="divButtonInstallment">
+                                <button type="button" class="btn btn-primary waves-effect waves-light" style="margin-top: 25px;" id="btnSaveNewDocument" onclick="installmentDocument();">Parcelar</button>
+                            </div>
+                            <div class="col-md-4 mb-4" id="divPaymentDate">
+                                <label for="paymentDate">Data Pagamento</label>
+                                <div class="input-group date">
+                                    <input type="text" class="form-control text-center" id="paymentDate" name="paymentDate" maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                                    <span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>
+                                </div>
+                            </div>
+                        	<div class="col-md-9 mb-4" id="divNote">
+                            	<label for="documentNote" class="control-label">Nota:</label>
+                            	<textarea class="form-control" id="documentNote" rows="1" name="documentNote"></textarea>
+                        	</div>
+                        	<div class="row" id="divDuplicates" style="width: 100%;">
+                        		
+                        	</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-success waves-effect waves-light" id="btnSaveNewDocument" href="javascript:saveNewDocument();">Gravar</a>
+                    <a type="button" class="btn btn-success waves-effect waves-light" id="btnChangeDocument" href="javascript:saveChangeDocument();">Gravar</a>
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!--End Modals-->
+    <!-- ============================================================== -->
+     <!-- ============================================================== -->
+    <!--Report Pdf Modal 16/02/2022--> 
+    <!-- ============================================================== -->
+     <div id="new-report-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="vcenter" style="height:100%;">
+     	<div class="modal-dialog modal-dialog-centered">
+           <div class="modal-content" style="border-radius:5px;">
+              <div class="modal-header">
+                 <div class="col-md-12">
+					<h4 class="modal-title" id="titleModal">Escolha os filtros para impress\u00e3o</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+				</div>
+                </div>
+                <div class="modal-body" style="height:170px;">
+                     <form id="formReportPdf" name="formReportPdf" th:action="@{/movement/document-movement/open}" method="post" autocomplete="off">
+					 	<div class="row">
+							<div class="col-md-12" id="divSincSema">
+								<div class="form-SincSema">
+									<label for="sinteticoSemana">Sintetico/Semana:</label> 
+									<select class="m-b-20 m-r-10 custom-select" id="sinteticoSemana" name="sinteticoSemana" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+							        	<option value="0">Sintetico</option>
+							        	<option value="4">Sintetico Agrupado por Loja</option>
+										<option value="3" selected="selected">Semana</option>
+							        </select>
+							   	</div>            
+							</div>
+						</div>
+					</form>  
+				</div>                                          
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-warning" id="btnCancReportPdf" data-dismiss="modal">Fechar</button>
+			        <button type="button" class="btn btn-primary" id="btnReportPdf" onclick="printReportPdf();">Imprimir</button>
+                </div>
+             </div>
+     	  </div>  
+       </div>
+    <!-- ============================================================== -->
+    <!--End Report Pdf Modal-->
+    <!-- ============================================================== -->
+	</th:block>
+</html>

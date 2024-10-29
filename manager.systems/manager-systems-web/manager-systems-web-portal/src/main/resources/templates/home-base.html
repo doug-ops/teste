@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/head-common :: head-metadados"></head>
+<body>
+	<!-- ============================================================== -->
+	<!-- Preloader - style you can find in spinners.css -->
+	<!-- ============================================================== -->
+	<div th:insert="fragments/pre-loader-common :: pre-loader"></div>
+	<!-- ============================================================== -->
+	<!-- End Preloader - style you can find in spinners.css -->
+	<!-- ============================================================== -->
+	<!-- ============================================================== -->
+	<!-- Main wrapper - style you can find in pages.scss -->
+	<!-- ============================================================== -->
+	<div id="main-wrapper">
+		<!-- ============================================================== -->
+		<!-- Topbar header - style you can find in pages.scss -->
+		<!-- ============================================================== -->
+		<header class="topbar">
+			<div th:insert="fragments/header-common :: header-common"></div>
+		</header>
+		<!-- ============================================================== -->
+		<!-- End Topbar header -->
+		<!-- ============================================================== -->
+		<!-- ============================================================== -->
+		<!-- Left Sidebar - style you can find in sidebar.scss  -->
+		<!-- ============================================================== -->
+		<aside class="left-sidebar"
+			th:insert="fragments/left-sidebar-common :: left-sidebar"></aside>
+		<!-- ============================================================== -->
+		<!-- End Left Sidebar - style you can find in sidebar.scss  -->
+		<!-- ============================================================== -->
+		<div th:insert="fragments/loading-page :: data-loading"></div>
+		<!-- ============================================================== -->
+		<!-- Page wrapper  -->
+		<!-- ============================================================== -->
+		<div class="page-wrapper">
+			<!-- ============================================================== -->
+			<!-- Container fluid  -->
+			<!-- ============================================================== -->
+			<div class="container-fluid" style="padding: 5px;">
+				<div class="row">
+					<div class="col-12" th:if="${session.permissions['MENU_DASHBOARD_ROMANEIO']} or ${session.permissions['MENU_DASHBOARD_TOP_CINCO']}">
+						<!-- Start Filter Button -->
+						<div style="float: right;">
+							<a id="btnFilter" name="btnFilter" type="button"
+								class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle"
+								data-toggle="collapse" data-target="#collapseFilter"
+								aria-expanded="false" aria-controls="collapseFilter"><i
+								class="ti-filter" style="font-size: 14px;"></i></a> <a id="btnView"
+								href="javascript: refreshDashboards();" name="btnView"
+								type="button"
+								class="btn waves-effect waves-light btn-outline-success m-t-10">Atualizar</a>
+						</div>
+					</div>
+					<!-- End Filter Button -->
+					<div class="col-12">
+						<!-- Filter -->
+						<div class="collapse" id="collapseFilter">
+							
+							<form id="formMessage" autocomplete="off">
+								<input type="hidden" id="message" name="message" th:value="${message}"/>
+								<input type="hidden" id="permissionDashboard" name="permissionDashboard" th:value="${session.permissions['MENU_DASHBOARD_TOP_CINCO']}"/>
+								<input type="hidden" id="permissionTop5" name="permissionTop5" th:value="${session.permissions['MENU_DASHBOARD_TOP_CINCO']}"/>								
+							</form>
+							
+							<!-- Filter Form -->
+							<form id="formFilter" name="formFilter"
+								th:action="@{/dashboard/filterDashboardCompanyExecutionWeek}"
+								autocomplete="off">
+								<!-- Card -->
+								<div class="card" th:if="${session.permissions['MENU_DASHBOARD_ROMANEIO']} or ${session.permissions['MENU_DASHBOARD_TOP_CINCO']}">
+									<!-- Card Body -->
+									<div class="card-body">
+										<!-- Row Title Filter -->
+										<div class="row">
+											<div class="col-12">
+												<h4 class="card-title text-center font-weight-bold"
+													style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+											</div>
+										</div>
+										<!--/ Row Title Filter -->
+										<!-- Row Fields Filter -->
+										<div class="row">
+											<div class="col-md-4 mb-3">
+												<label for="filterDate">Data</label>
+												<div class="input-group">
+													<input type="text"
+														class="form-control timeseconds text-center"
+														id="filterDate" name="filterDate" />
+													<div class="input-group-append">
+														<span class="input-group-text"> <span
+															class="ti-calendar"></span>
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-8 mb-3">
+												<div class="form-group" style="width: 300px; height: 13px;">
+													<div
+														class="form-check custom-control custom-checkbox mr-sm-2">
+														<input type="checkbox"
+															class="custom-control-input form-check-input"
+															id="selectAllUsers" name="selectAllUsers"
+															checked="checked" /> <label
+															class="custom-control-label form-check-label"
+															for="selectAllUsers">Selecionar todos os
+															usu&aacute;rios vinculados</label>
+													</div>
+												</div>
+												<select class="m-b-20 m-r-10 custom-select"
+													id="userChildrensParentCombobox"
+													name="userChildrensParentCombobox" multiple="multiple">
+													<option th:value="${session.user?.id}"
+														th:text="${session.user?.name}" selected></option>
+													<option th:each="item : ${userChidrensParent}"
+														th:value="${item.key}" th:text="${item.value}" selected></option>
+												</select>
+											</div>
+										</div>
+										<!--/ Row Fields Filtro -->
+									</div>
+									<!--/ Card Body -->
+								</div>
+								<!--/ Card -->
+							</form>
+							<!--/ Form Filter -->
+						</div>
+						<!--/ Filter -->
+					</div>
+					<!-- Start Card Romaneio -->
+					<div class="col-12" th:if="${session.permissions['MENU_DASHBOARD_ROMANEIO']}">
+						<div class="card">
+							<div class="card-body" style="padding: 5px;">
+								<div class="col-12">
+									<!-- Filter Form -->
+									<form id="formFilterRomaneio" name="formFilterRomaneio"
+										th:action="@{/dashboard/filterDashboardCompanyExecutionWeek}"
+										method="post" autocomplete="off" target="_blank">
+
+										<div class="row" id="itens-dashboard"></div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- End Start Card Romaneio -->
+					<!-- Start Dash Group -->
+					<div class="col-12"  th:if="${session.permissions['MENU_DASHBOARD_TOP_CINCO']}">
+						<div class="card">
+							<div class="card-body" style="padding: 5px;">
+								<div class="col-12">
+            						<div class="row">
+										<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">Total Movimentos por Grupo</h3>
+								                    <div id="chartMovementGroupBar" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>	
+			                			<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">Total Movimentos por Grupo</h3>
+								                    <div id="chartMovementGroupDonut" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>			               				
+									</div>																								
+									<div class="row">
+										<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">Total Movimentos por Subgrupo</h3>
+								                    <div id="chartMovementSubgroupBar" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>
+			                			<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">Total Movimentos por Subgrupo</h3>
+								                    <div id="chartMovementSubgroupDonut" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>				               				
+									</div>	
+									<div class="row">
+										<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">TOP 5 Lojas</h3>
+								                    <div id="chartMovementTopCompanyDonut" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>	
+			                			<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">M&eacute;	dia TOP 5 Produtos por Loja</h3>
+								                    <div id="chartMovementAverageTopProductCompanyDonut" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>		               				
+									</div>	
+									<div class="row">
+										<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">M&eacute;	dia TOP 5 Lojas</h3>
+								                    <div id="chartMovementAverageTopCompanyDonut" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>	
+			                			<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">Total Lojas Executadas</h3>
+								                    <div id="chartMovementCompanyExecutionDonut" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>		               				
+									</div>	
+									<div class="row">
+										<div class="col-md-6 border">
+											<div class="card">
+								                <div class="card-body">
+								                    <h3 class="card-title" style="font-size: 17px; text-align: center;">Total Produtos Executadas</h3>
+								                    <div id="chartMovementProductExecutionDonut" style="width:100%; width:100%;"></div>
+								                </div>
+								            </div>
+			                			</div>			               				
+									</div>												 
+                				</div>
+							</div>
+				      	</div>
+				   	</div>
+				</div>
+			</div>			  
+			<!-- ============================================================== -->
+			<!-- End Container fluid  -->
+			<!-- ============================================================== -->
+			<!-- ============================================================== -->
+			<!-- footer -->
+			<!-- ============================================================== -->
+			<footer class="footer footer-common"
+				th:insert="fragments/footer-common :: footer"></footer>
+			<!-- ============================================================== -->
+			<!-- End footer -->
+			<!-- ============================================================== -->
+		</div>
+		<!-- ============================================================== -->
+		<!-- End Page wrapper  -->
+		<!-- ============================================================== -->
+	</div>
+	<!-- ============================================================== -->
+	<!-- End Wrapper -->
+	<!-- ============================================================== -->
+	<!-- ============================================================== -->
+	<!-- customizer Panel -->
+	<!-- ============================================================== -->
+	<div class="chat-windows"></div>
+	<div
+		th:insert="/dashboard/dashboard-company-execution-week-forms :: forms"></div>
+	<!-- ============================================================== -->
+	<form id="formDashboard" name="formDashboard"
+		th:action="@{/filterDashboardCompanyExecutionWeek}" method="post"
+		autocomplete="off"></form>
+	<form id="formMovementGroupBar" name="formMovementGroupBar" th:action="@{/dashboard/filterDashboardMovement/?type=MovementGroups}" method="get"></form>
+	<form id="formMovementGroupDonut" name="formMovementGroupDonut" th:action="@{/dashboard/filterDashboardMovement/?type=MovementGroups}" method="get"></form>
+	<form id="formMovementSubgroupBar" name="formMovementSubgroupBar" th:action="@{/dashboard/filterDashboardMovement/?type=MovementSubgroups}"method="get"></form>
+	<form id="formMovementSubgroupDonut" name="formMovementSubgroupDonut" th:action="@{/dashboard/filterDashboardMovement/?type=MovementSubgroups}"method="get"></form>
+	<form id="formMovementTopCompanyDonut" name="formMovementTopCompanyDonut" th:action="@{/dashboard/filterDashboardMovement/?type=MovementTopCompany}"method="get"></form>
+	<form id="formMovementAverageTopProductCompanyDonut" name="formMovementAverageTopProductCompanyDonut" th:action="@{/dashboard/filterDashboardMovement/?type=MovementAverageTopProductCompany}"method="get"></form>
+	<form id="formMovementAverageTopCompanyDonut" name="formMovementAverageTopCompanyDonut" th:action="@{/dashboard/filterDashboardMovement/?type=MovementAverageTopCompany}"method="get"></form>
+	<form id="formMovementCompanyExecutionDonut" name="formMovementCompanyExecutionDonut" th:action="@{/dashboard/filterDashboardMovement/?type=MovementCompanyExecution}"method="get"></form>
+	<form id="formMovementProductExecutionDonut" name="formMovementProductExecutionDonut" th:action="@{/dashboard/filterDashboardMovement/?type=MovementProductExecution}"method="get"></form>
+	<form id="formEditWeekMovement" name="formEditWeekMovement"
+		th:action="@{/companyMovementExecution/open}" method="get"
+		autocomplete="off">
+		<input type="hidden" id="dateFrom" name="dateFrom" /> <input
+			type="hidden" id="dateTo" name="dateTo" />
+	</form>
+	
+	<div th:insert="fragments/scripts-common :: scripts-common"></div>
+	<link
+		th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}"
+		rel="stylesheet">
+	<link
+		th:href="@{/assets/libs/datatables/novo/css/responsive.bootstrap4.min.css}"
+		rel="stylesheet" type="text/css">
+	<link
+		th:href="@{/assets/libs/datatables/novo/css/buttons.dataTables.min.css}"
+		rel="stylesheet" type="text/css">
+
+	<!-- SweetAlert -->
+	<link th:href="@{/assets/libs/sweetalert2/dist/sweetalert2.min.css}"
+		rel="stylesheet" />
+	<script
+		th:src="@{/assets/libs/sweetalert2/dist/sweetalert2.all.min.js}"></script>
+
+	<!-- This Page CSS -->
+	<link rel="stylesheet" type="text/css"
+		th:href="@{/assets/libs/daterangepicker/daterangepicker.css}" />
+
+	<!-- data-table js -->
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/jquery.dataTables.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/dataTables.buttons.min.js}"></script>
+	<script th:src="@{/assets/libs/datatables/novo/js/jszip.min.js}"></script>
+	<script th:src="@{/assets/libs/datatables/novo/js/pdfmake.min.js}"></script>
+	<script th:src="@{/assets/libs/datatables/novo/js/vfs_fonts.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/buttons.flash.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/buttons.colVis.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/buttons.print.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/buttons.html5.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/dataTables.bootstrap4.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/dataTables.responsive.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/datatables/novo/js/responsive.bootstrap4.min.js}"></script>
+
+	<script type="text/javascript"
+		src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+	<script th:src="@{/assets/libs/moment/moment.js}"></script>
+	<script th:src="@{/assets/libs/daterangepicker/daterangepicker.js}"></script>
+	<script
+		src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+
+	<link rel="stylesheet" type="text/css"
+		th:href="@{/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+	<script
+		th:src="@{/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js}"></script>
+
+	<!-- Boostrap Validator -->
+	<link
+		th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"
+		rel="stylesheet" type="text/css" />
+	<script
+		th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+	<script
+		th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+
+	<script type="text/javascript"
+		src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>
+	<script type="text/javascript"
+		src="http://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+
+	<!--Morris JavaScript -->
+	<script th:src="@{/assets/libs/raphael/raphael-min.js}"></script>
+	<script th:src="@{/assets/libs/morrisjs/morris.js}"></script>
+
+	<!--c3 JavaScript -->
+	<script th:src="@{/assets/libs/d3/d3.min.js}"></script>
+	<script th:src="@{/assets/libs/c3-master/c3.min.js}"></script>
+
+
+	<!-- Select2 -->
+	<link th:href="@{/assets/libs/select2/dist/css/select2.min.css}"
+		rel="stylesheet" type="text/css" />
+	<link th:href="@{/assets/libs/select2/dist/css/select2-bootstrap.css}"
+		rel="stylesheet" type="text/css" />
+	<script th:src="@{/assets/libs/select2/dist/js/select2.full.min.js}"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+	<!-- Css Boostrap Validator Select2 -->
+	<style type="text/css">
+.was-validated .custom-select:invalid+.select2 .select2-selection {
+	border-color: #f62d51 !important;
+	padding-right: 2.0625rem;
+	background-repeat: no-repeat;
+	background-position: center right calc(6.0625rem/ 4);
+	background-size: calc(2.0625rem/ 2) calc(2.0625rem/ 2);
+	background-image:
+		url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+}
+
+.was-validated .custom-select:valid+.select2 .select2-selection {
+	border-color: #36bea6 !important;
+	padding-right: 3.29688rem;
+	background: url(../../assets/images/custom-select.png) right .75rem
+		center/8px 10px no-repeat,
+		url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e")
+		center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+}
+
+*:focus {
+	outline: 0px;
+}
+
+.modal-body {
+	height: 250px;
+	overflow-y: auto;
+}
+
+@media ( min-height : 500px) {
+	.modal-body {
+		height: 500px;
+	}
+}
+
+@media ( min-height : 800px) {
+	.modal-body {
+		height: 700px;
+	}
+}
+</style>
+
+	<script type="text/javascript">
+		var isOpenFormNewDocument = true;
+		var isSetFinancialGroup = false;
+
+		function formatRepoSelection(repo) {
+			return repo.text;
+
+		}
+		
+		function editWeek(initialDateWeek, finalDateWeek) {
+
+			//const dateFrom = $('.dashboardWeek').data('daterangepicker').startDate;
+			// dateTo = $('.dashboardWeek').data('daterangepicker').endDate;
+
+			$('form#formEditWeekMovement input#dateFrom').val(
+					encodeURIComponent(initialDateWeek));
+
+			$('form#formEditWeekMovement input#dateTo').val(
+					encodeURIComponent(finalDateWeek));
+
+			$('form#formEditWeekMovement').submit();
+		}
+
+		function requestDataChartMovementGroupBar() {
+			$('div#chartMovementGroupBar').empty();
+			
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+            			
+			var $formMovementGroupBar = $('form#formMovementGroupBar');
+			$.ajax({
+	            url : $formMovementGroupBar.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementGroupBar',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'bar'
+							},
+							bar : {
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									title : function(x, index) {
+										return 'Valor Total'
+									},
+									value : function(value, ratio, id, index) {
+										return ' - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+
+		function requestDataChartMovementGroupDonut() {
+			$('div#chartMovementGroupDonut').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+
+			const $formMovementGroupDonut = $('form#formMovementGroupDonut');
+			$.ajax({
+	            url : $formMovementGroupDonut.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementGroupDonut',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'donut'
+							},
+							donut : {
+								label : {
+									format : function(value, ratio, id) {
+										return value.format(2, 3, '.', ',');
+									}
+								},
+								title : "",
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									value : function(value, ratio, id, index) {
+										return ' - ' + (ratio * 100).toFixed(1)
+												+ '% - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+
+		function requestDataChartMovementSubgroupBar() {
+			$('div#chartMovementSubgroupBar').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+			
+			const $formMovementSubgroupBar = $('form#formMovementSubgroupBar');
+			$.ajax({
+	            url : $formMovementSubgroupBar.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementSubgroupBar',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'bar'
+							},
+							bar : {
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									title : function(x, index) {
+										return 'Valor Total'
+									},
+									value : function(value, ratio, id, index) {
+										return ' - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+
+		function requestDataChartMovementSubgroupDonut() {
+			$('div#chartMovementSubgroupDonut').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+			
+			var $formMovementSubgroupDonut = $('form#formMovementSubgroupDonut');
+			$.ajax({
+	            url : $formMovementSubgroupDonut.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementSubgroupDonut',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'donut'
+							},
+							donut : {
+								label : {
+									format : function(value, ratio, id) {
+										return value.format(2, 3, '.', ',');
+									}
+								},
+								title : "",
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									value : function(value, ratio, id, index) {
+										return ' - ' + (ratio * 100).toFixed(1)
+												+ '% - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+		
+		function requestDataChartMovementTopCompanyDonut() {
+			$('div#chartMovementTopCompanyDonut').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+
+			const $formMovementTopCompanyDonut = $('form#formMovementTopCompanyDonut');
+			$.ajax({
+	            url : $formMovementTopCompanyDonut.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementTopCompanyDonut',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'donut'
+							},
+							donut : {
+								label : {
+									format : function(value, ratio, id) {
+										return value.format(2, 3, '.', ',');
+									}
+								},
+								title : "",
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									value : function(value, ratio, id, index) {
+										return ' - ' + (ratio * 100).toFixed(1)
+												+ '% - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+				
+		function requestDataChartMovementAverageTopProductCompanyDonut() {
+			$('div#chartMovementAverageTopProductCompanyDonut').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+
+			const $formMovementAverageTopProductCompanyDonut = $('form#formMovementAverageTopProductCompanyDonut');
+			$.ajax({
+	            url : $formMovementAverageTopProductCompanyDonut.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementAverageTopProductCompanyDonut',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'donut'
+							},
+							donut : {
+								label : {
+									format : function(value, ratio, id) {
+										return value.format(2, 3, '.', ',');
+									}
+								},
+								title : "",
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									value : function(value, ratio, id, index) {
+										return ' - ' + (ratio * 100).toFixed(1)
+												+ '% - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+		
+		function requestDataChartMovementAverageTopCompanyDonut() {
+			$('div#chartMovementAverageTopCompanyDonut').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+
+			const $formMovementAverageTopCompanyDonut = $('form#formMovementAverageTopCompanyDonut');
+			$.ajax({
+	            url : $formMovementAverageTopCompanyDonut.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementAverageTopCompanyDonut',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'donut'
+							},
+							donut : {
+								label : {
+									format : function(value, ratio, id) {
+										return value.format(2, 3, '.', ',');
+									}
+								},
+								title : "",
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									value : function(value, ratio, id, index) {
+										return ' - ' + (ratio * 100).toFixed(1)
+												+ '% - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+						
+		function requestDataChartMovementCompanyExecutionDonut() {
+			$('div#chartMovementCompanyExecutionDonut').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+
+			const $formMovementCompanyExecutionDonut = $('form#formMovementCompanyExecutionDonut');
+			$.ajax({
+	            url : $formMovementCompanyExecutionDonut.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementCompanyExecutionDonut',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'donut'
+							},
+							donut : {
+								label : {
+									format : function(value, ratio, id) {
+										return value.format(2, 3, '.', ',');
+									}
+								},
+								title : "",
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									value : function(value, ratio, id, index) {
+										return ' - ' + (ratio * 100).toFixed(1)
+												+ '% - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+				
+		function requestDataChartMovementProductExecutionDonut() {
+			$('div#chartMovementProductExecutionDonut').empty();
+
+	    	const form = $('form#formFilter');        
+            const dataForm = form.serializeArray();
+
+			const $formMovementProductExecutionDonut = $('form#formMovementProductExecutionDonut');
+			$.ajax({
+	            url : $formMovementProductExecutionDonut.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(
+					function(response) {
+						var chartTypes = c3.generate({
+							bindto : '#chartMovementProductExecutionDonut',
+							data : {
+								columns : [ [ '', 0 ] ],
+
+								type : 'donut'
+							},
+							donut : {
+								label : {
+									format : function(value, ratio, id) {
+										return value.format(2, 3, '.', ',');
+									}
+								},
+								title : "",
+								width : 50
+							},
+
+							legend : {
+								hide : true
+							//or hide: 'data1'
+							//or hide: ['data1', 'data2']
+							},
+							color : {
+								pattern : [ '#eceff1', '#745af2', '#26c6da',
+										'#1e88e5', '#F06292', '#8892d6',
+										'#78c350', '#45bbe0', '#ff9800',
+										'#f7531f' ]
+							},
+							tooltip : {
+								format : {
+									value : function(value, ratio, id, index) {
+										return ' - ' + (ratio * 100).toFixed(1)
+												+ '% - R$: '
+												+ value.format(2, 3, '.', ',');
+									}
+								}
+							}
+						});
+
+						var labels = [];
+						$.each(response.data, function(key, value) {
+							labels.push(key);
+						});
+						chartTypes.load({
+							unload : true,
+							json : [ response.data ],
+							keys : {
+								value : labels,
+							}
+						});
+
+						chartTypes.flush();
+					}).fail(function() {
+				// If there is no communication between the server, show an error
+				//alert( "error occured" );
+			});
+		}
+
+		function refreshDashboards() {
+			const permissionDashboard = $('form#formMessage input#permissionDashboard').val();
+			const permissionTop5 = $('form#formMessage input#permissionTop5').val();
+			
+			if(permissionDashboard){
+				searchDashboardRomaneio();				
+			}
+
+			if(permissionTop5){				
+				requestDataChartMovementGroupBar();
+				requestDataChartMovementGroupDonut();
+				requestDataChartMovementSubgroupBar();
+				requestDataChartMovementSubgroupDonut();
+				requestDataChartMovementTopCompanyDonut();			
+				requestDataChartMovementAverageTopProductCompanyDonut();
+				requestDataChartMovementAverageTopCompanyDonut();
+				requestDataChartMovementCompanyExecutionDonut();
+				requestDataChartMovementProductExecutionDonut();
+			}
+		}
+
+		function searchDashboardRomaneio() {
+			const form = $('form#formFilter');
+			const dataForm = form.serializeArray();
+			showLoading("Carregando documentos... Por favor aguarde...");
+
+			let message = 'Ocorreu um erro ao carregar documentos.';
+			$.ajax({
+				url : form.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			}).done(function(data, textStatus, jqXHR) {
+				if (true == data.status) {
+					populateDashboard(data);
+				} else {
+					hideLoading();
+					showSweetalertWarning('Alerta!', data.message, '5000');
+				}
+			}).fail(function(data, textStatus, jqXHR) {
+				if ('' != data.message) {
+					message = data.message;
+				}
+				showSweetalertWarning('Alerta!', message, '5000');
+			}).always(function() {
+				$('#block1').hide();
+				$('#block2').hide();
+			});
+		}
+
+		function populateDashboard(data) {
+			$('div#itens-dashboard').html('');
+			if (true == data.status) {
+				let trHTML = '';
+				trHTML += '<div class="col-sm-12 col-lg-12" style="padding-right: 0px;">';
+				trHTML += '<div class="d-md-flex align-items-center">';
+				trHTML += '<div class="row" style="width: 100%;">';
+				trHTML += '<div class="col-md-12 mb-3">';
+				trHTML += '<h2 class="card-title">Romaneio</h2>';
+				trHTML += '</div>';
+				trHTML += '<div id="tabs" class="col-md-12 mb-3">';
+				trHTML += '<ul class="nav nav-pills custom-pills m-t-40" id="pills-tab" role="tablist">';
+
+				let count = 0;
+				$.each(data.report.mapData, function(key, value) {
+
+					trHTML += '<li class="nav-item p-l-10">';
+					trHTML += '<a class="nav-link'
+							+ (count == 0 ? ' active' : '')
+							+ '" id="pills-home-tab_' + value.weekYear
+							+ '" data-toggle="pill" href="#tab_'
+							+ value.weekYear
+							+ '" role="tab" aria-selected="false">'
+							+ value.weekYearString + '</a>';
+					trHTML += '</li>';
+					count = count + 1;
+				});
+
+				trHTML += '</ul>';
+
+				trHTML += '<div class="tab-content m-t-20" id="pills-tabContent">';
+				count = 0;
+				$
+						.each(
+								data.report.mapData,
+								function(key, value) {
+
+									// let totalExecNotExec = parseInt(value.countExecuted) + parseInt(value.countNegative);
+									//let totaNotExec = parseInt(value.countCompanyNotExpiry) + parseInt(value.countLowMovement) + parseInt(value.countDisable) + parseInt(value.countOthers) + parseInt(value.countNotInformed);
+
+									let totalPorcemExec = (value.countExecuted * 100)
+											/ parseInt(value.countMovement);
+									let totalPorcemNotExec = (value.countNotExecuted * 100)
+											/ parseInt(value.countMovement);
+
+									trHTML += '<div class="tab-pane fade'
+											+ (count == 0 ? ' show active' : '')
+											+ '" id="tab_'
+											+ value.weekYear
+											+ '" role="tabpanel" aria-labelledby="pills-home-tab_'
+											+ value.weekYear + '">';
+									trHTML += '<div id="div_' + value.weekYear + '" class="col-lg-12 col-xl-12">';
+									trHTML += '<div class="p-t-20 text-center">';
+									trHTML += '<a style="cursor:pointer;" onclick="editWeek(&quot;'
+											+ value.initialDateWeekString
+											+ '&quot;,&quot;'
+											+ value.finalDateWeekString
+											+ '&quot;);">';
+									trHTML += '<i class="mdi mdi-file-chart display-4 text-orange d-block" style="font-size: 3.5rem;"></i>';
+									trHTML += '<span class="display-4 d-block font-medium" style="font-size: 3.5rem;">'
+											+ value.countMovement + '</span>';
+									trHTML += '<span><h3>'
+											+ value.weekYearString
+											+ ' Semana</h3></span>';
+									trHTML += '</a>';
+									trHTML += '<p class="m-b-0 font-medium"><h6>'
+											+ value.initialDateWeekString
+											+ ' at&#233; '
+											+ value.finalDateWeekString
+											+ '</h6></p>';
+									trHTML += '<div class="progress m-t-40" style="height:4px;">';
+									trHTML += '<div class="progress-bar bg-info" role="progressbar" style="width: '
+											+ totalPorcemExec
+											+ '%" aria-valuenow="'
+											+ totalPorcemExec
+											+ '" aria-valuemin="0" aria-valuemax="100"></div>';
+									trHTML += '<div class="progress-bar bg-danger" role="progressbar" style="width: '
+											+ totalPorcemNotExec
+											+ '%" aria-valuenow="totalPorcemNotExec" aria-valuemin="0" aria-valuemax="100"></div>';
+									trHTML += '</div>';
+									trHTML += '<!-- row -->';
+									trHTML += '<div class="row m-t-30 m-b-20 border-left text-center">';
+									trHTML += '<!-- column smart-->';
+									trHTML += '<div class="col-sm-12 col-md-4 col-lg-4 border-right text-center">';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-12 col-lg-12 text-center">';
+									trHTML += '<h2 class="m-b-0 font-medium"><font color="#004AA2">'
+											+ value.countExecuted
+											+ '</h2><h5>Executada</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<div class="row m-t-30 m-b-20 text-center">';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-6 col-lg-6 border-right">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#D3CD02">'
+											+ value.countNegativeExecuted
+											+ '</h3><h5>Lan&ccedil;. Negativo<br>Executada</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-6 col-lg-6 text-center">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#32CD32">'
+											+ value.countDisableExecuted
+											+ '</h3><h5>Executado<br>Bloqueado</h5></font>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+									trHTML += '<!-- column smart-->';
+									trHTML += '<div class="col-sm-12 col-md-8 col-lg-8 border-right text-center">';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-12 col-lg-12 text-center">';
+									trHTML += '<h2 class="m-b-0 font-medium"><font color="#B61603">'
+											+ value.countNotExecuted
+											+ '</h2><h5>N&atilde;o Executado</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<!-- row -->';
+									trHTML += '<div class="row m-t-30 m-b-20 text-center">';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-2 col-lg-2 border-right text-center">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#B61603">'
+											+ value.countNegative
+											+ '</h3><h5>Lan&ccedil;. Negativo<br>N&atilde;o Executado</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-2 col-lg-2 border-right text-center">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#B61603">'
+											+ value.countDisable
+											+ '</h3><h5>Bloqueado</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-2 col-lg-2 border-right text-center">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#B61603">'
+											+ value.countLowMovement
+											+ '</h3><h5>Baixo<br>Movemento</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-2 col-lg-2 border-right text-center">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#B61603">'
+											+ value.countOthers
+											+ '</h3><h5>Outros</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-2 col-lg-2 border-right text-center">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#32CD32">'
+											+ value.countCompanyNotExpiry
+											+ '</h3><h5>A Vencer</h5></font>';
+									trHTML += '</div>';
+									trHTML += '<!-- column -->';
+									trHTML += '<div class="col-sm-12 col-md-2 col-lg-2 text-center">';
+									trHTML += '<h3 class="m-b-0 font-medium"><font color="#B61603">'
+											+ value.countNotInformed
+											+ '</h3><h5>N&atilde;o<br>Informado</h5></font>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+									trHTML += '</div>';
+
+									count = count + 1;
+									totalExecNotExec = 0;
+									totaLowMoveOthers = 0;
+								});
+
+				trHTML += '</div>';
+
+				trHTML += '</div>';
+				trHTML += '</div>';
+
+				trHTML += '</div>';
+				trHTML += '</div>';
+
+				$('div#itens-dashboard').html(trHTML);
+			}
+
+			//const selected = data.report.itens.find(itensArray => itensArray.selectedMovement === true);
+
+			document.getElementById('pills-home-tab_' + data.report.selectedWeekYear).click();
+		}
+
+		function format(d) {
+			// `d` is the original data object for the row
+			return d.detail;
+		}
+
+		function exportTableToCSV($table, filename) {
+
+			//rescato los itulos y las filas
+			var $Tabla_Nueva = $table.find('tr:has(td,th)');
+			// elimino la tabla interior.
+			var Tabla_Nueva2 = $Tabla_Nueva.filter(function() {
+				return (this.childElementCount != 1);
+			});
+
+			var $rows = Tabla_Nueva2,
+			// Temporary delimiter characters unlikely to be typed by keyboard
+			// This is to avoid accidentally splitting the actual contents
+			tmpColDelim = String.fromCharCode(11), // vertical tab character
+			tmpRowDelim = String.fromCharCode(0), // null character
+
+			// Solo Dios Sabe por que puse esta linea
+			colDelim = (filename.indexOf("xls") != -1) ? '"\t"' : '","', rowDelim = '"\r\n"',
+
+			// Grab text from table into CSV formatted string
+			csv = '"'
+					+ $rows
+							.map(
+									function(i, row) {
+										var $row = $(row);
+										var $cols = $row
+												.find('td:not(.hidden),th:not(.hidden)');
+
+										return $cols
+												.map(
+														function(j, col) {
+															var $col = $(col);
+															var text = $col
+																	.text()
+																	.replace(
+																			/\./g,
+																			'');
+															return text
+																	.replace(
+																			'"',
+																			'""'); // escape double quotes
+
+														}).get().join(
+														tmpColDelim);
+										csv = csv + '"\r\n"' + 'fin '
+												+ '"\r\n"';
+									}).get().join(tmpRowDelim).split(
+									tmpRowDelim).join(rowDelim).split(
+									tmpColDelim).join(colDelim) + '"';
+
+			download_csv(csv, filename);
+
+		}
+
+		function download_csv(csv, filename) {
+			var csvFile;
+			var downloadLink;
+
+			// CSV FILE
+			csvFile = new Blob([ csv ], {
+				type : "text/csv"
+			});
+
+			// Download link
+			downloadLink = document.createElement("a");
+
+			// File name
+			downloadLink.download = filename;
+
+			// We have to create a link to the file
+			downloadLink.href = window.URL.createObjectURL(csvFile);
+
+			// Make sure that the link is not displayed
+			downloadLink.style.display = "none";
+
+			// Add the link to your DOM
+			document.body.appendChild(downloadLink);
+
+			// Lanzamos
+			downloadLink.click();
+		}
+
+		(function() {
+			'use strict';
+
+			$('.collapse').collapse('show');
+
+			$.fn.dataTable.moment('DD/MM/YYYY hh:mm');
+
+			const timezone = "America/Sao_Paulo";
+			let fromDate = moment().startOf('week').format('dddd') === 'Sunday' ? moment()
+					.startOf('week').add('d', 1)
+					: moment().startOf('week');
+
+			let fromDateTimeZone = moment.tz(fromDate, timezone);
+			fromDateTimeZone.set('hour', 0);
+			fromDateTimeZone.set('minute', 0);
+			fromDateTimeZone.set('second', 0);
+
+			if (moment().startOf('week').format('dddd') === 'Sunday') {
+				let fromDateNowTimeZone = moment.tz(moment(), timezone);
+				if (new Number(fromDateTimeZone.format('YYYYMMDD')) > new Number(
+						fromDateNowTimeZone.format('YYYYMMDD'))) {
+					fromDateTimeZone = fromDateTimeZone.clone().day(-6);
+				}
+			}
+
+			let toDate = fromDateTimeZone.clone().day(7);
+			let toDateTimeZone = moment.tz(toDate, timezone);
+			toDateTimeZone.set('hour', 23);
+			toDateTimeZone.set('minute', 59);
+			toDateTimeZone.set('second', 59);
+
+			$('.timeseconds').daterangepicker(
+					{
+						ranges : {
+							'Hoje' : [ moment().set({
+								'hour' : 0,
+								'minute' : 0,
+								'second' : 0
+							}), moment() ],
+							'Ontem' : [ moment().subtract(1, 'days').set({
+								'hour' : 0,
+								'minute' : 0,
+								'second' : 0
+							}), moment().subtract(1, 'days') ],
+							'Ult. 7 Dias' : [
+									moment().subtract(6, 'days').set({
+										'hour' : 0,
+										'minute' : 0,
+										'second' : 0
+									}), moment() ],
+							'Ult. 30 Dias' : [
+									moment().subtract(29, 'days').set({
+										'hour' : 0,
+										'minute' : 0,
+										'second' : 0
+									}), moment() ],
+							'Este M&ecirc;s' : [ moment().startOf('month').set({
+								'hour' : 0,
+								'minute' : 0,
+								'second' : 0
+							}), moment().endOf('month') ],
+							'Ult. M&ecirc;s' : [
+									moment().subtract(1, 'month').startOf(
+											'month').set({
+										'hour' : 0,
+										'minute' : 0,
+										'second' : 0
+									}),
+									moment().subtract(1, 'month')
+											.endOf('month') ]
+						},
+						startDate : fromDateTimeZone,
+						endDate : toDateTimeZone,
+						timePicker : true,
+						timePickerIncrement : 1,
+						timePicker24Hour : true,
+						autoApply : true,
+						autoUpdateInput : true,
+						locale : {
+							format : 'DD/MM/YYYY HH:mm',
+							"separator" : " - ",
+							"applyLabel" : "Aplicar",
+							"cancelLabel" : "Cancelar",
+							"fromLabel" : "De",
+							"toLabel" : "At&eacute;",
+							"customRangeLabel" : "Custom",
+							"daysOfWeek" : [ "Dom", "Seg", "Ter", "Qua", "Qui",
+									"Sex", "S&aacute;b" ],
+							"monthNames" : [ "Janeiro", "Fevereiro", "Mar&ccedil;o",
+									"Abril", "Maio", "Junho", "Julho",
+									"Agosto", "Setembro", "Outubro",
+									"Novembro", "Dezembro" ],
+							"firstDay" : 0
+						},
+
+						showDropdowns : true
+					});
+
+			//$('.dateFilter').data('daterangepicker').setStartDate(data.report.dateFromString);
+			//$('.dateFilter').data('daterangepicker').setEndDate(data.report.dateToString);
+
+			$('form#formFilter select#userChildrensParentCombobox').select2({
+				width : '100%',
+				theme : "bootstrap",
+				language : {
+					noResults : function(params) {
+						return "Nenhum registro encontrado.";
+					}
+				}
+			});
+
+			$('input#selectAllUsers')
+					.click(
+							function() {
+								if ($('input#selectAllUsers').is(':checked')) {
+									$(
+											'form#formFilter select#userChildrensParentCombobox > option')
+											.prop('selected', 'selected');
+								} else {
+									$(
+											'form#formFilter select#userChildrensParentCombobox > option')
+											.prop('selected', false);
+								}
+								$(
+										'form#formFilter select#userChildrensParentCombobox')
+										.trigger('change');
+							});
+
+			$(document).keypress(function(event) {
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+				if (keycode == '13') {
+					event.preventDefault();
+					return false;
+				}
+			});
+			
+			const messageResult = $('form#formMessage input#message').val();
+		    if(messageResult != null && messageResult.trim().length > 0){
+				showSweetalertWarning('Alerta!', messageResult,'30000');
+			}
+
+			refreshDashboards();
+			
+			$('.collapse').collapse('hide');
+
+		})();
+	</script>
+</body>
+</html>

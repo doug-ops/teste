@@ -1,0 +1,3138 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	    
+	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	    
+	    <!-- This Page CSS -->
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-document-movement.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-currency.css}"/>
+
+	    <script th:src="@{/assets/libs/moment/moment.js}"></script>
+	    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+	    
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js}"></script>
+	    
+	    <!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>	
+    	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+		<script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.2.6/jquery.inputmask.bundle.min.js"></script>
+		
+		<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.common.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.rtl.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.silver.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.mobile.all.min.css"/>
+	    <script src="https://kendo.cdn.telerik.com/2018.1.221/js/kendo.all.min.js"></script>
+    
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+			
+			.modal-body{
+			    height: 250px;
+			    overflow-y: auto;
+			}
+			
+			@media (min-height: 500px) {
+			    .modal-body { height: 500px; }
+			}
+			
+			@media (min-height: 800px) {
+			    .modal-body { height: 700px; }
+			}
+			
+			.k-grid td {
+			  border-style: solid;
+			  border-width: 0 0 0 1px;
+			  padding: .4em .6em;
+			  overflow: hidden;
+			  line-height: 1.6em;
+			  vertical-align: middle;
+			  text-overflow: ellipsis;
+			  font-size: 11px;
+			}
+			
+			.select2-container--bootstrap .select2-selection--single {
+			  height: 25px;
+			  line-height: 1.42857143;
+			  padding: 2px 24px 6px 12px;
+			  font-size: .775rem;
+			}
+			
+			.form-control {
+			  display: block;
+			  width: 100%;
+			  height: calc(1.50rem + 2px);
+			  padding: .375rem .75rem;
+			  font-size: .775rem;
+			  line-height: 1.5;
+			  color: #4F5467;
+			  background-color: #fff;
+			  border: 1px solid #e9ecef;
+			  border-radius: 2px;
+			    border-top-right-radius: 2px;
+			    border-bottom-right-radius: 2px;
+			  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+			}
+			
+			textarea.form-control {
+			  height: 32px;
+			  font-size: .775rem;
+			}
+			
+			label {
+			  font-weight: 600;
+			  font-size: .775rem;
+			}
+			
+			.positive-value {
+			  color: #1c6356 !important;
+			  background-color: #d7f2ed !important;
+			  border-color: #c7ede6 !important;
+			  text-align: right !important;
+			  font-weight: 600 !important;
+			  font-size: 12px !important;
+			}	
+			
+			.negative-value {
+			  color: #85621b !important;
+			  background-color: #fdd5dc !important;
+			  border-color: #fdd5dc !important;
+			  text-align: right !important;
+			  font-weight: 600 !important;
+			  font-size: 12px !important;
+			}
+			
+			.warning-value {
+			  color: #000 !important;
+			  background-color: #ffbc34 !important;
+			  border-color: #ffbc34 !important;
+			  text-align: right !important;
+			  font-weight: 600 !important;
+			  font-size: 12px !important;
+			}
+			
+			.round {
+			  color: #000;
+			  width: 50px;
+			  height: 50px;
+			  display: inline-block;
+			  font-weight: 400;
+			  text-align: center;
+			  line-height: 52px;
+			}
+		</style>
+		
+	    <script>	    	   	   
+	   	
+	    const mapCash = new Map(); 
+	    
+	    let isSetFinancialGroup = false;
+	    
+	    let totalExpenseLaunch = 0;
+	    
+	    let bankAccountsAll = [];
+	    let bankAccountDelet = [];
+	    let financialGroupsAll = [];
+	    let countExpense = 0;
+	    	    
+	    let tableReport = null;
+
+		const expenses = [
+		];
+		
+		let totalDocumentTransfer = 0;
+
+		const dataSource = new kendo.data.DataSource({
+			pageSize: 20,
+			data: expenses,
+			autoSync: true,
+			schema: {
+				model: {
+					id: "id",
+					fields: {
+						type: { validation: { required: true } },
+						bankAccountDescription: { validation: { required: true } },
+						paymentExpiryDate: { validation: { required: true } },
+						documentValue: { validation: { required: true } },
+						documentStatus: { validation: { required: true } },
+						providerDescription: { validation: { required: true } },
+						financialGroupDescription: { validation: { required: true } },
+						financialSubGroupDescription: { validation: { required: true } },
+					}
+				}
+			}
+		});
+		
+		function checkCelValue() {
+			var selectedItem = dataSource.getByUid(this.select().data().uid);
+			//$("#log").text("Selected Type.Name: " + selectedItem.Type.Name);
+		}		
+	    	    
+        function clearFormCashierClosing()
+        {
+        	$('form#formNewDocumentTransfDest input#documentId').val('');
+			$('form#formNewDocumentTransfDest input#documentParentId').val('');
+			$('form#formNewDocumentTransfDest input#documentTypeTransfDest').val('');
+			$('form#formNewDocumentTransfDest select#companyTransfDest').empty().trigger('change');
+			$('form#formNewDocumentTransfDest select#providerTransfDest').empty().trigger('change');
+			$('form#formNewDocumentTransfDest select#movementTypeTransfDest').val('1').trigger('change');
+			$('form#formNewDocumentTransfDest select#installmentTransfDest').val('1').trigger('change');
+			$('form#formNewDocumentTransfDest select#documentStatusTransfDest').val('2').trigger('change');	
+			$('form#formNewDocumentTransfDest input#documentNumberTransfDest').val('');
+			$('form#formNewDocumentTransfDest input#documentValueTransfDest').val('');
+			$('form#formNewDocumentTransfDest input#paymentDateTransfDest').val('');
+			$('form#formNewDocumentTransfDest select#paymentStatusTransfDest').val('2').trigger('change');
+			$('form#formNewDocumentTransfDest input#paymentExpiryDateTransfDest').val('');
+			$('form#formNewDocumentTransfDest select#bankAccountTransfDest').val('').trigger('change');
+			$('form#formNewDocumentTransfDest textarea#documentNoteTransfDest').val('');
+        }	  
+        
+        function populateFormModelCashierClosing()
+        {
+			$('a#btnSaveNewDocument').show();
+        	$('div#divInstallmentTransfDest').show();
+        	$('div#divPaymentDateTransfDest').hide();
+			$('div#divDuplicates').html('');
+			$('div#divButtonInstallment').hide();
+			$('div#divInstallmentTypeTransfDest').hide();
+			$('div#divPaymentValueTransfDest').hide();			
+			
+			$('div#divDocumentValueTransfDest').removeClass('col-md-4').addClass('col-md-2');
+			
+			$('form#formNewDocumentTransfDest select#financialGroupTransfDest').val(0).trigger('change');
+			$('form#formNewDocumentTransfDest select#financialSubGroupTransfDest').val(0).trigger('change');
+        	$('form#formNewDocumentTransfDest input#paymentDateTransfDest').datepicker("setDate", new Date());
+			
+			const mainCompanyId = $('form#formFilter input#mainCompanyId').val();
+			const mainCompanyDescription = $('form#formFilter input#mainCompanyDescription').val();
+		
+			if(mainCompanyId > 0){
+				let optionKey = mainCompanyId;
+				let optionValue = mainCompanyDescription + ' (' +mainCompanyId + ')';
+				newOption = new Option(optionValue, optionKey, true, true);
+				$('form#formNewDocumentTransfDest select#companyTransfDest').append(newOption).trigger('change');
+			}			
+
+			$('div#divExpenseDuplicates').html('');			
+		}
+		
+		function processCashierClosing()
+	    { 			
+			const dataExpenses = dataSource.data();
+			
+			if(dataExpenses.length == 0){
+				return;	
+			}
+			
+			const userChildrensParent = $('form#formFilter select#userChildrensParentCombobox option:selected').val();
+			
+			if(!userChildrensParent){
+				return;
+			}
+
+			const cashierClosingResult = {
+				cashierClosingId: $('form#formNewDocumentTransfDest input#cashierClosingId').val(),
+				userOperator: userChildrensParent,
+				companysIds: '',
+				process: true,
+				launchs: []
+			}
+			
+			let companysIds = '';
+			let countCompany = 0;
+			Array.prototype.forEach.call(
+			  dataExpenses,
+			  (item) => {
+				  cashierClosingResult.launchs.push({
+					    "cashierClosingId": $('form#formNewDocumentTransfDest input#cashierClosingId').val(),
+					    "userOperator": userChildrensParent,
+					    "type": item.type,
+					  	"bankAccountDescription": item.bankAccountDescription,
+						"bankAccountExpense": item.bankAccountExpense,
+						"companyId": item.companyId,
+						"documentNoteExpense": encodeURIComponent(item.documentNoteExpense),
+						"documentStatusExpense": item.documentStatusExpense == 'BA' ? 2 : 1,
+						"documentValueExpense": removeDoteValue(item.documentValueExpense),
+						"financialGroupDescription": item.financialGroupDescription,
+						"financialGroupExpense": item.financialGroupExpense,
+						"financialSubGroupDescription": item.financialSubGroupDescription,
+						"financialSubGroupExpense": item.financialSubGroupExpense,
+						"id": item.id,
+						"paymentExpiryDateExpense": item.paymentExpiryDateExpense,
+						"providerDescription": item.providerDescription,
+						"providerExpense": item.providerExpense,
+						"uid": item.uid,
+						"credit": (item.type == 0),
+						"inactive": false
+				  });
+				  
+				  if(countCompany > 0){
+					  companysIds += ',';
+				  }
+				  
+				  companysIds += item.companyId;
+				  
+				  countCompany = countCompany + 1;
+			  }
+			);
+						
+			const jsonString = JSON.stringify(cashierClosingResult);
+			
+			$('form#formNewDocumentTransfDest input#jsonDataRequest').val(jsonString);
+			
+	    	var form = $('form#formNewDocumentTransfDest');
+	  		var dataForm = form.serializeArray();
+	  		
+	  		$('div#new-document-modal').modal('hide');
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		countExpense=0;
+            		clearFormCashierClosing();
+            		searchUserMovement();  		
+        			showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	  		$('div#new-document-modal').modal('show');
+        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','30000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }	
+		
+  		function processSaveCashierClosing()
+	    { 			
+			const dataExpenses = dataSource.data();
+			
+			if(dataExpenses.length == 0){
+				return;	
+			}
+			
+			const userChildrensParent = $('form#formFilter select#userChildrensParentCombobox option:selected').val();
+			
+			if(!userChildrensParent){
+				return;
+			}
+
+			const cashierClosingResult = {
+				cashierClosingId: $('form#formNewDocumentTransfDest input#cashierClosingId').val(),
+				userOperator: userChildrensParent,
+				companysIds: '',
+				process: false,
+				launchs: []
+			}
+			
+			let companysIds = '';
+			let countCompany = 0;
+			Array.prototype.forEach.call(
+			  dataExpenses,
+			  (item) => {
+				  cashierClosingResult.launchs.push({
+					    "cashierClosingId": $('form#formNewDocumentTransfDest input#cashierClosingId').val(),
+					    "userOperator": userChildrensParent,
+					    "type": item.type,
+					  	"bankAccountDescription": item.bankAccountDescription,
+						"bankAccountExpense": item.bankAccountExpense,
+						"companyId": item.companyId,
+						"documentNoteExpense": encodeURIComponent(item.documentNoteExpense),
+						"documentStatusExpense": item.documentStatusExpense == 'BA' ? 2 : 1,
+						"documentValueExpense": removeDoteValue(item.documentValueExpense),
+						"financialGroupDescription": item.financialGroupDescription,
+						"financialGroupExpense": item.financialGroupExpense,
+						"financialSubGroupDescription": item.financialSubGroupDescription,
+						"financialSubGroupExpense": item.financialSubGroupExpense,
+						"id": item.id,
+						"paymentExpiryDateExpense": item.paymentExpiryDateExpense,
+						"providerDescription": item.providerDescription,
+						"providerExpense": item.providerExpense,
+						"uid": item.uid,
+						"credit": (item.type == 0),
+						"inactive": false
+				  });
+				  
+				  if(countCompany > 0){
+					  companysIds += ',';
+				  }
+				  
+				  companysIds += item.companyId;
+				  
+				  countCompany = countCompany + 1;
+			  }
+			);
+						
+			const jsonString = JSON.stringify(cashierClosingResult);
+			
+			$('form#formNewDocumentTransfDest input#jsonDataRequest').val(jsonString);
+
+	    	var form = $('form#formNewDocumentTransfDest');
+	  		var dataForm = form.serializeArray();
+	  		
+	  		$('div#new-document-modal').modal('hide');
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		countExpense=0;
+            		clearFormCashierClosing();
+            		searchUserMovement();  		
+        			showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	  		$('div#new-document-modal').modal('show');
+        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','30000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }		          
+	    
+		function showModalCashierClosing()
+        {
+        	clearFormCashierClosing();      
+        	populateFormModelCashierClosing();  	
+        	
+        	//dataSource.data([]);//clear out old data
+			//dataSource.sync();//refresh grid
+				 
+			$('div#divButtonExpenseTransf').show();
+			
+			const mapCashResult = [];              
+			
+			bankAccountsAll = [];
+			    		    	
+	    	let canOpen = false;
+	    	$('.checkboxItem').each(function() 
+	    	{
+	    		if($(this).is(":checked")) 
+	    		{					
+					const companyIdItem = $(this).data('companyid'); 
+		        	
+		        	const mapCashResultItem = mapCash.get(companyIdItem);
+		        	if(mapCashResultItem && 'F' != mapCashResultItem.cashierClosingStatus){			
+		        		        				    	
+				    	const movementValueItem = mapCashResultItem.movementValue;
+						const pendingMovementValueItem = mapCashResultItem.pendingMovementValue;					
+						const totalCompanyItem = mapCashResultItem.totalCompany;
+						const discountTotalItem = parseFloat($('input#discountValue_' + companyIdItem).val());															
+						const totalPayStoreItem = parseFloat($('input#paymentValue_' + companyIdItem).val());										
+						const totalStorePendingAfterItem = ((totalCompanyItem - discountTotalItem) - totalPayStoreItem);		        	
+		        	
+						mapCashResultItem.checked = true;
+						
+						mapCashResultItem.discountTotal = discountTotalItem;
+						mapCashResultItem.paymentTotal = totalPayStoreItem;
+						mapCashResultItem.pendingMovementAfterValue = totalStorePendingAfterItem;
+						mapCashResult.push(mapCashResultItem);
+						
+						const bankAccountItem = {
+			        		value: mapCashResultItem.bankAccountId,
+			        		description: mapCashResultItem.bankAccountDescription,
+			        		companyId: companyIdItem
+			        	};
+			        	
+			        	bankAccountsAll.push(bankAccountItem);
+			        	
+			        	$('form#formNewDocumentTransfDest input#cashierClosingId').val(mapCashResultItem.cashierClosingId);
+			        	
+			        	if('F' != mapCashResultItem.cashierClosingStatus){
+							canOpen = true;
+						}
+					}						        		
+ 		        }	    		        
+	    	});
+	    	
+	    	if(mapCashResult.length > 0 && canOpen){
+				const jsonString = JSON.stringify(mapCashResult);
+				
+				const totalStore = mapCashResult.reduce((total, item) => total + item.paymentTotal,0); 
+								
+		    	$('form#formNewDocumentTransfDest input#jsonData').val(jsonString);
+		    	$('form#formNewDocumentTransfDest input#documentValueTransfDest').val(Number(totalStore).format(2, 3, '.', ','));
+		    	$('span#balanceCashingClose').html(Number(totalStore).format(2, 3, '.', ','));
+		    	
+		    	totalDocumentTransfer = parseFloat(totalStore).toFixed(2);
+		    	
+		    	
+		    	dataExpenses = dataSource.data();
+			
+				//const bankAccountTransfDestVal = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').val();
+				let totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+				let totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+	
+				let total = (totalDocumentTransfer - (totalLaunch + totalExpenses));
+				$('span#balanceCashingClose').html(Number(total).format(2, 3, '.', ','));			
+				$('form#formNewDocumentTransfDest input#documentValueTransfDest').val(Number(total).format(2, 3, '.', ','));
+		    		    	
+		    	$('div#new-document-modal').modal('show');
+			}			
+        }
+        
+        function saveLaunch(){
+						
+			const bankAccountOriginId = $('form#formNewDocumentTransfDest input#bankAccountOriginId').val();
+
+			const selectCompany = $('form#formNewDocumentTransfDest select#companyTransfDest option:selected').val();
+			if(!selectCompany || selectCompany == null){
+				showSweetalertWarning('Alerta!', 'Informe a empresa antes de gravar o lan\u00e7amento.','5000');
+				return;	
+			}
+			
+			const selectExpense = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').val();
+			
+			if(!selectExpense || selectExpense == null){
+				showSweetalertWarning('Alerta!', 'Informe a conta antes de gravar o lan\u00e7amento.','5000');
+				return;	
+			}
+			
+			const selectExpenseDescription = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').text();
+			
+			const paymentExpiryDateExpense = $('form#formNewDocumentTransfDest input#paymentExpiryDateTransfDest').val();
+			if(!paymentExpiryDateExpense || paymentExpiryDateExpense == null || paymentExpiryDateExpense == ''){
+				showSweetalertWarning('Alerta!', 'Informe o vencimento antes de gravar o lan\u00e7amento.','5000');
+				return;	
+			}
+	
+			let documentValue = $('form#formNewDocumentTransfDest input#documentValueTransfDest').val();
+			if(!documentValue || documentValue == null || documentValue == ''){
+				showSweetalertWarning('Alerta!', 'Informe o valor antes de gravar o lan\u00e7amento.','5000');
+				return;	
+			}
+			
+			const expenseDocumentStatus = $('form#formNewDocumentTransfDest select#documentStatusTransfDest option:selected').val();
+			if(!expenseDocumentStatus || expenseDocumentStatus == null || expenseDocumentStatus == ''){
+				showSweetalertWarning('Alerta!', 'Informe o status do documento antes de gravar o lan\u00e7amento.','5000');
+				return;	
+			}
+			
+			const documentNote = $('form#formNewDocumentTransfDest textarea#documentNoteTransfDest').val();
+			
+			if(parseFloat(removeDoteValue(documentValue)) == 0){
+				return;
+			}
+			
+			documentValue = parseFloat(removeDoteValue(documentValue));
+			
+			totalExpenseLaunch = 0;
+			if((bankAccountOriginId == 199 || bankAccountOriginId == 1565)){
+				(async () => {
+				    await searchConfigTransfer(bankAccountOriginId, selectExpense, documentValue).then((res) => {
+						documentValue = parseFloat(documentValue) - totalExpenseLaunch;
+    					populateDataSaveExpense(documentValue, selectExpense, selectExpenseDescription, selectCompany, paymentExpiryDateExpense, expenseDocumentStatus, documentNote);
+    					totalExpenseLaunch = 0;
+					});
+				})();				 
+			} else {
+				populateDataSaveExpense(documentValue, selectExpense, selectExpenseDescription, selectCompany, paymentExpiryDateExpense, expenseDocumentStatus, documentNote);
+			} 
+		}
+		
+		function populateDataSaveExpense(documentValue, selectExpense, selectExpenseDescription, selectCompany, paymentExpiryDateExpense, expenseDocumentStatus, documentNote){
+			let dataExpenses = dataSource.data();
+			
+			let totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			let totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			
+			let total = (totalDocumentTransfer - (totalLaunch + totalExpenses) - documentValue);
+
+			if(total < 0){
+				showSweetalertWarning('Alerta!', 'Lan\u00e7amento n\u00e3o permitido. Saldo do Fechamento de Caixa ficara negativo depois desse lan\u00e7amento.','5000');
+				return;
+			}
+
+			countExpense = countExpense + 1;
+
+			dataSource.add( {
+				'id': countExpense,
+				'type': 0,
+				"bankAccountExpense": selectExpense,
+				"bankAccountDescription": selectExpenseDescription,
+				'companyId': selectCompany,
+				'paymentExpiryDateExpense': paymentExpiryDateExpense,
+				'documentValueExpense': Number(documentValue).format(2, 3, '.', ','),
+				'documentStatusExpense': expenseDocumentStatus == 1 ? 'AB' : 'BA',
+				'providerExpense': 0,
+				'providerDescription': '-',
+				'financialGroupExpense': '',
+				'financialGroupDescription': '-',
+				'financialSubGroupExpense': '',
+				'financialSubGroupDescription': '-',
+				'documentNoteExpense': documentNote
+			});
+			
+			dataExpenses = dataSource.data();
+			
+			//const bankAccountTransfDestVal = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').val();
+			totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+
+			total = (totalDocumentTransfer - (totalLaunch + totalExpenses));
+			$('span#balanceCashingClose').html(Number(total).format(2, 3, '.', ','));			
+			$('form#formNewDocumentTransfDest input#documentValueTransfDest').val(Number(total).format(2, 3, '.', ','));
+
+			$('form#formNewDocumentTransfDest input#documentValue').val('');
+			$('form#formNewDocumentTransfDest textarea#documentNote').val('');		
+		}
+		
+		const searchConfigTransfer = async (bankAccountOrigin, bankAccountDestiny, totalTransferValue) => {  	
+  			$('form#formConfigTransfer input#bankAccountOrigin').val(bankAccountOrigin);
+			$('form#formConfigTransfer input#bankAccountDestiny').val(bankAccountDestiny);
+
+			
+	  		var form = $('form#formConfigTransfer');        
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Carregando dados... Por favor aguarde...");  	
+	  		
+			await $.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+        			countExpense = 0;
+        			if(Object.keys(data.report).length > 0){
+        				populateExpenseConfigTransfer(data, totalTransferValue);
+                		hideLoading();
+        			}        			
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+		
+		const populateExpenseConfigTransfer = async (data, totalTransferValue) => {
+			totalExpenseLaunch = 0;
+			$.each(data.report, function(keyGroup, valueGroup)
+			{
+				$.each(valueGroup.itens, function(keyItem, valueItem)
+			    {
+			    	$.each(valueItem, function(key, value)
+			        {
+						const selectExpense = value.bankAccountId;
+						if(!selectExpense || selectExpense == null){
+							showSweetalertWarning('Alerta!', 'Informe a conta antes de gravar uma despesa.','5000');
+							return;	
+						}
+						
+						const selectExpenseDescription = value.bankAccountDescription;
+						
+						const paymentExpiryDateExpense = $('form#formNewDocumentTransfDest input#paymentExpiryDateTransfDest').val();
+						if(!paymentExpiryDateExpense || paymentExpiryDateExpense == null || paymentExpiryDateExpense == ''){
+							showSweetalertWarning('Alerta!', 'Informe o vencimento antes de gravar uma despesa.','5000');
+							return;	
+						}
+						
+						let resultTransferValue = 0;
+						if(true==value.overTotal && false==value.useRemainingBalance)
+						{
+							resultTransferValue = bankersRound((totalTransferValue * value.valueTransfer), 2);
+						}
+						else if(false==value.overTotal && true==value.useRemainingBalance)
+						{
+							resultTransferValue = bankersRound((balanceTotal * (value.valueTransfer / 100)), 2);
+						    balanceTotal = bankersRound((balanceTotal - resultTransferValue), 2);		
+						}
+						else if(true==value.overTotal && true==value.useRemainingBalance)
+						{
+							resultTransferValue = bankersRound((totalTransferValue * (value.valueTransfer / 100)), 2);
+						}
+				
+						const documentValue = resultTransferValue;
+						if(!documentValue || documentValue == null || documentValue == ''){
+							showSweetalertWarning('Alerta!', 'Informe o valor antes de gravar uma despesa.','5000');
+							return;	
+						}
+						
+						const expenseDocumentStatus = 2;
+						if(!expenseDocumentStatus || expenseDocumentStatus == null || expenseDocumentStatus == ''){
+							showSweetalertWarning('Alerta!', 'Informe o status do documento antes de gravar uma despesa.','5000');
+							return;	
+						}
+						
+						const selectProvider = value.providerId;
+						if(!selectProvider || selectProvider == null || selectProvider == ''){
+							showSweetalertWarning('Alerta!', 'Informe o fornecedor antes de gravar uma despesa.','5000');
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+							return;	
+						}
+						const selectProviderDescription = value.providerName;
+						
+						const financialGroup = value.finantialGroupId;
+						const financialGroupDescription = value.finantialGroupName;
+			
+						const financialSubGroup = value.finantialSubGroupId;
+						const financialSubGroupDescription = value.finantialSubGroupName;
+						
+						let documentNote = 'DESPESA: ';
+						if(value.launchType == 2){
+							documentNote = 'TRANFERENCIA: ';
+						} else if(value.launchType == 3){
+							documentNote = 'LANCAMENTO: ';
+						}  
+																			
+						if(value.transferType == 1){
+							documentNote += ' % ' + value.valueTransfer.format(2, 3, '.', ',');
+						} else {
+							documentNote += ' R$ ' + value.valueTransfer.format(2, 3, '.', ',');
+						}
+						
+						if(value.launchType == 1){
+							documentNote += ' CONTA: ' + value.bankAccountDescription +' >> ';			
+							documentNote += ' FORN: ' + value.providerName;
+						}
+						if(value.launchType == 2){
+							documentNote += ' CONTA: ' + value.bankAccountDescription + ' >> ';	
+							documentNote += ' FORN: ' + value.providerName;
+						} else if(value.launchType == 3){
+							documentNote += ' CONTA: ' + value.bankAccountDescription + ' >> ';
+							documentNote += ' FORN: ' + value.providerName;	
+						}	
+												
+						let dataExpenses = dataSource.data();
+						
+						let totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+						let totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+
+						let total = (totalDocumentTransfer - (totalLaunch + totalExpenses) - parseFloat(removeDoteValue(documentValue.toString())));			  
+						total = Math.round((total + Number.EPSILON) * 100) / 100;
+						
+						if(total < 0){
+							showSweetalertWarning('Alerta!', 'Lan\u00e7amento n\u00e3o permitido. Saldo do Fechamento de Caixa ficara negativo depois desse lan\u00e7amento.','5000');
+							return;
+						}			
+						
+						countExpense = countExpense + 1;
+						
+						dataSource.add( {
+							'id': countExpense,
+							'type': 1,
+							"bankAccountExpense": selectExpense,
+							"bankAccountDescription": selectExpenseDescription,
+							'companyId': 0,
+							'paymentExpiryDateExpense': paymentExpiryDateExpense,
+							'documentValueExpense': Number(documentValue).format(2, 3, '.', ','),
+							'documentStatusExpense': expenseDocumentStatus == 1 ? 'AB' : 'BA',
+							'providerExpense': selectProvider,
+							'providerDescription': selectProviderDescription,
+							'financialGroupExpense': financialGroup,
+							'financialGroupDescription': financialGroupDescription,
+							'financialSubGroupExpense': financialSubGroup,
+							'financialSubGroupDescription': financialSubGroupDescription,
+							'documentNoteExpense': documentNote
+						});
+							
+						dataExpenses = dataSource.data();
+									
+						totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+						totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			
+						total = (totalDocumentTransfer - (totalLaunch + totalExpenses));
+						
+						totalExpenseLaunch += documentValue;
+			
+						$('span#balanceCashingClose').html(Number(total).format(2, 3, '.', ','));			
+						$('form#formNewDocumentTransfDest input#documentValueTransfDest').val(Number(total).format(2, 3, '.', ','));							
+					});
+				 });
+			});
+		}	
+		
+		function bankersRound(n, d=2) {
+		    let x = n * Math.pow(10, d);
+		    let r = Math.round(x);
+		    let br = Math.abs(x) % 1 === 0.5 ? (r % 2 === 0 ? r : r-1) : r;
+		    return br / Math.pow(10, d);
+		} 
+		
+		function deleteExpenseve(){
+          	var grid = $("#grid").data("kendoGrid");
+          	$("#grid").find("input:checked").each(function(){
+            	grid.removeRow($(this).closest('tr'));
+          	});
+          
+          	//const bankAccountTransfDestVal = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').val();
+			const dataExpenses = dataSource.data();
+			const totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			const totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+
+			const total = (totalDocumentTransfer - (totalLaunch + totalExpenses));
+			$('span#balanceCashingClose').html(Number(total).format(2, 3, '.', ','));			
+			$('form#formNewDocumentTransfDest input#documentValueTransfDest').val(Number(total).format(2, 3, '.', ','));
+        }        
+        
+		function saveExpenseve(){			
+			
+			const selectExpense = $('form#formNewDocumentTransfDest select#expenseOrigin option:selected').val();			
+			if(!selectExpense || selectExpense == null){
+				showSweetalertWarning('Alerta!', 'Informe a conta antes de gravar uma despesa.','5000');
+				return;	
+			}
+			
+			const selectExpenseArray = selectExpense.split('_');
+			const selectExpenseDescription = $('form#formNewDocumentTransfDest select#expenseOrigin option:selected').text();
+			
+			const paymentExpiryDateExpense = $('form#formNewDocumentTransfDest input#paymentExpiryDate').val();
+			if(!paymentExpiryDateExpense || paymentExpiryDateExpense == null || paymentExpiryDateExpense == ''){
+				showSweetalertWarning('Alerta!', 'Informe o vencimento antes de gravar uma despesa.','5000');
+				return;	
+			}
+	
+			let documentValue = $('form#formNewDocumentTransfDest input#documentValue').val();
+			if(!documentValue || documentValue == null || documentValue == ''){
+				showSweetalertWarning('Alerta!', 'Informe o valor antes de gravar uma despesa.','5000');
+				return;	
+			}
+			
+			const expenseDocumentStatus = '2';
+			if(!expenseDocumentStatus || expenseDocumentStatus == null || expenseDocumentStatus == ''){
+				showSweetalertWarning('Alerta!', 'Informe o status do documento antes de gravar uma despesa.','5000');
+				return;	
+			}
+			
+			const selectProvider = $('form#formNewDocumentTransfDest select#provider option:selected').val();
+			if(!selectProvider || selectProvider == null || selectProvider == ''){
+				showSweetalertWarning('Alerta!', 'Informe o fornecedor antes de gravar uma despesa.','5000');
+				return;	
+			}
+			const selectProviderDescription = $('form#formNewDocumentTransfDest select#provider option:selected').text();
+			const financialGroup = $('form#formNewDocumentTransfDest select#financialGroup option:selected').val();
+			if(!financialGroup || financialGroup == null || financialGroup == ''){
+				showSweetalertWarning('Alerta!', 'Informe o grupo financeiro antes de gravar uma despesa.','5000');
+				return;	
+			}
+			const financialGroupDescription = $('form#formNewDocumentTransfDest select#financialGroup option:selected').text();
+			const financialSubGroup = $('form#formNewDocumentTransfDest select#financialSubGroup option:selected').val();
+			if(!financialSubGroup || financialSubGroup == null || financialSubGroup == ''){
+				showSweetalertWarning('Alerta!', 'Informe o subgrupo financeiro antes de gravar uma despesa.','5000');
+				return;	
+			}
+			const financialSubGroupDescription = $('form#formNewDocumentTransfDest select#financialSubGroup option:selected').text();
+			const documentNote = $('form#formNewDocumentTransfDest textarea#documentNote').val();
+			
+			if(parseFloat(removeDoteValue(documentValue)) == 0){
+				return;
+			}
+			
+			
+			const installment = $('form#formNewDocumentTransfDest select#installment').val();
+			if(1 == installment)
+  			{
+				 $('div#divDocumentValue').removeClass('col-md-2').addClass('col-md-4');
+				 $('div#divDocumentValueResidue').hide();	
+				 $('div#divDuplicates').html('');			  
+			}
+			else {
+				documentValue = removeDoteValue(documentValue.toString());
+	  			
+	  			let documentValueInstallment = 0;
+				for (var i = 1; i <= installment; i++) 
+	  			{
+					 let installmentValue = $('form#formNewDocumentTransfDest input#documentValue_'+i).val();
+					 if(typeof(installmentValue) != 'undefined' && installmentValue != null){
+					   installmentValue = removeDoteValue(installmentValue.toString());
+	  			
+				       documentValueInstallment += Math.round((parseFloat(installmentValue) + Number.EPSILON) * 100) / 100;
+				     } 				
+				}
+					
+				documentValueInstallment = Math.round((documentValueInstallment + Number.EPSILON) * 100) / 100;
+				documentValue = Math.round((parseFloat(documentValue) + Number.EPSILON) * 100) / 100;
+				
+				const balanceInstallment =  Math.round(((documentValue - documentValueInstallment) + Number.EPSILON) * 100) / 100;
+				if(balanceInstallment != 0){
+					Swal.fire({
+					  title: 'Alerta',
+					  text: 'Existem parcelas pendentes de lan\u00e7amento no total de R$ '+balanceInstallment.format(2, 3, '.', ','),
+					  icon: 'question',
+					  showCancelButton: false,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'OK',
+					  cancelButtonText: 'Cancelar'
+					});	
+					
+					return;
+				}
+			}
+			
+			let dataExpenses = dataSource.data();
+			
+			let totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			let totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+
+			let total = 0;			 
+			if(1 == installment)
+  			{
+				total = (totalDocumentTransfer - (totalLaunch + totalExpenses) - parseFloat(removeDoteValue(documentValue.toString())));			  
+			} else {
+				total = (totalDocumentTransfer - (totalLaunch + totalExpenses) - parseFloat(documentValue));
+			}
+			
+			total = Math.round((total + Number.EPSILON) * 100) / 100;
+			
+			if(total < 0){
+				showSweetalertWarning('Alerta!', 'Lan\u00e7amento n\u00e3o permitido. Saldo do Fechamento de Caixa ficara negativo depois desse lan\u00e7amento.','5000');
+				return;
+			}
+			
+			if(1 == installment)
+  			{
+				countExpense = countExpense + 1;
+	
+				documentValue = removeDoteValue(documentValue);
+				
+				dataSource.add( {
+					'id': countExpense,
+					'type': 1,
+					"bankAccountExpense": selectExpenseArray[0],
+					"bankAccountDescription": selectExpenseDescription,
+					'companyId': selectExpenseArray[1],
+					'paymentExpiryDateExpense': paymentExpiryDateExpense,
+					'documentValueExpense': Number(documentValue).format(2, 3, '.', ','),
+					'documentStatusExpense': expenseDocumentStatus == 1 ? 'AB' : 'BA',
+					'providerExpense': selectProvider,
+					'providerDescription': selectProviderDescription,
+					'financialGroupExpense': financialGroup,
+					'financialGroupDescription': financialGroupDescription,
+					'financialSubGroupExpense': financialSubGroup,
+					'financialSubGroupDescription': financialSubGroupDescription,
+					'documentNoteExpense': documentNote
+				});
+			} else {
+				for (var i = 1; i <= installment; i++) 
+	  			{
+					 countExpense = countExpense + 1;
+					  
+					 let installmentValue = $('form#formNewDocumentTransfDest input#documentValue_'+i).val();
+					 if(typeof(installmentValue) != 'undefined' && installmentValue != null){
+						 
+					   installmentValue = removeDoteValue(installmentValue);
+			  		   
+			  		   const paymentExpiryDateInstallment = $('form#formNewDocumentTransfDest input#paymentExpiryDate_'+i).val();
+			  		   
+			  		   const documentNoteInstallment = $('form#formNewDocumentTransfDest textarea#documentNote_'+i).val();			  		   
+			  		   
+			  		   dataSource.add({
+							'id': countExpense,
+							'type': 1,
+							"bankAccountExpense": selectExpenseArray[0],
+							"bankAccountDescription": selectExpenseDescription,
+							'companyId': selectExpenseArray[1],
+							'paymentExpiryDateExpense': paymentExpiryDateInstallment,
+							'documentValueExpense': Number(installmentValue).format(2, 3, '.', ','),
+							'documentStatusExpense': expenseDocumentStatus == 1 ? 'AB' : 'BA',
+							'providerExpense': selectProvider,
+							'providerDescription': selectProviderDescription,
+							'financialGroupExpense': financialGroup,
+							'financialGroupDescription': financialGroupDescription,
+							'financialSubGroupExpense': financialSubGroup,
+							'financialSubGroupDescription': financialSubGroupDescription,
+							'documentNoteExpense': documentNoteInstallment
+						});
+				     } 				
+				}
+			}
+				
+			//const bankAccountTransfDestVal = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').val();
+			dataExpenses = dataSource.data();
+						
+			totalLaunch = dataExpenses.filter(item => item.type == 0).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			totalExpenses = dataExpenses.filter(item => item.type == 1).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+
+			total = (totalDocumentTransfer - (totalLaunch + totalExpenses));
+			
+			$('span#balanceCashingClose').html(Number(total).format(2, 3, '.', ','));			
+			$('form#formNewDocumentTransfDest input#documentValueTransfDest').val(Number(total).format(2, 3, '.', ','));
+			
+			$('form#formNewDocumentTransfDest input#documentValue').val('');
+			$('form#formNewDocumentTransfDest textarea#documentNote').val('');
+			
+			$('form#formNewDocumentTransfDest select#installment').val('1').trigger('change');
+		 	$('div#divDocumentValue').removeClass('col-md-2').addClass('col-md-4');
+		 	$('div#divDocumentValueResidue').hide();	
+		 	$('div#divDuplicates').html('');
+		}
+        
+  		function expenseTransfDocument()
+  		{
+			const companyIdDestVal = $('form#formNewDocumentTransfDest select#companyTransfDest option:selected').val();
+			const bankAccountTransfDestVal = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').val();
+			const bankAccountTransfDestText = $('form#formNewDocumentTransfDest select#bankAccountTransfDest option:selected').text();
+			
+			if(!companyIdDestVal || Number.isNaN(companyIdDestVal) || !bankAccountTransfDestVal || Number.isNaN(bankAccountTransfDestVal)){
+				showSweetalertWarning('Alerta!', 'Informe a empresa de destino e a conta destino antes de icluir uma despesa.','5000');
+				return;
+			}
+			
+			$('div#divButtonExpenseTransf').hide();
+			
+  			var documentNumber = $('form#formNewDocumentTransfDest input#documentNumberTransfDest').val();
+  			var documentValue = $('form#formNewDocumentTransfDest input#expenseValueTransf').val();
+  			var paymentExpiryDate = $('form#formNewDocumentTransfDest input#paymentExpiryDateTransfDest').val();
+  			var installmentType = $('form#formNewDocumentTransfDest select#installmentType').val();
+  			var paymentValue = $('form#formNewDocumentTransfDest input#paymentValue').val();
+  	
+  			var paymentExpiryDateArray = paymentExpiryDate.split('/');
+  			var startdate = paymentExpiryDateArray[0]+'.'+paymentExpiryDateArray[1]+'.'+paymentExpiryDateArray[2];
+  			var newDate = moment(startdate, "DD.MM.YYYY");
+
+			let trHTML= '';
+			trHTML+='<div class="row m-t-30 m-b-20 col-md-12" id="duplicate">';
+			trHTML+='<div class="col-md-3 mb-2">';
+			trHTML+='<label for="expenseOrigin" style="margin-bottom: -0.5rem;">Conta Bancaria</label>';
+
+			trHTML+='<select class="expenseOriginSelect" id="expenseOrigin" name="expenseOrigin" required data-bv-notempty-message="Campo obrigat&oacute;rio.">';
+					
+			trHTML+= '<option value="'+bankAccountTransfDestVal+'_'+companyIdDestVal+'" selected>'+bankAccountTransfDestText+'</option>';
+			for(var i = 0; i < bankAccountsAll.length; i++){
+  				trHTML+= '<option value="'+bankAccountsAll[i].value+'_'+bankAccountsAll[i].companyId+'">'+bankAccountsAll[i].description+'</option>';
+  			}
+			trHTML+='</select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-2 mb-2">';
+			trHTML+='<label for="paymentExpiryDate" style="margin-bottom: -0.5rem;">Vencimento</label>';
+			trHTML+='<div class="input-group date">';
+			trHTML+='<input type="text" class="form-control dateDuplicate text-center" id="paymentExpiryDate" name="paymentExpiryDate" maxlength="10" value="'+newDate.format('DD/MM/YYYY')+'"/>';
+			trHTML+='<span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>';
+			trHTML+='</div>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-1 mb-2" id="divInstallment">';
+			trHTML+='<label for="installment" style="margin-bottom: -0.5rem;">Parcelas</label>';
+			trHTML+='<select class="m-b-20 m-r-10 installment" id="installment" name="installment">';
+			for(let i = 1; i <= 40; i++){
+				trHTML+= '<option value="'+i+'">'+i+'X'+'</option>';
+  			}	
+			trHTML+='</select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-2 mb-2">';
+			trHTML+='<label for="documentValue" style="margin-bottom: -0.5rem;">Valor</label>';
+			trHTML+='<input type="text" data-accept-dot="0" data-accept-comma="1"  class="only-number form-control text-center" id="documentValue" name="documentValue" maxlength="15"/>';			
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-2 mb-2" id="divInstallmentType">';
+			trHTML+='<label for="installmentType" style="margin-bottom: -0.5rem;">Tipo Parcela</label>';
+			trHTML+='<select class="m-b-20 m-r-10 installmentType" id="installmentType" name="installmentType">';
+			trHTML+='<option value="1" selected="selected">Di&aacute;ria</option>';
+			trHTML+='<option value="2">Semanal</option>';
+			trHTML+='<option value="3">Quinzenal</option>';
+			trHTML+='<option value="4">Mensal</option>';
+			trHTML+='</select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-1 mb-2" id="divButtonInstallment">';
+			trHTML+='<button type="button" class="btn btn-primary waves-effect waves-light" style="margin-top: 16px; font-size: 13px;" id="btnInstallment" onclick="installmentDocument();">Parcelar</button>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-2 mb-2">';
+			trHTML+='<label for="expenseDocumentStatus" style="margin-bottom: -0.5rem;">Status</label>';
+			trHTML+='<select class="m-b-20 m-r-10 duplicateSelect" name="expenseDocumentStatus" id="expenseDocumentStatus">';
+			trHTML+='<option value="2" selected="selected">Baixado</option>';
+			trHTML+='</select>';			
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-4 mb-2">';
+			trHTML+='<label for="provider" style="margin-bottom: -0.5rem;">Fornecedor</label>';
+			trHTML+='<select class="m-b-20 m-r-10 providerSelect" name="provider" id="provider"></select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-3 mb-2">';
+			trHTML+='<label for="financialGroup" style="margin-bottom: -0.5rem;">Grupo Financeiro</label>';
+			trHTML+='<select class="m-b-20 m-r-10 financialGroupSelect" name="financialGroup" id="financialGroup">';
+			trHTML+='<option value="" selected="selected">SELECIONE...</option>';
+			for(var i = 0; i < financialGroupsAll.length; i++){
+				trHTML+= '<option value="'+financialGroupsAll[i].value+'">'+financialGroupsAll[i].description+' ('+financialGroupsAll[i].value+')</option>';
+  			}
+			trHTML+='</select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-3 mb-2">';
+			trHTML+='<label for="financialSubGroup" style="margin-bottom: -0.5rem;">Sub-Grupo Financeiro</label>';
+			trHTML+='<select class="m-b-20 m-r-10 financialSubGroupSelect" name="financialSubGroup" id="financialSubGroup"></select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-10 mb-2">';
+			trHTML+='<label for="documentNote" class="control-label" style="margin-bottom: -0.5rem;">Nota:</label>';
+			trHTML+='<textarea class="form-control" id="documentNote" name="documentNote" rows="1" cols="30"></textarea>';
+			trHTML+='</div>';
+			trHTML+='<div class="col-md-1 mb-2" style="text-align: center; max-width: 150px;">';
+	        trHTML+='	<button type="button" id="buttonExpenseSave" name="buttonExpenseSave" class="btn btn-info btn-circle" onclick="saveExpenseve();"><i class="fa fa-save"></i> </button>';
+	        trHTML+='</div>';  
+	        
+	       	trHTML+='<div class="col-md-12 mb-2" id="divDocumentValueResidue" style="float: right; font-size: 24px; display: none;">';
+			trHTML+='<label for="documentValueResidue" style="color: red;">Saldo a Lan&#231;ar</label>';
+			trHTML+='<input type="text" class="form-control text-center" style="color: red;" id="documentValueResidue" name="documentValueResidue" maxlength="15" disabled/>';
+			trHTML+='</div>';
+			            
+			trHTML+='<hr class="hr-admin"/>';
+			trHTML+='</div>';
+			
+			$('div#divExpenseDuplicates').append(trHTML);			
+			
+			$('.dateDuplicate').datepicker({
+	            autoclose: true,
+	            todayHighlight: true,
+	            toggleActive: true,
+	            format: 'dd/mm/yyyy',
+	            language: 'pt-BR'
+	        });
+			
+			$('.duplicateSelect')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        }); 
+	        
+		  	$('.expenseOriginSelect')
+	        	.select2({ 
+		            width: '100%',
+		            theme: "bootstrap",
+		            dropdownParent: $('#new-document-modal'),
+		  			//placeholder: "SELECIONE...",
+		            allowClear: true,
+		            language: 
+		            {
+		                noResults: function (params) 
+		                {
+		                    return "Nenhum registro encontrado.";
+		                }
+		            }
+	        }); 
+	        
+	        $('.installment')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            dropdownParent: $('#new-document-modal'),
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	       });
+	       
+	       $('.installmentType')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            dropdownParent: $('#new-document-modal'),
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	       });	
+			  
+			  $('.providerSelect')
+		        .select2({
+		        	width: '100%',
+		  			theme: "bootstrap",
+		  			dropdownParent: $('#new-document-modal'),
+		  			placeholder: "SELECIONE...",
+				    allowClear: true,
+			    	language: {
+			        	noResults: function (params) {
+			            return "Nenhum registro encontrado.";
+			          },
+			          searching: function ()
+			          {
+			              return 'Buscando...';
+			          },
+			          loadingMore: function () {
+			              return 'Carregando mais resultados...';
+			          },
+			          errorLoading: function () {
+			              return 'Os resultados n\u00e3o puderam ser carregados.';
+			          },
+			          inputTooLong: function (args) {
+			              var overChars = args.input.length - args.maximum;
+
+			              var message = 'Apague ' + overChars + ' caracter';
+
+			              if (overChars != 1) {
+			                message += 'es';
+			              }
+
+			              return message;
+			            },
+			            inputTooShort: function (args) {
+			              var remainingChars = args.minimum - args.input.length;
+
+			              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+			              return message;
+			            }
+			        },
+		  			ajax: {
+		  				url : $('form#formAutocomplete').attr('action'),
+		                type : "POST",
+		  	            dataType: 'json',
+		  	            delay: 250,
+		  	            data: function (params)
+		  	            {
+		  	                return {
+		  	                	description: params.term, // search term
+		  	                	inactive: '0',
+		  	                	objectType: 'FOR',
+		  	                	personType: 'F'
+		  	                };
+		  	            },
+		  	            processResults: function (data, params) {
+		  	                //console.log(data);
+		  	                var results = $.map(data.report, function (value, key)
+		  	                {
+		  	                    return {
+		  	                    	id: value.key,
+		  	                        text: value.value + ' (' + value.key + ')',
+		  	                      	financialGroupId: value.key1, 
+		  	                      	financialSubGroupId: value.key2,
+		  	                      	financialGroupDescription: value.key3, 
+		  	                      	financialSubGroupDescription: value.key4
+		  	                    };
+		  	                });
+		  	                return {
+		  	                    results: results
+		  	                };
+		  	            },
+		  	            cache: true
+		  	        },
+		  	        minimumInputLength: 3,
+		  	        templateSelection: formatRepoSelection
+		  	    }).on('change', function (data)
+		  		{
+				  const idProviderSelect = $(this).attr('id');
+				  if(idProviderSelect){
+					  $('select#financialGroup').empty().trigger('change');
+					  $('select#financialSubGroup').empty().trigger('change');
+					  
+					  const dataArray = $(this).select2('data');
+			  		  if(dataArray != null && dataArray.length > 0){
+			  		  	const providerSelected = dataArray[0];						
+			  			    if(providerSelected != null){
+			  			      let optionKeyGroup = providerSelected.financialGroupId;
+							  let optionValueGroup = providerSelected.financialGroupDescription + ' (' + providerSelected.financialGroupId + ')';
+							  const newOptionGroup = new Option(optionValueGroup, optionKeyGroup, true, true);									  
+							  $('select#financialGroup').append(newOptionGroup).trigger('change');
+							  
+							  let optionKeySubGroup = providerSelected.financialSubGroupId;
+							  let optionValueSubGroup = providerSelected.financialSubGroupDescription + ' (' + providerSelected.financialSubGroupId + ')';
+							  const newOptionSubGroup = new Option(optionValueSubGroup, optionKeySubGroup, true, true);									  
+							  $('select#financialSubGroup').append(newOptionSubGroup).trigger('change');
+			  			    }
+			  			}						  
+				  }
+		  		}).on('select2:close', function (e) 
+		  		{
+		  			
+		  			
+		  		});
+			  
+			  $('.financialGroupSelect')
+		        .select2({ 
+		        	//tags : true,
+		            width: '100%',
+		            theme: "bootstrap",
+		            dropdownParent: $('#new-document-modal'),
+		            placeholder: "SELECIONE...",
+				    allowClear: true,
+		            language: {
+		                noResults: function() {
+		               return `<button style="width: 100%" type="button"
+		               class="btn btn-primary btn-sm" 
+		               onClick="saveNewFinancialGroup('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+		               </li>`;
+		               }
+		            },
+		          
+		           escapeMarkup: function (markup) {
+		               return markup;
+		           }
+		        }).on('change', function (e)
+		        {
+		        	if(isSetFinancialGroup)
+		        	{
+		        		 isSetFinancialGroup = false;
+		        		 return;
+		        	}
+		        	if(''!=this.value && !isNaN(this.value))
+					{
+			        	//$('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+			        	//searchFinancialSubGroup('formNewDocumentTransfDest');
+					}
+		        });
+
+		        $('.financialSubGroupSelect')
+		        .select2({ 
+		            width: '100%',
+		            theme: "bootstrap",
+		            dropdownParent: $('#new-document-modal'),
+		            placeholder: "SELECIONE...",
+				    allowClear: true,
+		            language: {
+		                noResults: function() {
+		               return `<button style="width: 100%" type="button"
+		               class="btn btn-primary btn-sm" 
+		               onClick="saveNewFinancialSubGroup('formNewDocument')">+ Adicionar Sub-Grupo Financeiro</button>
+
+		               </li>`;
+		               }
+		            },
+		          
+		           escapeMarkup: function (markup) {
+		               return markup;
+		           }
+		        });
+			 
+			  $('form#formNewDocumentTransfDest input#countExpense').val(countExpense);
+			}        
+        
+		function searchBankAccountByCompany()
+		{		
+			let company = $('form#formNewDocumentTransfDest select#companyTransfDest option:selected').val();
+			
+			if(company == null || ''== company){
+				
+				if(0 != bankAccountDelet){
+					
+					$(".expenseOriginSelect option[value='"+bankAccountDelet[0].value+"']").each(function() {
+					    $(this).remove();
+					});
+				}
+				return;
+			}
+
+			$('form#formGetBankAccounts input#personsId').val(company);
+			const form = $('form#formGetBankAccounts'); 			
+			const dataForm = form.serializeArray();
+
+			$('form#formNewDocumentTransfDest select#bankAccountTransfDest').empty().trigger('change');
+			
+			//showLoading("Carregando Contas... Por favor aguarde...");  	
+
+			let message = 'Ocorreu um erro ao carregar contas.';
+			
+			$.ajax({
+				url : form.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			})
+			.done(function(data, textStatus, jqXHR) 
+			{	
+				if(true==data.status)
+				{
+					const count = data.itens.length; 
+					let newOption = '';
+					
+					if(count > 1){
+						let optionKey = '';
+						let optionValue = 'SELECIONE...';
+						newOption = new Option(optionValue, optionKey, true, false);	
+						newOption.setAttribute('data-bankBalanceAvailable', '0');										
+					}
+
+					let moreTwoAccounts = 0;
+					let mainAccountKey = 0;
+					let mainAccountValue = 0;
+					let mainAccount = '';
+					$.each(data.itens, function(key, value)
+					{
+						moreTwoAccounts = moreTwoAccounts +1;
+						
+						let optionKey = value.key;
+						let optionValue = value.value + ' (' + value.key + ')';
+						if(1 >= moreTwoAccounts){
+							mainAccountKey = optionKey;
+							mainAccount = optionValue;
+							mainAccountValue = value.key1;
+							
+							const bankAccountItem = {
+				        			value: value.key,
+				        			description: value.value
+				        	};
+								
+							if(0 == bankAccountDelet.length){
+								bankAccountDelet.push(bankAccountItem);
+							}
+						}
+						if(1 == count){
+							newOption = new Option(optionValue, optionKey, true, true);
+						}else{
+							newOption = new Option(optionValue, optionKey, false, false);
+						}
+						
+						newOption.setAttribute('data-bankBalanceAvailable', value.key1);
+						$('form#formNewDocumentTransfDest select#bankAccountTransfDest').append(newOption);							
+					});
+					if(2 <= moreTwoAccounts){
+						newOption = new Option(mainAccount, mainAccountKey, true, true);
+						newOption.setAttribute('data-bankBalanceAvailable', mainAccountValue);
+						$('form#formNewDocumentTransfDest select#bankAccountTransfDest').val(mainAccountKey);	
+					}
+				}
+				else
+				{
+					hideLoading();
+					showSweetalertWarning('Alerta!', data.message,'5000');
+				}
+			})
+			.fail(function(data, textStatus, jqXHR) 
+			{
+				if(''!=data.message)
+				{
+					message = data.message;
+				}
+				showSweetalertWarning('Alerta!', message,'5000');
+			}).always(function() 
+			{
+				$('form#formNewDocumentTransfDest select#bankAccountTransfDest').trigger('change');
+				$('#block1').hide();
+				$('#block2').hide();				
+			});
+		}
+	    
+	    function filterCasingClosingLaunchByUser()
+		{		
+			const userChildrensParent = $('form#formFilter select#userChildrensParentCombobox option:selected').val();
+	    	
+	    	if(!userChildrensParent){
+				return;
+			}
+			
+			$('form#formFilterCasingClosingLaunchByUser input#userChildrensParentCombobox').val(userChildrensParent);
+			const form = $('form#formFilterCasingClosingLaunchByUser'); 			
+			const dataForm = form.serializeArray();
+
+			let message = 'Ocorreu um erro ao carregar caixas.';
+			
+			$.ajax({
+				url : form.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			})
+			.done(function(data, textStatus, jqXHR) 
+			{	    		
+				if(true==data.status)
+				{
+					$('form#formFilter select#cashingClose').empty().trigger('change');
+					
+					let newOption = '';	
+					
+					const count = data.cashMovements.length;
+					
+					if(count > 1){
+						let optionKey = '';
+						let optionValue = 'Selecione...';
+						newOption = new Option(optionValue, optionKey, true, false);		
+						
+						$('form#formFilter select#cashingClose').append(newOption).trigger('change');	
+					}
+													
+					$.each(data.cashMovements, function(key, value)
+					{
+						let optionKey = value.weekYear;
+						let optionValue = value.cashierClosingLabel;
+
+						if(1 == count){
+							newOption = new Option(optionValue, optionKey, true, true);
+						}else{
+							newOption = new Option(optionValue, optionKey, false, false);
+						}
+						
+						$('form#formFilter select#cashingClose').append(newOption).trigger('change');
+					});
+				}
+			})
+			.fail(function(data, textStatus, jqXHR) 
+			{
+				if(''!=data.message)
+				{
+					message = data.message;
+				}
+				showSweetalertWarning('Alerta!', message,'5000');
+			}).always(function() 
+			{
+				
+			});
+		}		
+	    	    
+	    function showModalReportPdf()
+        {
+			if(tableReport != null)
+			{	    
+	  			$('a#btnCancReportPdf').hide();
+	        	$('a#btnReportPdf').show();
+	        	$('div#divAnalitic').show();
+				
+				$('div#divAnalitic').removeClass('col-md-12').addClass('col-md-12'); 
+				$('form#formReportPdf select#analitic').val('1').change();
+	            $('div#new-report-Pdf-modal').modal('show'); 				
+			}
+        }  
+	    
+	    function confirmPreview()
+	    {			       	
+            $('div#new-report-Pdf-modal').modal('hide');
+           
+            const mapCashResult = [];              
+	    		    	
+	    	$('.checkboxItem').each(function() 
+	    	{
+	    		if($(this).is(":checked")) 
+	    		{
+		        	const companyIdItem = $(this).data('companyid'); 
+		        	
+		        	const mapCashResultItem = mapCash.get(companyIdItem);				
+		        		        				    	
+			    	const movementValueItem = mapCashResultItem.movementValue;
+					const pendingMovementValueItem = mapCashResultItem.pendingMovementValue;					
+					const totalCompanyItem = mapCashResultItem.totalCompany;
+					const discountTotalItem = parseFloat($('input#discountValue_' + companyIdItem).val());															
+					const totalPayStoreItem = parseFloat($('input#paymentValue_' + companyIdItem).val());										
+					const totalStorePendingAfterItem = ((totalCompanyItem - discountTotalItem) - totalPayStoreItem);
+		        	
+		        	if(mapCashResultItem){
+						mapCashResultItem.checked = true;
+						
+						mapCashResultItem.discountTotal = discountTotalItem;
+						mapCashResultItem.paymentTotal = totalPayStoreItem;
+						mapCashResultItem.pendingMovementAfterValue = totalStorePendingAfterItem;
+						mapCashResult.push(mapCashResultItem);
+					}  		        	
+ 		        }	    		        
+	    	});
+	    	
+	    	if(mapCashResult.length > 0){
+				var jsonString = JSON.stringify(mapCashResult);
+				
+				const weekValue = $('select#cashingClose option:selected').val();
+				const weekDescription = $('select#cashingClose option:selected').text();
+				
+				const userChildrensParentSelected = [];
+				$('select#userChildrensParentCombobox option:selected').each(function( index ) {
+					const userChildrensParentSelectedItem = {
+						key: $( this ).val(),
+						value: $( this ).text(),
+					};
+					
+					userChildrensParentSelected.push(userChildrensParentSelectedItem);
+				});
+				
+				const companysSelected = [];
+				$('select#companyId option:selected').each(function( index ) {
+					const companysSelectedItem = {
+						key: $( this ).val(),
+						value: $( this ).text(),
+					};
+					
+					companysSelected.push(companysSelectedItem);
+				});
+	    	
+		    	$('form#formReportPdf input#jsonData').val(jsonString);
+		    	$('form#formReportPdf input#weekValue').val(weekValue);
+		    	$('form#formReportPdf input#weekDescription').val(weekDescription);
+		    	$('form#formReportPdf input#userChildrensParent').val(JSON.stringify(userChildrensParentSelected));
+		    	$('form#formReportPdf input#companys').val(JSON.stringify(companysSelected));
+		    			    	
+		    	$('form#formReportPdf').submit();	    		
+			}	    	
+		}
+	    
+	    function savePreview()
+	    {			       	           
+            const mapCashResult = [];     
+	    		 
+	    	let canSave = false;   	
+	    	$('.checkboxItem').each(function() 
+	    	{
+				if($(this).is(":checked")) 
+	    		{		        
+		        	const companyIdItem = $(this).data('companyid'); 
+		        	
+		        	const mapCashResultItem = mapCash.get(companyIdItem);				
+		        	
+		        	if(mapCashResultItem && 'F' != mapCashResultItem.cashierClosingStatus){      				    	
+				    	const movementValueItem = mapCashResultItem.movementValue;
+						const pendingMovementValueItem = mapCashResultItem.pendingMovementValue;					
+						const totalCompanyItem = mapCashResultItem.totalCompany;
+						const discountTotalItem = parseFloat($('input#discountValue_' + companyIdItem).val());															
+						const totalPayStoreItem = parseFloat($('input#paymentValue_' + companyIdItem).val());										
+						const totalStorePendingAfterItem = ((totalCompanyItem - discountTotalItem) - totalPayStoreItem);
+		        			        	
+						mapCashResultItem.checked = true;
+						
+						mapCashResultItem.discountTotal = discountTotalItem;
+						mapCashResultItem.paymentTotal = totalPayStoreItem;
+						mapCashResultItem.pendingMovementAfterValue = totalStorePendingAfterItem;
+						mapCashResult.push(mapCashResultItem);
+					}
+					
+					if('F' != mapCashResultItem.cashierClosingStatus){
+						canSave = true;
+					}
+				}  		        	    		        
+	    	});
+	    	
+	    	if(mapCashResult.length > 0 && canSave){
+				var jsonString = JSON.stringify(mapCashResult);
+				
+				const weekValue = $('select#cashingClose option:selected').val();
+	    	
+		    	$('form#formSavePreview input#jsonData').val(jsonString);
+		    	$('form#formSavePreview input#weekValue').val(weekValue);
+		    			    	
+		    	var form = $('form#formSavePreview');
+		  		var dataForm = form.serializeArray();
+		  		
+		  		showLoading("Gravando dados... Por favor aguarde...");  	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{         
+	            		searchUserMovement();  		
+	        			showSweetalertSuccess(data.message);
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','30000');
+			    }).always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });	
+			}	    	
+		}
+		
+		function removeDoteValue(value){
+			value = value.replaceAll('.','');
+			value = value.replace(',','.');
+			return value;
+		}		
+  		
+  		function formatRepoSelection(repo)
+  		{
+  		  return repo.text;
+  		  
+  		}
+  		
+	    function checkboxAllItem(id)
+	    {
+	    	var parentChecked = false; 
+        	if($("#"+id).is(':checked')) 
+            {
+        		parentChecked = true;
+            }
+        	changeAllItemCheckboxTable(parentChecked, id);
+	    }
+	    
+	    function changeAllSubItemCheckboxTable(id)
+        {
+        	var totalSaldo = parseFloat(0);        	
+        	$('.'+id+':input:checkbox').each(function() 
+        	{  
+        		if(this.checked)
+        		{
+            		var documentValue = parseFloat($(this).data('documentvalue'));
+        			totalSaldo= (totalSaldo + documentValue);		
+        		}
+        	});
+    		if(totalSaldo>=0)
+    		{
+        		$('th#th'+id).html('<span class="positive-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+    		else
+    		{
+    			$('th#th'+id).html('<span class="negative-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+        }
+	    
+	    function changeAllItemCheckboxTable(parentChecked, id)
+        {
+        	var totalSaldo = parseFloat(0);        	
+        	$('.'+id+':input:checkbox').each(function() 
+        	{ 
+        		this.checked = parentChecked; 
+        		if(parentChecked)
+        		{
+            		var documentValue = parseFloat($(this).data('documentvalue'));
+        			totalSaldo= (totalSaldo + documentValue);		
+        		}
+        	});
+    		if(totalSaldo>=0)
+    		{
+        		$('th#th'+id).html('<span class="positive-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+    		else
+    		{
+    			$('th#th'+id).html('<span class="negative-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+        }	    	    	                           
+	    
+	    function searchUserMovement()
+	    {
+	    	if($('#new-document-modal').is(':visible')){
+	    		return;
+	    	}	    	
+	    	
+	    	const userChildrensParent = $('form#formFilter select#userChildrensParentCombobox option:selected').val();
+	    	const cashingClose = $('form#formFilter select#cashingClose option:selected').val();
+	    	const cashStatus = $('form#formFilter select#cashStatus option:selected').val();
+	    	
+	    	if(!userChildrensParent || !cashingClose || !cashStatus){
+				return;
+			}
+	    	
+	    	const form = $('form#formFilter'); 			
+	  		const dataForm = form.serializeArray();
+	  		
+	  		showLoading("Carregando documentos... Por favor aguarde...");  	
+	  		
+	  		mapCash.clear(); 
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		populateTable(data);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao carregar documentos.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	    
+	    function populateTable(data)
+	    {
+	    	var trHTML = '<table id="table-relatorio" style="width: 100%;" class="table table-striped table-bordered display">';
+	    	trHTML += '<thead>';
+	    	trHTML += '<tr>';
+	    	trHTML += '<th data-class="expand" style="text-align: center; font: 18px Lucida; display: inline-block;">';
+	    	trHTML += '<div class="custom-control custom-checkbox" style="font: 30px Lucida; display: inline-block;">';
+	    	trHTML += '<input id="checkAllMoviments" class="custom-control-input" type="checkbox" style="text-align: center;" checked="checked">';
+	    	trHTML += '<label for="checkAllMoviments" class="custom-control-label"></label>';
+       		trHTML += '</div>';
+	    	trHTML += '</th>';
+	    	trHTML += '<th class="text-center">A&ccedil;&otilde;es</th>';
+	    	trHTML += '<th class="text-center">Total<br/>Movimentos</th>';
+	    	trHTML += '<th class="text-center">Pend&ecirc;ncias<br/>Anteriores</th>';
+	    	trHTML += '<th data-priority="1" class="text-center">Total<br/>Receber</th>';
+	    	trHTML += '<th class="text-center">Desconto</th>';
+	    	trHTML += '<th class="text-center">Total<br/>Recebido</th>';
+	    	trHTML += '<th class="text-center">Pend&ecirc;ncia<br/>Atual</th>'
+	    	trHTML += '<th data-priority="1" class="text-center">Empresa</th>';
+	    	trHTML += '<th class="text-center">Status</th>';
+	    	trHTML += '<th class="text-center">Documento</th>';
+	    	trHTML += '<th class="test" style="padding: 0px;"></th>';
+	    	trHTML += '</tr>';
+	    	trHTML += '</thead>';
+	    	trHTML += '<tbody>';
+				
+			let expenseOrigin = parseFloat(0);
+			let expenseDestiny = parseFloat(0);
+				
+			dataSource.data([]);//clear out old data
+			$.each(data.report.launchs, function(key, value)
+	    	{
+				countExpense = value.count;
+				dataSource.add( {
+					'id': countExpense,
+					'type': value.type,
+					"bankAccountExpense": value.bankAccountExpense,
+					"bankAccountDescription": value.bankAccountDescription,
+					'companyId': value.companyId,
+					'paymentExpiryDateExpense': value.paymentExpiryDateExpense,
+					'documentValueExpense': Number(value.documentValueExpense).format(2, 3, '.', ','),
+					'documentStatusExpense': value.documentStatusExpense == 1 ? 'AB' : 'BA',
+					'providerExpense': value.providerExpense,
+					'providerDescription': value.providerDescription,
+					'financialGroupExpense': value.financialGroupExpense,
+					'financialGroupDescription': value.financialGroupDescription,
+					'financialSubGroupExpense': value.financialSubGroupExpense,
+					'financialSubGroupDescription': value.financialSubGroupDescription,
+					'documentNoteExpense': value.documentNoteExpense
+				});
+				
+				if(value.type == 1){
+					if(value.companyId == 1 ||  value.companyId == 182){
+						expenseDestiny += parseFloat(value.documentValueExpense);	
+					} else {
+						expenseOrigin += parseFloat(value.documentValueExpense);							
+					}					
+				}	
+			});	
+			dataSource.sync();//refresh grid
+			
+			$('h3#expenseOrigin').text('R$ ' + parseFloat(expenseOrigin).toFixed(2));
+			$('h3#expenseDestiny').text('R$ ' + parseFloat(expenseDestiny).toFixed(2));
+				
+					        	        
+	    	$.each(data.report.companys, function(key, value)
+	    	{					    
+		    	const mapCashItem = {
+		    			cashierClosingId: value.cashierClosingId,
+		    			weekYear: value.weekYear,
+		    			cashierClosingStatus: value.cashierClosingStatus,
+		    			bankAccountId: value.bankAccountId,
+			    		bankAccountDescription: value.bankAccountDescription,
+		    			companyId: value.companyId,
+		    			companyDescription: value.companyDescription,
+		    			movementValue: value.movementValue,
+		    			pendingMovementValue: value.pendingMovementValue,
+		    			totalCompany: value.totalCompany,
+		    			discountTotal: value.discountTotal, 
+		    			paymentTotal: value.paymentTotal, 	
+		    			pendingMovementValueAfter: value.pendingMovementValueAfter,
+				    	checked: false
+			    	};
+		    	
+		    	const listProducts = [];		    	
+		    	$.each(value.itemsProducts, function(keyItem, valueItem)
+				{
+			    	const itemProduct = {
+				    		productId: valueItem.productId,
+				    		inputValue: valueItem.inputValue,
+				    		outputValue: valueItem.outputValue,		    					
+				    		balance: valueItem.balance,
+				    		inputDocumentMovementId: valueItem.inputDocumentMovementId,
+				    		outputDocumentMovementId: valueItem.outputDocumentMovementId
+				    	}
+				    			    	
+			    	listProducts.push(itemProduct);
+		    	});
+		    	
+		    	const listDuplicatas = [];		    	
+		    	$.each(value.items, function(keyItem, valueItem)
+				{
+			    	const itemDuplicata = {
+			    			documentMovementId: valueItem.documentMovementId,
+			    			documentNote: valueItem.documentNote,
+			    			documentValue: valueItem.documentValue,		    					
+			    			dateFrom: valueItem.dateFrom,
+			    			dateTo: valueItem.dateTo
+				    	}
+				    			    	
+			    	listDuplicatas.push(itemDuplicata);
+		    	});
+		    	
+		    	mapCashItem.products = listProducts;
+		    	mapCashItem.items = listDuplicatas;
+			    mapCash.set(mapCashItem.companyId, mapCashItem);
+			    	
+		    	trHTML += '<tr>';
+		    	trHTML += '<td data-class="expand" style="text-align: center; font: 18px Lucida; display: inline-block;">';
+		    	trHTML += '<div class="custom-control custom-checkbox" style="font: 12px Lucida; display: inline-block;">';
+		    	trHTML += '<input id="checkMov_'+value.key+'" data-movementvalue="'+value.movementValue+'" data-pendingmovementvalue="'+value.pendingMovementValue+'" data-companyid="'+value.companyId+'" data-totalcompany="'+value.totalCompany+'" class="custom-control-input checkboxItem" type="checkbox" style="text-align: center;" checked="checked">';
+		    	trHTML += '<label for="checkMov_'+value.key+'" class="custom-control-label"></label>';
+	       		trHTML += '</div>';
+		    	trHTML += '</td>';
+		    	trHTML += '<td>';
+		    	trHTML += '<div class="btn-group">';
+		    	
+		    	let itensSize = 0;
+		    	if(value.items){
+					itensSize = Object.keys(value.items).length;
+				}
+		    	if(itensSize > 0)
+		    	{
+		    		trHTML += '<button type="button" class="details-control btn waves-effect waves-light btn-outline-primary"><i class="expandButtonIcon ti-plus"></i></button>';
+		    	}
+		    	else
+		    	{
+		    		trHTML += '<button type="button" class="details-control btn waves-effect waves-light btn-outline-primary" disabled="disabled"><i class="ti-plus"></i></button>';
+		    	}
+		    	//trHTML += '<button type="button" class="btn waves-effect waves-light btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-settings"></i></button>';
+		    	//trHTML += '<div class="dropdown-menu">';
+		    	//trHTML += '<a href="javascript:printDocumentParentSelected(&quot;'+value.companyId+'&quot;,&quot;'+value.companyId+'&quot;);" type="button" class="btn waves-effect waves-light btn-outline-secondary" style="width: 100%;"><i class="mdi mdi-printer"></i>&nbsp;Imprimir</a>';
+		    	//trHTML += '</div>';
+		    	trHTML += '</div>';
+		    	trHTML += '</td>';
+		    	
+	    		if(value.movementValue > -1)
+		    	{
+		    		trHTML += '<td style="text-align: right"><span class="positive-value">'+value.movementValue.toFixed(2)+'</span></td>';
+		    	}
+		    	else
+		    	{
+		    		trHTML += '<td style="text-align: right"><span class="negative-value">'+value.movementValue.toFixed(2)+'</span></td>';
+		    	}
+			    
+		    	if(value.pendingMovementValue != 0)
+		    	{
+		    		trHTML += '<td style="text-align: right"><span class="warning-value">'+value.pendingMovementValue.toFixed(2)+'</span></td>';
+		    	}
+		    	else
+		    	{
+		    		trHTML += '<td style="text-align: right"><span>'+value.pendingMovementValue.toFixed(2)+'</span></td>';
+		    	}
+		    			    	
+		    	if(value.totalCompany > -1)
+		    	{
+		    		trHTML += '<td style="text-align: right"><span class="positive-value" id="totalStore_'+value.companyId+'">'+value.totalCompany.toFixed(2)+'</span></td>';
+		    	}
+		    	else
+		    	{
+		    		trHTML += '<td style="text-align: right"><span class="negative-value" id="totalStore_'+value.companyId+'">'+value.totalCompany.toFixed(2)+'</span></td>';
+		    	}
+		    	
+		    	let disableResolve = ''; 
+		    	if('F' == value.cashierClosingStatus){
+					disableResolve = ' disabled ';
+				}
+		    			    	
+		    	trHTML += '<td>';
+  				trHTML+='<input type="text" class="classPaymentValue force-numeric-only moneyDuplicate totalStoreDiscountChange text-center" id="discountValue_'+value.companyId+'" name="discountValue_'+value.companyId+'" data-companyid="'+value.companyId+'" maxlength="15" value="'+value.discountTotal.toFixed(2)+'"' + disableResolve + '/>';
+  				trHTML += '</td>';
+		    	
+	    		if(value.paymentTotal > -1)
+		    	{
+		    		trHTML += '<td>';
+	  				trHTML+='<input type="text" class="classPaymentValue force-numeric-only moneyDuplicate totalStorePayChange text-center" id="paymentValue_'+value.companyId+'" name="paymentValue_'+value.companyId+'" data-companyid="'+value.companyId+'" maxlength="15" value="'+value.paymentTotal.toFixed(2)+'"' + disableResolve + '/>';
+	  				trHTML += '</td>';
+		    	}
+		    	else
+		    	{
+		    		trHTML += '<td>';
+	  				trHTML+='<input type="text" class="classPaymentValue force-numeric-only moneyDuplicate totalStorePayChange text-center" id="paymentValue_'+value.companyId+'" name="paymentValue_'+value.companyId+'" data-companyid="'+value.companyId+'" maxlength="15" value="'+value.paymentTotal.toFixed(2)+'"' + disableResolve + '/>';
+	  				trHTML += '</td>';
+		    	}
+	    		
+			    if(value.pendingMovementAfterValue > 0){
+			    	trHTML += '<td style="text-align: right"><span class="totalPendingAfterChange warning-value" id="totalPendingAfter_'+value.companyId+'">'+parseFloat(value.pendingMovementAfterValue).toFixed(2)+'</span></td>';			    	
+			    } else {
+			    	trHTML += '<td style="text-align: right"><span class="totalPendingAfterChange" id="totalPendingAfter_'+value.companyId+'">'+parseFloat(value.pendingMovementAfterValue).toFixed(2)+'</span></td>';
+			    }
+		    	trHTML += '<td>'+value.companyDescription+'</td>';
+		    	
+		    	let statusDescription = value.cashierClosingStatus;
+		    	if('L'==value.cashierClosingStatus){
+					statusDescription = '<span>'+statusDescription+'</span>'+'<br/>'+'<span class="positive-value" style="font-size: 10px !important;">'+value.launchDate+'</span>';
+				} else if('F'==value.cashierClosingStatus){
+					statusDescription = '<span>'+statusDescription+'</span>'+'<br/>'+'<span class="positive-value" style="font-size: 10px !important;">'+value.closeDate+'</span>';
+				} 
+		    	trHTML += '<td class="text-center">'+ statusDescription +'</td>';
+		    	trHTML += '<td class="text-center">'+value.documentParentId+'</td>';
+		    	
+		    	trHTML += '<td>';
+		    	trHTML += '<table style="width: 100%;">';
+		    	trHTML += '<tbody class="border border-dark">';
+		    	
+		    	let hasHeaderDocumentTransfer = false;
+		    	let hasHeaderProductMovement = false;
+		    	
+		    	$.each(value.itemsProducts, function(keyItem, valueItem)
+		    	{
+					if(!hasHeaderProductMovement){
+				    	trHTML += '<tr class="bg-dark text-white">';
+				    	trHTML += '<td colspan="2" class="text-center">Produto </td>';
+				    	trHTML += '<td class="text-center">Entradas Periodo</td>';
+				    	trHTML += '<td class="text-center">Sa&iacute;das Periodo</td>';
+				    	trHTML += '<td class="text-center">Sobra</td>';
+				    	trHTML += '<td class="text-center">Documento Entrada</td>';
+				    	trHTML += '<td class="text-center">Documento Sa&iacute;da</td>';
+				    	trHTML += '</tr>';
+				    	
+				    	hasHeaderProductMovement = true;
+					}
+					
+	    			trHTML += '<tr>';				    	
+			    	trHTML += '<td colspan="2" class="text-center">'+valueItem.productId+'</td>';
+			    	trHTML += '<td class="text-right' + (parseFloat(valueItem.inputValue) < 0 ? ' negative-value' : ' positive-value') + '">'+parseFloat(valueItem.inputValue).toFixed(2)+'</td>';
+			    	trHTML += '<td class="text-right' + (parseFloat(valueItem.outputValue) < 0 ? ' negative-value' : ' positive-value') + '">'+parseFloat(valueItem.outputValue).toFixed(2)+'</td>';
+			    	trHTML += '<td class="text-right' + (parseFloat(valueItem.balance) < 0 ? ' negative-value' : ' positive-value') + '">'+parseFloat(valueItem.balance).toFixed(2)+'</td>';
+			    	trHTML += '<td class="text-center">'+valueItem.inputDocumentMovementId+'</td>';
+			    	trHTML += '<td class="text-center">'+valueItem.outputDocumentMovementId+'</td>';
+			    	trHTML += '</tr>';			    				    	
+		    	});
+		    	
+		    	
+		    	$.each(value.items, function(keyItem, valueItem)
+		    	{
+		    		if(!hasHeaderDocumentTransfer){	    				
+		    			trHTML += '<tr class="bg-dark text-white">';
+				    	trHTML += '<td class="text-center">Documento';
+				    	trHTML += '</td>';
+				    	trHTML += '<td colspan="3" class="text-center">Tipo';
+				    	trHTML += '</td>';
+				    	trHTML += '<td colspan="1" class="text-center">Valor';
+				    	trHTML += '</td>'; 
+				    	trHTML += '<td class="text-center">Data Inicial</td>';
+				    	trHTML += '<td class="text-center">Data Final</td>';
+				    	trHTML += '</tr>';
+				    	
+				    	hasHeaderDocumentTransfer = true;
+	    			}
+	    			
+		    		trHTML += '<tr>';			    					    					   
+			    	trHTML += '<td class="text-center">'+valueItem.documentMovementId+'</td>';
+			    	trHTML += '<td colspan="3" class="text-left">'+valueItem.documentNote+'</td>';				    
+				    trHTML += '<td class="text-right' + (parseFloat(valueItem.documentValue) < 0 ? ' negative-value' : ' positive-value') + '">'+parseFloat(valueItem.documentValue).toFixed(2)+'</td>';
+				    trHTML += '<td class="text-center">'+valueItem.dateFrom+'</td>';
+				    trHTML += '<td class="text-center">'+valueItem.dateTo+'</td>';
+			    	trHTML += '</tr>';	
+		    	});  	
+		    	trHTML += '</tbody>';
+		    	
+		    	trHTML += '<tfoot class="bg-secondary text-white">';
+		    	trHTML += '<tr class="border border-primary">';
+		    	trHTML += '<th data-class="expand" style="text-align: center;">';
+		    	trHTML += '</th>';
+		    	trHTML += '<th class="text-center"></th>';
+		    	trHTML += '<th class="text-center"></th>';
+		    	trHTML += '<th class="text-center"></th>';
+		    	
+		    	trHTML += '<th class="text-right" id="thcheckMovItem_'+value.key+'"><span class="' + (parseFloat(value.totalCompany) < 0 ? 'negative-value' : 'positive-value') + '">'+parseFloat(value.totalCompany).toFixed(2)+'</span></th>';
+		    	
+		    	trHTML += '<th class="text-center"></th>';
+		    	trHTML += '<th class="text-center"></th>';
+		    	trHTML += '</tr>';
+
+		    	trHTML += '</tfoot>';
+		    	trHTML += '</table>'
+		    	trHTML += '</td>';
+		    	trHTML += '</tr>';
+	    	});
+	    	
+	    	trHTML += '</tbody>';
+	    	trHTML += '</table>';
+	    	
+	    	$('div#report-table').html(trHTML);
+	    	
+	    	/** Force input numeric only */
+	  		$('.force-numeric-only').ForceNumericOnly();
+	    	
+	    	$('.moneyDuplicate').mask('#,##0', {
+    		  reverse: true,
+    		  translation: {
+    		    '#': {
+    		      pattern: /-|\d/,
+    		      recursive: true
+    		    }
+    		  }
+    		});
+    			
+	    	createTable();
+	    	
+	    	 $('.totalStorePayChange').blur(function() {
+
+				const companyIdItem = $(this).data('companyid');
+				const totalPayStoreItem = parseFloat($(this).val());
+				
+				const discountStoreItem = parseFloat(document.getElementById('discountValue_' + companyIdItem).value);	
+				
+				const totalStoreItem = parseFloat(document.getElementById('totalStore_' + companyIdItem).textContent);				
+				const totalStorePendingAfter = ((totalStoreItem < 0 ? (totalStoreItem * -1) : totalStoreItem) - ((totalPayStoreItem < 0 ? (totalPayStoreItem * -1) : totalPayStoreItem) + discountStoreItem));
+				
+				$('span#totalPendingAfter_'+companyIdItem).removeClass('positive-value negative-value');
+				if(totalStorePendingAfter != 0){
+					$('span#totalPendingAfter_'+companyIdItem).addClass('negative-value');					
+				}					
+				$('span#totalPendingAfter_'+companyIdItem).text(totalStorePendingAfter.toFixed(2));	
+				
+				if(totalStorePendingAfter < 0){
+					showSweetalertWarning('Total Pago n�o pode ser maior que o total loja menos os descontos: (R$ ' +  (totalStoreItem - discountStoreItem).toFixed(2)+')');
+				}
+				
+				$(this).val(totalPayStoreItem.format(2, 3, '', '.'));
+				
+				changeCheckboxTable();
+			});
+			
+			$('.totalStoreDiscountChange').blur(function() {
+
+				const companyIdItem = $(this).data('companyid');
+				
+				const discountStoreItem = parseFloat($(this).val());
+				
+				const totalStoreItem = parseFloat(document.getElementById('totalStore_' + companyIdItem).textContent);	
+				
+				const totalPayStoreItem = totalStoreItem - (totalStoreItem < 0 ? (discountStoreItem * -1) : discountStoreItem);
+				
+				$('input#paymentValue_'+companyIdItem).val(totalPayStoreItem.toFixed(2));
+						
+				const totalStorePendingAfter = ((totalStoreItem < 0 ? (totalStoreItem * -1) : totalStoreItem) - ((totalPayStoreItem < 0 ? (totalPayStoreItem * -1) : totalPayStoreItem) + discountStoreItem));
+				
+				$('span#totalPendingAfter_'+companyIdItem).removeClass('positive-value negative-value');
+				if(totalStorePendingAfter != 0){
+					$('span#totalPendingAfter_'+companyIdItem).addClass('negative-value');					
+				}					
+				$('span#totalPendingAfter_'+companyIdItem).text(totalStorePendingAfter.toFixed(2));	
+				
+				$(this).val(discountStoreItem.format(2, 3, '', '.')); 
+				
+				changeCheckboxTable();
+			});
+			
+			$(".totalStoreDiscountChange").focus(function(){
+			  $(this).select();
+			});
+			
+			$(".totalStorePayChange").focus(function(){
+			  $(this).select();
+			});				
+			
+			changeCheckboxTable();
+			
+			$('input#checkAllMoviments').trigger('click', {
+               nonUI : true
+            });
+	    }
+	    	    	    
+	    function changeAllCheckboxTable(parentChecked)
+        {
+        	let totalMovement = new Number(0);
+	    	let totalPendingBefore = new Number(0);
+	    	let totalCompany = new Number(0);
+	    	let totalDiscount = new Number(0);
+	    	let totalPay = new Number(0);
+	    	let totalPendingAfter = new Number(0);	    		    	    
+        	
+        	$('.checkboxItem:input:checkbox').each(function() 
+        	{ 
+        		this.checked = parentChecked; 
+        		if(parentChecked)
+        		{
+            		const companyIdItem = $(this).data('companyid');	
+					const movementValueItem = parseFloat($(this).data('movementvalue'));
+					const pendingMovementValueItem = parseFloat($(this).data('pendingmovementvalue'));
+					const totalCompanyItem = parseFloat($(this).data('totalcompany'));	
+					
+					const discountTotalItem = parseFloat($('input#discountValue_' + companyIdItem).val());															
+					const totalPayStoreItem = parseFloat($('input#paymentValue_' + companyIdItem).val());
+					
+					const totalItem = (totalCompanyItem - (totalCompanyItem < 0 ? (discountTotalItem * -1) : discountTotalItem));
+										
+					const totalStorePendingAfterItem = (totalItem - totalPayStoreItem);
+										
+					totalMovement += movementValueItem;
+					totalPendingBefore += pendingMovementValueItem;
+					totalPay += totalPayStoreItem;
+					totalCompany += totalCompanyItem;
+					totalDiscount += discountTotalItem;
+        		}
+        	});
+        	
+        	totalPendingAfter = ((totalMovement + totalPendingBefore - totalDiscount) - (totalPay < 0 ? (totalPay * -1) : totalPay));
+	    	populateDataSaldo(totalMovement, totalPendingBefore, totalPay, totalPendingAfter, totalCompany, totalDiscount);
+        }
+        
+        function changeCheckboxTable()
+        {
+        	let totalMovement = new Number(0);
+	    	let totalPendingBefore = new Number(0);
+	    	let totalCompany = new Number(0);
+	    	let totalDiscount = new Number(0);
+	    	let totalPay = new Number(0);
+	    	let totalPendingAfter = new Number(0);	    	
+	    	
+        	$('.checkboxItem:input:checkbox').each(function() 
+        	{ 
+        		if(this.checked)
+        		{
+        			const companyIdItem = $(this).data('companyid');	
+					const movementValueItem = parseFloat($(this).data('movementvalue'));
+					const pendingMovementValueItem = parseFloat($(this).data('pendingmovementvalue'));
+					const totalCompanyItem = parseFloat($(this).data('totalcompany'));	
+					
+					const discountTotalItem = parseFloat($('input#discountValue_' + companyIdItem).val());															
+					const totalPayStoreItem = parseFloat($('input#paymentValue_' + companyIdItem).val());
+					
+					const totalItem = (totalCompanyItem - (totalCompanyItem < 0 ? (discountTotalItem * -1) : discountTotalItem));
+										
+					const totalStorePendingAfterItem = (totalItem - totalPayStoreItem);
+										
+					totalMovement += movementValueItem;
+					totalPendingBefore += pendingMovementValueItem;
+					totalPay += totalPayStoreItem;
+					totalCompany += totalCompanyItem;
+					totalDiscount += discountTotalItem;         		
+        		}
+        	});
+        	
+        	totalPendingAfter = ((totalMovement + totalPendingBefore - totalDiscount) - (totalPay < 0 ? (totalPay * -1) : totalPay));
+	    	populateDataSaldo(totalMovement, totalPendingBefore, totalPay, totalPendingAfter, totalCompany, totalDiscount);
+        }
+        
+        function populateDataSaldo(totalMovement, totalPendingBefore, totalPay, totalPendingAfter, totalStore, totalDiscount)
+        {
+        	$('h3#totalMovement').text('R$ ' + parseFloat(totalMovement).toFixed(2));
+	    	$('h3#totalPendingBefore').text('R$ ' + parseFloat(totalPendingBefore).toFixed(2));
+	    	$('h3#totalPay').text('R$ ' + parseFloat(totalPay).toFixed(2));     
+	    	$('h3#totalPendingAfter').text('R$ ' + parseFloat(totalPendingAfter).toFixed(2));
+	    	$('h3#totalStore').text('R$ ' + parseFloat(totalStore).toFixed(2));
+	    	$('h3#totalDiscount').text('R$ ' + parseFloat(totalDiscount).toFixed(2));
+        }        
+	    
+	    function format(d)
+	    {
+	         // `d` is the original data object for the row
+	         return d.detail;  
+	    }
+	    
+	    function exportTableToCSV($table, filename) {
+	    	 
+	        //rescato los titulos y las filas
+	        var $Tabla_Nueva = $table.find('tr:has(td,th)');
+	        // elimino la tabla interior.
+	        var Tabla_Nueva2= $Tabla_Nueva.filter(function() {
+	             return (this.childElementCount != 1 );
+	        });
+	    
+	        var $rows = Tabla_Nueva2,
+	            // Temporary delimiter characters unlikely to be typed by keyboard
+	            // This is to avoid accidentally splitting the actual contents
+	            tmpColDelim = String.fromCharCode(11), // vertical tab character
+	            tmpRowDelim = String.fromCharCode(0), // null character
+	    
+	            // Solo Dios Sabe por que puse esta linea
+	            colDelim = (filename.indexOf("xls") !=-1)? '"\t"': '","',
+	            rowDelim = '"\r\n"',
+	    
+	    
+	            // Grab text from table into CSV formatted string
+	            csv = '"' + $rows.map(function (i, row) {
+	                var $row = $(row);
+	                var   $cols = $row.find('td:not(.hidden),th:not(.hidden)');
+	    
+	                return $cols.map(function (j, col) {
+	                    var $col = $(col);
+	                    var text = $col.text().replace(/\./g, '');
+	                    return text.replace('"', '""'); // escape double quotes
+	    
+	                }).get().join(tmpColDelim);
+	                csv =csv +'"\r\n"' +'fin '+'"\r\n"';
+	            }).get().join(tmpRowDelim)
+	                .split(tmpRowDelim).join(rowDelim)
+	                .split(tmpColDelim).join(colDelim) + '"';
+	    
+	    
+	         download_csv(csv, filename);
+	    
+	    
+	    }
+	    
+	   function download_csv(csv, filename) {
+	        var csvFile;
+	        var downloadLink;
+	    
+	        // CSV FILE
+	        csvFile = new Blob([csv], {type: "text/csv"});
+	    
+	        // Download link
+	        downloadLink = document.createElement("a");
+	    
+	        // File name
+	        downloadLink.download = filename;
+	    
+	        // We have to create a link to the file
+	        downloadLink.href = window.URL.createObjectURL(csvFile);
+	    
+	        // Make sure that the link is not displayed
+	        downloadLink.style.display = "none";
+	    
+	        // Add the link to your DOM
+	        document.body.appendChild(downloadLink);
+	    
+	        // Lanzamos
+	        downloadLink.click();
+	    }
+	    
+	    function createTable()
+	    { 
+	    	tableReport = $('#table-relatorio').DataTable({
+                destroy: true,
+		        select:'single',
+		        'paging': false,
+			   	'displayLength': 500,
+	   		 	'responsive': true,
+			   	'order': [ [ 10, 'asc' ] ],
+			   	'autoWidth': false,
+				'scrollCollapse': true,
+				'language': {
+			           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+			           'zeroRecords': 'Nenhum registro encontrado',
+			           'info': 'Mostrando _TOTAL_ registro(s)',
+			           'infoEmpty': 'Nenhum registro encontrado',
+			           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+			           'search': 'Filtrar:',
+			           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+			           "decimal": ",",
+			           "thousands": ".",
+			           'paginate': {
+			               'next': 'Proximo',
+			               'previous': 'Anterior'
+			             }
+			    },
+			    
+			/**
+				0 - Checkbox
+				1 - Acoes
+				2 - total movements
+				3 - Pendencias anteriores
+				4 - Total a receber
+				5 - Discount
+				6 - Total Recebido 
+				7 - Pendencia Atual 
+				8 - Empresa
+				9 - Status
+				10 - Documento
+				11 - Detail 							
+			*/
+
+ 		    	
+			    "columns": [
+    	            {
+    	             "orderable": false,
+    	             "data": "checkboxAll"
+	    	        },
+    	            { 
+    	           	 "className": 'text-center',
+    	           	 "data": "actions" 
+    	            },
+    	            { 
+       	           	 "className": 'text-center',
+       	           	 "data": "totalMovements" 
+       	            },
+       	         	{ 
+          	         "className": 'text-center',
+          	         "data": "totalPendingBefore" 
+       	            },
+       	            {
+     	           	  "className": 'text-center',
+     	           	  "data": "totalPayStore" 
+         	        },
+       	            { 
+       	           	 "className": 'text-center',
+       	           	 "data": "totalDiscount" 
+       	            },        	          
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "totalPay" 
+       	            },       	         
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "totalPendingAfter" 
+       	            },
+       	            { 
+       	           	 "className": 'text-center',
+       	           	 "data": "company" 
+       	            },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "status" 
+       	            },
+       	         	{ 
+               	     "className": 'text-center',
+               	     "data": "documentNumber" 
+               	    },
+       	         	{ 
+    	           	 "className": 'dt-control',
+    	           	 "data": "detail" 
+        	       	 }
+    	        ],
+                'columnDefs': [
+                    {
+                 	   "targets":[1],
+                 	   "orderable": false,
+                 	   "searchable": false
+                    },
+                    {
+                 	   "targets":[2],
+                 	   "orderable": false,
+                 	   "searchable": false
+                    },
+                	{
+                   	 "targets": [3],
+                   	 "orderable": false,
+                   	 "searchable": false
+                   	},
+                	{
+                   	 "targets": [4],
+                   	 "orderable": false,
+                   	 "searchable": false
+                   	},
+                    {
+                  	   "targets":[5],
+                  	   "orderable": false,
+                  	   "searchable": false
+                     },
+                     {
+                  	   "targets":[6],
+                  	   "orderable": false,
+                  	   "searchable": false
+                     },
+                     {
+                  	   "targets":[7],
+                  	   "orderable": false,
+                  	   "searchable": false
+                     },
+                     {
+                  	   "targets":[8],                  	   
+                 	   "orderable": true,
+                 	   "searchable": true
+                     },
+                     {
+                  	   "targets":[9],
+                  	   "orderable": false,
+                  	   "searchable": false
+                     },
+                     {
+                       "targets": [10],
+                       "orderable": false,
+                  	   "visible": false,
+                       "searchable": false
+                     },
+                	 {
+
+                	 "targets": [11],
+                     "visible": false,
+                     "searchable": false,
+                     "createdCell": function (td, cellData, rowData, row, col) {
+                    	 $(td).css('padding', '0px')
+                       }
+                	}
+                ]
+        	});
+
+        	// Handle click on "Select all" control
+	        $('input#checkAllMoviments').on('click', function()
+	        {
+	        	var parentChecked = false;
+	        	if(this.checked) 
+	            {
+	        		parentChecked = true;
+	            }
+	        	changeAllCheckboxTable(parentChecked);
+	        });
+        
+	        $(".checkboxItem").change(function() 
+	        {        	
+	        	changeCheckboxTable();
+	        });
+        
+	     // Add event listener for opening and closing details
+	        $('table#table-relatorio tbody').on('click', 'button.details-control', function () {
+	            var tr = $(this).closest('tr');
+	            var tdi = tr.find("i.expandButtonIcon");
+	            var row = tableReport.row(tr);
+	
+	            if (row.child.isShown()) {
+	                // This row is already open - close it
+	                row.child.hide();
+	                tr.removeClass('shown');
+	                tdi.first().removeClass('ti-minus');
+	                tdi.first().addClass('ti-plus');
+	            }
+	            else {
+	                // Open this row
+	                row.child(format(row.data())).show();
+	                row.child()[0].lastChild.style.padding = "0px";
+	                tr.addClass('shown');
+	                tdi.first().removeClass('ti-plus');
+	                tdi.first().addClass('ti-minus');
+	            }
+	        });
+        	
+	        tableReport.on("user-select", function (e, dt, type, cell, originalEvent) {
+	            if ($(cell.node()).hasClass("details-control")) {
+	                e.preventDefault();
+	            }
+	        });
+
+	          $('.classPaymentValue')
+				.on('change', function (e)
+				{
+					 const paymentValue = this.value;
+		              const id = this.id;
+		              if(id.indexOf('paymentValue_') > -1){
+		                  $(id).val(parseFloat(paymentValue).toFixed(2));
+		              }
+          
+				});
+	        //$(".moneyDuplicate").inputmask('Regex', {regex: "^[0-9]{1,6}(\\.\\d{1,2})?$", rightAlign: true});
+	          $(".moneyDuplicate").inputmask({'alias': 'numeric', allowMinus: true, digits: 2, rightAlign: true});
+			//$('.moneyDuplicate').mask("#.##0,00", {reverse: true});
+			
+		  }
+		  
+		  
+        function installmentDocument()
+  		{
+  			const installment = $('form#formNewDocumentTransfDest select#installment').val();
+  			if(1==installment)
+  			{
+  				showSweetalertWarning('Alerta!', 'Parcelamento somente para pagamento a prazo em mais de 1 parcela.','30000');
+  				return;
+  			}
+  			
+  			let documentNumber = moment().format('YYYYMMDDHHmmss');
+
+  			let documentValue = $('form#formNewDocumentTransfDest input#documentValue').val();
+  			const paymentExpiryDate = $('form#formNewDocumentTransfDest input#paymentExpiryDate').val();
+  			const installmentType = $('form#formNewDocumentTransfDest select#installmentType').val();
+  			const bankAccount = $('form#formNewDocumentTransfDest select#expenseOrigin').val();
+  			
+  			if(''==documentNumber)
+  			{
+  				showSweetalertWarning('Alerta!', 'Informe um numero de documento antes de parcelar.','30000');
+  				return;
+  			}
+  			if(''==documentValue || '0'==documentValue)
+  			{
+  				showSweetalertWarning('Alerta!', 'Digite o valor total a ser parcelado.','30000');
+  				return;
+  			}
+  			
+  			if(''==paymentExpiryDate)
+  			{
+  				showSweetalertWarning('Alerta!', 'Informe a data do primeiro Vencimento antes de parcelar.','30000');
+  				return;
+  			}
+  			
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace(',', '.');
+  			
+  			const paymentExpiryDateArray = paymentExpiryDate.split('/');
+  			const startdate = paymentExpiryDateArray[0]+'.'+paymentExpiryDateArray[1]+'.'+paymentExpiryDateArray[2];
+  			const newDate = moment(startdate, "DD.MM.YYYY");
+  			
+  			const installmentValue = (new Number(documentValue)/new Number(installment));  
+  			
+  			var trHTML='<table class="table" style="width: 100%; margin: 10px;" id="duplicateTable">';
+  			trHTML+='<thead class="thead-light">';
+  			trHTML+='<tr>';
+  			trHTML+='<th scope="col"></th>';
+  			trHTML+='<th scope="col" class="text-center">Documento</th>';
+  			trHTML+='<th scope="col" class="text-center">Vencimento</th>';
+  			trHTML+='<th scope="col" class="text-center">Valor</th>';
+  			trHTML+='<th scope="col" class="text-center">Nota</th>';
+  			trHTML+='</tr>';
+  			trHTML+='</thead>';
+  			trHTML+='<tbody>';        
+  			for (var i = 1; i <= installment; i++) 
+  			{
+  				trHTML+='<tr id="duplicate_'+i+'">';
+  				trHTML+='<td class="text-center">';
+  				trHTML+='<a onclick="deleteInstallment(&quot;duplicate_'+i+'&quot;,&quot;'+documentNumber+'_'+i+'&quot;);" style="cursor: pointer;">';
+  				trHTML+='<i class="mdi mdi-delete mdi-24px" style="color: red;"></i>';
+  				trHTML+='</a>';
+  				trHTML+='</td>';
+  				trHTML+='<td><input type="text" class="form-control text-center" id="documentNumber_'+i+'" name="documentNumber_'+i+'" maxlength="20" value="'+documentNumber+'_'+i+'"/></td>';
+  				trHTML+='<td>';
+  				trHTML+='<div class="input-group date">';
+  				trHTML+='<input type="text" class="form-control dateDuplicate text-center" id="paymentExpiryDate_'+i+'" name="paymentExpiryDate_'+i+'" maxlength="10" value="'+newDate.format('DD/MM/YYYY')+'"/>';
+  				trHTML+='<span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>';
+  				trHTML+='</div>';
+  				trHTML+='</td>';
+  				trHTML+='<td>';
+  				trHTML+='<input type="text" data-accept-dot="0" data-accept-comma="1" class="only-number-dinamic form-control text-center" id="documentValue_'+i+'" name="documentValue_'+i+'" maxlength="15" value="'+Number(installmentValue).format(2, 3, '.', ',')+'"/>';
+  				trHTML+='</td>';
+  				trHTML+='<td><textarea class="form-control documentNoteClasses"  id="documentNote_'+i+'"" rows="1" name="documentNote_'+i+'""></textarea></td>';
+  				trHTML+='</tr>';
+  				if(4==installmentType)
+  				{
+  					newDate.add(30, 'days');
+  				}
+  				else if(3==installmentType)
+  				{
+  					newDate.add(15, 'days');
+  				}
+  				else if(2==installmentType)
+  				{
+  					newDate.add(7, 'days');
+  				}
+  				else if(1==installmentType)
+  				{
+  					//Quando diario nao adiciona dia
+  				}
+			}
+  			trHTML+='</tbody>';
+  			trHTML+='</table>';
+			$('div#divDuplicates').html(trHTML);
+			
+			$(document).on('keypress', 'input.only-number-dinamic', function(e) {
+			    const $this = $(this);
+			    const key = (window.event)?event.keyCode:e.which;
+			    const dataAcceptDot = $this.data('accept-dot');
+			    const dataAcceptComma = $this.data('accept-comma');
+			    const acceptDot = (typeof dataAcceptDot !== 'undefined' && (dataAcceptDot == true || dataAcceptDot == 1)?true:false);
+			    const acceptComma = (typeof dataAcceptComma !== 'undefined' && (dataAcceptComma == true || dataAcceptComma == 1)?true:false);
+			    
+			    const str = $this.val();
+			    if(str){
+					 const contemsComma = str.includes(",");
+					 if(contemsComma && key == 44){
+						 return false;
+					 }
+				}
+		
+				if((key > 47 && key < 58)
+			      || (key == 46 && acceptDot)
+			      || (key == 44 && acceptComma)) {
+			    	return true;
+			  	} else {
+			 			return (key == 8 || key == 0)?true:false;
+			 	}
+		  	});
+		  	
+		  	$("input.only-number-dinamic").on('blur', function() {
+				let paymentValue = this.value; 
+				paymentValue = paymentValue.replaceAll('.', '');
+				const commaIndex = paymentValue.indexOf(',');
+				const paymentValueLength = paymentValue.length;
+				
+				if(paymentValueLength > 0){
+					if(commaIndex > -1){
+						if((commaIndex + 1) == paymentValueLength){
+							paymentValue = paymentValue + '00';
+						} else if((commaIndex + 2) == paymentValueLength){
+							paymentValue = paymentValue + '0';
+						}					
+					} else {
+						paymentValue = paymentValue + ',00'
+					}
+					paymentValue = paymentValue.replace(',', '.');
+					
+					
+					$("input#"+$(this).attr('id')).val(Number(paymentValue).format(2, 3, '.', ','));
+					validadeInstallmentValue();
+				}		
+	        });
+			
+			$('.dateDuplicate').datepicker({
+	            autoclose: true,
+	            todayHighlight: true,
+	            toggleActive: true,
+	            format: 'dd/mm/yyyy',
+	            language: 'pt-BR'
+	        });
+		
+	        $('.duplicateSelect')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        });
+	        $('.duplicateSelect').val(bankAccount).trigger('change');
+	        
+	        validadeInstallmentValue();
+  		}	 
+  		
+  		function validadeInstallmentValue(){
+			const installment = $('form#formNewDocumentTransfDest select#installment').val();
+			if(1==installment)
+  			{
+				 $('div#divDocumentValue').removeClass('col-md-2').addClass('col-md-4');
+				 $('div#divDocumentValueResidue').hide();
+				 return; 				  
+			}
+			
+			let documentValue = $('form#formNewDocumentTransfDest input#documentValue').val();
+			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace(',', '.');
+  			
+			let documentValueInstallment = 0;
+			for (var i = 1; i <= installment; i++) 
+  			{
+				 let installmentValue = $('form#formNewDocumentTransfDest input#documentValue_'+i).val();
+				 if(typeof(installmentValue) != 'undefined' && installmentValue != null){
+				   installmentValue = installmentValue.replace('.', '');
+		  		   installmentValue = installmentValue.replace('.', '');
+		  		   installmentValue = installmentValue.replace('.', '');
+		  		   installmentValue = installmentValue.replace('.', '');
+		  		   installmentValue = installmentValue.replace(',', '.');
+  			
+			       documentValueInstallment += parseFloat(installmentValue);
+			     } 				
+			}
+			
+			$('div#divDocumentValue').removeClass('col-md-4').addClass('col-md-2');
+			$('div#divDocumentValueResidue').show();
+			$('input#documentValueResidue').val(parseFloat(documentValue - documentValueInstallment).format(2, 3, '.', ','));
+		}
+  		
+  		function deleteInstallment(trId, documentId)
+  		{
+  			Swal.fire({
+				  title: 'Alerta',
+				  text: 'Confirma a exclus\u00e3o da duplicata '+documentId+'?',
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Confirma',
+				  cancelButtonText: 'Cancelar'
+				}).then((result) => 
+				{
+				  if (result.value) 
+				  {
+					  $('table#duplicateTable tr#'+trId).remove();
+					  setTimeout(() => {
+						  validadeInstallmentValue();
+					  }, "500");
+				  }
+				});
+  		}    
+        		  	    	    	    	    	    
+        
+	    (function() {
+	    'use strict';
+
+	   	    $('.collapse').collapse('show');
+	    
+	        $('form#formReportPdf select#analitic')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            dropdownParent: $('#new-report-Pdf-modal'),
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        });
+	    	
+	    	$.fn.dataTable.moment('DD/MM/YYYY hh:mm');
+
+			/** Force input numeric only */
+			$('.force-numeric-only').ForceNumericOnly();
+
+	        $('form#formFilter select#cashingClose')
+	        .select2({ 
+				placeholder: {
+				    id: '-1',
+				    text: 'Selecione...'
+				},  
+				allowClear: true,
+	            width: '100%',
+	            theme: "bootstrap",
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        }).on('change', function (data)
+	  		{
+				const valueCashingClosing = this.value;
+				if("" != valueCashingClosing){
+					searchUserMovement();					
+				}
+	  		});	
+  		        
+	        $('form#formFilter select#userChildrensParentCombobox')
+	  		.select2({ 
+				placeholder: {
+				    id: '-1',
+				    text: 'Selecione...'
+				},  
+				allowClear: true,
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			}).on('change', function (data)
+	  		{
+				filterCasingClosingLaunchByUser();
+	  		});	
+	  		
+	  		$("#grid").kendoGrid({
+			dataSource: dataSource,
+			pageable: true,
+			height: 180,
+			columns: [
+				    {
+		                field : "",
+		                title : "",
+		                width: 50,
+		                template: "<input type='checkbox' class='sel' />",
+		                attributes: { style: "text-align: left" }
+	                },
+					{ field: "bankAccountDescription", title: "Conta", width: 170, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" }},
+					{ field: "paymentExpiryDateExpense", title: "Vencimento", width: 110, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: center" }},
+					{ field: "documentValueExpense", title: "Vator", width: 110, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: right" } },
+					{ field: "documentStatusExpense", title: "Satus", width: 60, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: center" } },
+					{ field: "providerDescription", title: "Fornecedor", width: 170, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } },
+					{ field: "financialGroupDescription", title: "Grupo", width: 300, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } },
+					{ field: "financialSubGroupDescription", title: "Sub-Grupo", width: 300, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } },
+					{ field: "documentNoteExpense", title: "Nota", width: 300, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } }
+             	],
+				editable: false,
+			    selectable: true,
+	    		change: checkCelValue
+			});
+			
+	        $('form#formNewDocumentTransfDest select#companyTransfDest')
+	        .select2({
+	  			theme: "bootstrap",
+	  			dropdownParent: $('#new-document-modal'),
+	  			placeholder: "SELECIONE...",
+			    allowClear: true,
+		    	language: {
+		        	noResults: function (params) {
+		            return "Nenhum registro encontrado.";
+		          },
+		          searching: function ()
+		          {
+		              return 'Buscando...';
+		          },
+		          loadingMore: function () {
+		              return 'Carregando mais resultados...';
+		          },
+		          errorLoading: function () {
+		              return 'Os resultados n\u00e3o puderam ser carregados.';
+		          },
+		          inputTooLong: function (args) {
+		              var overChars = args.input.length - args.maximum;
+	
+		              var message = 'Apague ' + overChars + ' caracter';
+	
+		              if (overChars != 1) {
+		                message += 'es';
+		              }
+	
+		              return message;
+		            },
+		            inputTooShort: function (args) {
+		              var remainingChars = args.minimum - args.input.length;
+	
+		              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+	
+		              return message;
+		            }
+		        },
+	  			ajax: {
+	  				url : $('form#formAutocomplete').attr('action'),
+	                type : "POST",
+	  	            dataType: 'json',
+	  	            delay: 250,
+	  	            data: function (params)
+	  	            {
+	  	                return {
+	  	                	description: params.term, // search term
+	  	                	inactive: '0',
+	  	                	objectType: 'COM'
+	  	                };
+	  	            },
+	  	            processResults: function (data, params) {
+	  	                //console.log(data);
+	  	                var results = $.map(data.report, function (value, key)
+	  	                {
+	  	                    return {
+	  	                    	id: value.key,
+	  	                        text: value.value + ' (' + value.key + ')' 
+	  	                    };
+	  	                });
+	  	                //console.log(results);
+	  	                return {
+	  	                    results: results
+	  	                };
+	  	            },
+	  	            cache: true
+	  	        },
+	  	        minimumInputLength: 3,
+	  	        templateSelection: formatRepoSelection
+	  	    }).on('change', function (data)
+	  		{
+	  	    	searchBankAccountByCompany();
+	  		}).on('select2:close', function (e) 
+	  		{
+	  			//console.log(this.value);
+	  		});		
+	  		
+	        $('form#formNewDocumentTransfDest select#bankAccountTransfDest')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            placeholder: "SELECIONE...",
+			    allowClear: true,
+	            dropdownParent: $('#new-document-modal'),
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        }).on('change', function (e)
+	        {
+				$('span#bankBalanceAvailableSpan').text('');
+				const selectedOption = $(this).find(":selected");
+				if(selectedOption){
+					const bankBalanceAvailable = selectedOption.attr('data-bankBalanceAvailable'); 
+		    		if(bankBalanceAvailable){
+		    			$('span#bankBalanceAvailableSpan').text(bankBalanceAvailable);
+		    		}
+				}			
+	        });	  	
+	        
+	        $('form#formNewDocumentTransfDest select#movementTypeTransfDest')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            dropdownParent: $('#new-document-modal'),
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        });
+	        
+		    $('form#formNewDocumentTransfDest select#documentStatusTransfDest')
+		    .select2({ 
+		        width: '100%',
+		        theme: "bootstrap",
+		        dropdownParent: $('#new-document-modal'),
+		        language: 
+		        {
+		            noResults: function (params) 
+		            {
+		                return "Nenhum registro encontrado.";
+		            }
+		        }
+		    });	        
+
+	        $('form#formNewDocumentTransfDest select#paymentStatusTransfDest')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            dropdownParent: $('#new-document-modal'),
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        });	       
+	        
+	        $('form#formNewDocumentTransfDest input#paymentExpiryDateTransfDest').datepicker({
+	            autoclose: true,
+	            todayHighlight: true,
+	            toggleActive: true,
+	            format: 'dd/mm/yyyy',
+	            language: 'pt-BR'
+	        });
+	        
+	        $(document).on('keypress', 'input.only-number', function(e) {
+			    const $this = $(this);
+			    const key = (window.event)?event.keyCode:e.which;
+			    const dataAcceptDot = $this.data('accept-dot');
+			    const dataAcceptComma = $this.data('accept-comma');
+			    const acceptDot = (typeof dataAcceptDot !== 'undefined' && (dataAcceptDot == true || dataAcceptDot == 1)?true:false);
+			    const acceptComma = (typeof dataAcceptComma !== 'undefined' && (dataAcceptComma == true || dataAcceptComma == 1)?true:false);
+			    
+			    const str = $this.val();
+			    if(str){
+					 const contemsComma = str.includes(",");
+					 if(contemsComma && key == 44){
+						 return false;
+					 }
+				}
+		
+				if((key > 47 && key < 58)
+			      || (key == 46 && acceptDot)
+			      || (key == 44 && acceptComma)) {
+			    	return true;
+			  	} else {
+			 			return (key == 8 || key == 0)?true:false;
+			 	}
+		  	});
+		  	
+		  	$("input.only-number").on('blur', function() {
+				let paymentValue = this.value; 
+				paymentValue = paymentValue.replaceAll('.', '');
+				const commaIndex = paymentValue.indexOf(',');
+				const paymentValueLength = paymentValue.length;
+				
+				if(paymentValueLength > 0){
+					if(commaIndex > -1){
+						if((commaIndex + 1) == paymentValueLength){
+							paymentValue = paymentValue + '00';
+						} else if((commaIndex + 2) == paymentValueLength){
+							paymentValue = paymentValue + '0';
+						}					
+					} else {
+						paymentValue = paymentValue + ',00'
+					}
+					paymentValue = paymentValue.replace(',', '.');
+					
+					
+					$("input#"+$(this).attr('id')).val(Number(paymentValue).format(2, 3, '.', ','));
+				}		
+	        });	         		
+	        
+		    $('button#buttonExpenseTransf').click(function() 
+		    {
+		    	expenseTransfDocument();
+		    });
+		    
+		    $('button#buttonSaveTransf').click(function() 
+		    {
+		    	saveLaunch();
+		    });
+		    
+		    $('form#formFilter select#cashStatus')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			}).on('change', function (data)
+	  		{
+				searchUserMovement();
+	  		});
+		    		   
+		    const loggedUserId = $('form#formFilter input#loggedUserId').val();    
+		    if(loggedUserId){
+				$('form#formFilter select#userChildrensParentCombobox').val(loggedUserId).trigger('change');
+			} 						
+			
+			tabId = 'cashierClosingPreviewFinish';
+	    })();
+	    </script>
+	</th:block>
+</html>

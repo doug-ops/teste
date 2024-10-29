@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+                    
+    
+    
+    
+    <wb-module deploy-name="ROOT">
+                                        
+        
+        
+        
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+                                        
+        
+        
+        
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+                                        
+        
+        
+        
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+                                        
+        
+        
+        
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+                                        
+        
+        
+        
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/.apt_generated_tests"/>
+                
+        <dependent-module archiveName="manager-systems-common-vo-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-common-vo/manager-systems-common-vo">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-common-utils-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-common-utils/manager-systems-common-utils">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-common-model-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-common-model/manager-systems-common-model">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-common-dto-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-common-dto/manager-systems-common-dto">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-common-service-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-common-service/manager-systems-common-service">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-common-dao-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-common-dao/manager-systems-common-dao">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-web-common-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-web-common/manager-systems-web-common">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-web-adm-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-web-adm/manager-systems-web-adm">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-web-financial-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-web-financial/manager-systems-web-financial">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-web-movements-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-web-movements/manager-systems-web-movements">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                
+        <dependent-module archiveName="manager-systems-web-bravo-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/manager-systems-web-bravo/manager-systems-web-bravo">
+                        
+            <dependency-type>uses</dependency-type>
+                    
+        </dependent-module>
+                                        
+        
+        
+        
+        <property name="context-root" value="ROOT"/>
+                                        
+        
+        
+        
+        <property name="java-output-path" value="/manager-systems-web-portal/target/classes"/>
+                                    
+    
+    
+    
+    </wb-module>
+                
+
+
+
+</project-modules>

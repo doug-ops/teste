@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.png">
+    <title>Manager Systems</title>
+    <!-- Custom CSS -->
+    <link href="dist/css/style.min.css" rel="stylesheet">
+    <link href="dist/css/application-style.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                <div class="navbar-header">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <a class="navbar-brand" href="index.html">
+                        <!-- Logo icon -->
+                        <b class="logo-icon">
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text -->
+                        <span class="logo-text" style="font-weight: 900;">    
+                            MANAGER SYSTEMS
+                       </span>
+                    </a>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i class="ti-more"></i></a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-left mr-auto">
+                        <li class="nav-item d-none d-md-block"><a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a></li>
+                        <!-- ============================================================== -->
+                        <!-- Search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item search-box"> <a class="nav-link waves-effect waves-dark" href="javascript:void(0)"><i class="ti-search"></i></a>
+                            <form class="app-search position-absolute">
+                                <input type="text" class="form-control" placeholder="Digite para buscar"> <a class="srh-btn"><i class="ti-close"></i></a>
+                            </form>
+                        </li>
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- Right side toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-right">                       
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="assets/images/logo-icon.png" alt="user" class="rounded-circle" width="31"></a>
+                            <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
+                                <span class="with-arrow"><span class="bg-primary"></span></span>
+                                <div class="d-flex no-block align-items-center p-15 bg-primary text-white mb-2">
+                                    <div class=""><img src="assets/images/logo-icon.png" alt="user" class="img-circle" width="60"></div>
+                                    <div class="ml-2">
+                                        <h4 class="mb-0">Steave Jobs</h4>
+                                        <p class=" mb-0">varun@gmail.com</p>
+                                    </div>
+                                </div>
+                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user mr-1 ml-1"></i> Meus Dados</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-power-off mr-1 ml-1"></i> Sair</a>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <!-- User Profile-->
+                        <li>
+                            <!-- User Profile-->
+                            <div class="user-profile d-flex no-block dropdown mt-3">
+                                <div class="user-pic"><img src="assets/images/logo-icon.png" alt="users" class="rounded-circle" width="40" /></div>
+                                <div class="user-content hide-menu ml-2">
+                                    <a href="javascript:void(0)" class="" id="Userdd" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <h5 class="mb-0 user-name font-medium">Steave Jobs <i class="fa fa-angle-down"></i></h5>
+                                        <span class="op-5 user-email">varun@gmail.com</span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="Userdd">
+                                        <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user mr-1 ml-1"></i> Meus Dados</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-power-off mr-1 ml-1"></i> Sair</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End User Profile-->
+                        </li>
+                        <li class="nav-small-cap"><i class="mdi mdi-dots-horizontal"></i> <span class="hide-menu">Cadastros</span></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="form-wizard.html" aria-expanded="false"><i class="mdi mdi-cube-send"></i><span class="hide-menu">Form Wizard</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="form-repeater.html" aria-expanded="false"><i class="mdi mdi-creation"></i><span class="hide-menu">Form Repeater</span></a></li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid" style="padding: 5px;">
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body" style="padding: 0px;">
+                                    <div class="col-md-12">
+                                        <div style="float: right;">
+                                            <button id="btnFiltrar" name="btnFiltrar" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFiltro" aria-expanded="false" aria-controls="collapseFiltro"><i class="ti-filter" style="font-size: 18px;"></i></button>
+                                            <button id="btnNovo" name="btnNovo" type="button" class="btn waves-effect waves-light btn-info m-t-10" onclick="submitFormNovo();">Novo</button> 
+                                            <button id="btnLimpar" name="btnLimpar" type="button" class="btn waves-effect waves-light btn-warning m-t-10" onclick="formLimpar();">Limpar</button>
+                                            <button id="btnVisualizar" name="btnVisualizar" type="button" class="btn waves-effect waves-light btn-success m-t-10" onclick="formSubmitConsultar();">Visualizar</button>
+                                            <button id="btnCancelar" name="btnCancelar" type="button" class="btn waves-effect waves-light btn-danger m-t-10" onclick="submitFormNovo();">Cancelar</button>
+                                            <button id="btnImprimir" name="btnImprimir" type="button" class="btn waves-effect waves-light btn-primary m-t-10" onclick="formSubmitImprimir();">Imprimir</button>
+                                        </div>
+                                    </div>
+                                    <h4 class="p-20 text-center">Manutenção de Empresa</h4>    
+                                    <!-- Nav tabs -->
+                                    <ul class="nav nav-tabs" role="tablist">
+                                        <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#relatorio" role="tab"><span class="hidden-sm-up"><i class="fas fa-list"></i></span> <span class="hidden-xs-down">Relatório</span></a> </li>
+                                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#cadastro" role="tab"><span class="hidden-sm-up"><i class="far fa-edit"></i></span> <span class="hidden-xs-down">Cadastro</span></a> </li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content tabcontent-border">
+                                        <div class="tab-pane active" id="relatorio" role="tabpanel">
+                                            <div style="padding: 5px;">
+                                                <div class="table-responsive">
+                                                        <table id="file_export" class="table table-striped table-bordered display">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Position</th>
+                                                                    <th>Office</th>
+                                                                    <th>Age</th>
+                                                                    <th>Start date</th>
+                                                                    <th>Salary</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>Tiger Nixon</td>
+                                                                    <td>System Architect</td>
+                                                                    <td>Edinburgh</td>
+                                                                    <td>61</td>
+                                                                    <td>2011/04/25</td>
+                                                                    <td>$320,800</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Bradley Greer</td>
+                                                                    <td>Software Engineer</td>
+                                                                    <td>London</td>
+                                                                    <td>41</td>
+                                                                    <td>2012/10/13</td>
+                                                                    <td>$132,000</td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Position</th>
+                                                                    <th>Office</th>
+                                                                    <th>Age</th>
+                                                                    <th>Start date</th>
+                                                                    <th>Salary</th>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane" style="padding: 15px;" id="cadastro" role="tabpanel">
+                                                <form class="needs-validation" novalidate id="formSave" name="formSave">
+                                                    <div class="action-form m-b-10">
+                                                        <div class="form-group m-b-0 text-right">
+                                                            <button class="btn btn-success" type="submit">Gravar</button>
+                                                            <button class="btn btn-danger" type="button">Cancelar</button>                                        
+                                                        </div>
+                                                    </div>        
+                                                    <div class="form-row">
+                                                        <hr class="hr-admin">
+                                                        <h4 class="card-title">Dados Principais</h4>
+                                                        <hr class="hr-admin">
+                                                        <div class="col-md-2 mb-3">
+                                                            <label for="personId">C&oacute;digo</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-key"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control force-numeric-only" id="personId" name="personId" maxlength="8" placeholder="C&oacute;digo" aria-describedby="inputGroupPrepend" required>
+                                                                <div class="invalid-feedback">
+                                                                    Campo obrigat&oacute;rio.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5 mb-3">
+                                                            <label for="socialName">Raz&atilde;o Social</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="inputGroupPrepend"><i class="far fa-user"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control" id="socialName" name="socialName" maxlength="100" placeholder="Raz&atilde;o Social" aria-describedby="inputGroupPrepend" required>
+                                                                <div class="invalid-feedback">
+                                                                    Campo obrigat&oacute;rio.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5 mb-3">
+                                                            <label for="fantasyName">Nome Fantasia</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text" id="inputGroupPrepend"><i class="far fa-user"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control" id="fantasyName" name="fantasyName" maxlength="100" placeholder="Nome Fantasia" aria-describedby="inputGroupPrepend">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 mb-3">
+                                                            <label for="cpfCnpj">Cpf/Cnpj</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i class="fas fa-address-card"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control force-numeric-only" id="cpfCnpj" name="cpfCnpj" maxlength="20" placeholder="Cpf/Cnpj">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8 mb-3">
+                                                            <label for="email">Email</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i class="fas fa-at"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control" id="email" name="email" maxlength="100" placeholder="Email">
+                                                            </div>
+                                                        </div>
+                                                        <hr class="hr-admin">
+                                                        <h4 class="page-title">Dados de Endereço</h4>
+                                                        <hr class="hr-admin">
+                                                        <div class="col-md-2 mb-3">
+                                                            <label for="addressZipCode">Cep</label>
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                                                                </div>
+                                                                <input type="text" class="form-control force-numeric-only" id="addressZipCode" name="addressZipCode" maxlength="9" placeholder="Cep">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5 mb-3">
+                                                            <label for="addressStreet">Rua</label>
+                                                            <input type="text" class="form-control" id="addressStreet" name="addressStreet" maxlength="100" placeholder="Rua">
+                                                        </div>
+                                                        <div class="col-md-2 mb-3">
+                                                            <label for="addressStreetNumber">N&uacute;mero</label>
+                                                            <input type="text" class="form-control" id="addressStreetNumber" name="addressStreetNumber" maxlength="20" placeholder="N&uacute;mero">
+                                                        </div>
+                                                        <div class="col-md-3 mb-3">
+                                                            <label for="addressStreetComplement">Complemento</label>
+                                                            <input type="text" class="form-control" id="addressStreetComplement" name="addressStreetComplement" maxlength="50" placeholder="Complemento">
+                                                        </div>
+                                                        <div class="col-md-4 mb-3">
+                                                            <label for="addressDistrict">Bairro</label>
+                                                            <input type="text" class="form-control" id="addressDistrict" name="addressDistrict" maxlength="100" placeholder="Bairro">
+                                                        </div>
+                                                        <div class="col-md-3 mb-3">
+                                                            <label for="addressState">Estado</label>
+                                                            <input type="text" class="form-control" id="addressState" name="addressState" maxlength="100" placeholder="Estado">
+                                                        </div>
+                                                        <div class="col-md-4 mb-3">
+                                                            <label for="addressCity">Estado</label>
+                                                            <input type="text" class="form-control" id="addressCity" name="addressCity" maxlength="100" placeholder="Cidade">
+                                                        </div>
+                                                        <div class="col-md-1 mb-3">
+                                                            <div class="form-group">
+                                                                <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                                    <input type="checkbox" class="custom-control-input form-check-input" id="inactive" name="inactive">
+                                                                    <label class="custom-control-label form-check-label" for="inactive">Ativar</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                    <hr style="width: 100%">                                         
+                                                    <div class="action-form">
+                                                        <div class="form-group m-b-0 text-right">
+                                                            <button class="btn btn-success" type="submit">Gravar</button>
+                                                            <button class="btn btn-danger" type="button">Cancelar</button>                                        
+                                                        </div>
+                                                    </div>     
+                                                </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Right sidebar -->
+                <!-- ============================================================== -->
+                <!-- .right-sidebar -->
+                <!-- ============================================================== -->
+                <!-- End Right sidebar -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center" style="background: #414755; color: #fff;">
+                &copy; 2019 - Manger Systems
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- customizer Panel -->
+    <!-- ============================================================== -->
+    <div class="chat-windows"></div>
+    <!-- ============================================================== -->
+
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <script src="dist/js/app.js"></script>
+    <script src="dist/js/app.init.overlay.js"></script>
+     <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="dist/js/custom.min.js"></script>
+    <script src="dist/js/application.js"></script>
+    <!--This page plugins -->
+
+    <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="assets/libs/datatables/novo/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/datatables/novo/css/buttons.dataTables.min.css">
+    
+	<!-- data-table js -->
+	<script src="assets/libs/datatables/novo/js/jquery.dataTables.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/dataTables.buttons.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/jszip.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/pdfmake.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/vfs_fonts.js"></script>
+	<script src="assets/libs/datatables/novo/js/buttons.flash.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/buttons.colVis.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/buttons.print.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/buttons.html5.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/dataTables.bootstrap4.min.js"></script>
+	<script src="assets/libs/datatables/novo/js/dataTables.responsive.min.js"></script>
+    <script src="assets/libs/datatables/novo/js/responsive.bootstrap4.min.js"></script>
+    
+    <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+        'use strict';
+
+        $(".navbar-header").attr("data-logobg","skin5");
+
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+
+        $('#file_export').DataTable({
+            destroy: true,
+		        select:'single',
+		        'paging': false,
+			   	'displayLength': 500,
+	   		 	'responsive': true,
+			   	'order': [ [ 3, 'asc' ] ],
+			   	'autoWidth': false,
+				'scrollCollapse': true,
+				'language': {
+			           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+			           'zeroRecords': 'Nenhum registro encontrado',
+			           'info': 'Mostrando _TOTAL_ registro(s)',
+			           'infoEmpty': 'Nenhum registro encontrado',
+			           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+			           'search': 'Filtrar:',
+			           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+			           "decimal": ",",
+			           "thousands": ".",
+			           'paginate': {
+			               'next': 'Proximo',
+			               'previous': 'Anterior'
+			             }
+			    },
+				dom: 'Bfrtip',
+				buttons: [
+				{
+					extend: 'copyHtml5',
+					text: 'Copiar',
+					exportOptions: {
+						columns: ':visible'
+					}
+				}, 
+				{
+					extend: 'excelHtml5',
+					text: 'Excel',
+					exportOptions: {
+						columns: ':visible'
+					}
+				}, 
+				{
+					extend: 'pdfHtml5',
+					text: 'PDF',
+					title: 'Relatorio de Empresas',
+					orientation: 'landscape',
+					pageSize: 'A4',
+					pageMargins: [ 0, 0, 0, 0 ], // try #1 setting margins
+					margin: [ 0, 0, 0, 0 ], // try #2 setting margins
+					key: { // press E for export PDF
+						key: 'e',
+						altKey: true
+					},
+					exportOptions: {
+						columns: ':visible'
+					}
+				}, 
+				{
+					text: 'JSON',
+					action: function(e, dt, button, config) 
+					{
+						var data = dt.buttons.exportData();
+						$.fn.dataTable.fileSave(new Blob([JSON.stringify(data)]), 'Export.json');
+					}
+				},
+				'colvis']
+        });
+        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .dt-button').addClass('btn btn-primary mr-1');
+
+		/** Force input numeric only */
+		$('.force-numeric-only').ForceNumericOnly();    
+    })();
+    </script>
+</body>
+
+</html>

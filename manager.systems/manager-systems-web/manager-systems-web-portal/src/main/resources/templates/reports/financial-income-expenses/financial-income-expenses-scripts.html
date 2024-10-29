@@ -1,0 +1,831 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	    
+	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	    
+	    <!-- This Page CSS -->
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/daterangepicker/daterangepicker.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-document-movement.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-currency.css}"/>
+
+	    <script th:src="@{/assets/libs/moment/moment.js}"></script>
+	    <script th:src="@{/assets/libs/daterangepicker/daterangepicker.js}"></script>
+	    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+	    
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js}"></script>
+	    
+	    <!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>	
+		<script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+    	
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+			
+			.modal-body{
+			    height: 250px;
+			    overflow-y: auto;
+			}
+			
+			@media (min-height: 500px) {
+			    .modal-body { height: 500px; }
+			}
+			
+			@media (min-height: 800px) {
+			    .modal-body { height: 700px; }
+			}
+		</style>
+		
+		<script type="text/javascript">
+			let initialBalance = 0;
+			
+	  		function formatRepoSelection(repo)
+	  		{
+	  		  return repo.text;
+	  		}
+	  		
+	  		function saveNewCostCenter(formId){
+	  			let descriptionFinancialCostCenter = $('form#formFilter select#financialCostCenter').data("select2").dropdown.$search.val(); 			
+	  			
+	  			$('form#formSaveFinancialCostCenter input#description').val(encodeURIComponent(descriptionFinancialCostCenter));
+	
+	  			const form = $('form#formSaveFinancialCostCenter');			
+		  		let dataForm = form.serializeArray();
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(res, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==res.status)
+	             	{
+	            		const optionKey = res.data.id;
+	            		const optionValue = res.data.description + ' (' + optionKey + ')';
+	
+	            		const newOption = new Option(optionValue, optionKey, true, true);
+						$('form#formFilter select#financialCostCenter').append(newOption).trigger('change');
+		    			$('form#formFilter select#financialCostCenter').select2("close");
+	               	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', res.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+			    }).always(function() 
+			    { 
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+	  		}
+	  		
+			function createTable(){ 
+				let tableReport = $('#table-relatorio').DataTable({
+					destroy: true,
+					select:'single',
+					'paging': false,
+					'displayLength': 50,
+					'responsive': true,
+					'order': [ [ 0, 'asc' ] ],
+					'autoWidth': false,
+					'scrollY': '400px',
+					'scrollCollapse': true,
+					'language': {
+						'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+						'zeroRecords': 'Nenhum registro encontrado',
+						'info': 'Mostrando _TOTAL_ registro(s)',
+						'infoEmpty': 'Nenhum registro encontrado',
+						'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+						'search': 'Filtrar:',
+						'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+						"decimal": ",",
+						"thousands": ".",
+						'paginate': {
+							'next': 'Proximo',
+							'previous': 'Anterior'
+							}
+					},
+					/**
+					'footerCallback': function ( row, data, start, end, display ) {
+						let totalCredit = 0;
+						let totalDebit = 0;
+						let totalSaldo = 0;
+						let balance = initialBalance;
+						
+						$.each(display, function(key, value)
+						{
+							let valor = parseFloat(data[value].documentValueHidden);
+							if(valor<0)
+							{
+								totalDebit += valor;
+							}
+							else
+							{
+								totalCredit += valor;	
+							}	
+
+							balance = (balance + valor);
+							const idBalance = 'balance_'+data[value].documentId+'_'+data[value].documentParentId;
+
+							if(balance>=0)
+							{
+								$('td#'+idBalance).html('<span class="positive-value">'+parseFloat(balance).toFixed(2)+'</span>');
+							}
+							else
+							{
+								$('td#'+idBalance).html('<span class="negative-value">'+parseFloat(balance).toFixed(2)+'</span>');
+							}
+						});
+						totalSaldo =  (initialBalance + totalCredit +totalDebit);
+						populateDataSaldo(totalCredit, totalDebit, totalSaldo);
+					},
+					*/
+					"columns": [
+						{
+							"className": 'text-center',
+							"data": "movementDate"
+						},
+						{ 
+							"className": 'text-center',
+							"data": "documentParentId" 
+						},
+						{ 
+							"className": 'text-center',
+							"data": "documentId" 
+						},
+						{ 
+							"className": 'text-left',
+							"data": "bankAccount" 
+						},
+						{ 
+							"className": 'text-left',
+							"data": "company" 
+						},
+						{ 
+							"className": 'text-left',
+							"data": "bankAccountOrigin" 
+						},
+						{ 
+							"className": 'text-left',
+							"data": "movementType" 
+						},
+						{ 
+							"className": 'text-left',
+							"data": "description" 
+						},
+						{ 
+							"className": 'text-right',
+							"data": "documentValue" 
+						},
+						{ 
+							"className": 'text-right',
+							"data": "documentValueHidden" 
+						},
+						{ 
+							"className": 'text-right',
+							"data": "documentBalance" 
+						}
+					],
+					'columnDefs': [
+						{ responsivePriority: 1, targets: 0 },
+						{ responsivePriority: 1, targets: 6 },
+						{ responsivePriority: 1, targets: 7 },
+						{ responsivePriority: 1, targets: 8 },
+						{ responsivePriority: 1, targets: 10 },
+						{
+						"targets": [2],
+						"visible": false,
+						"searchable": false
+						},
+						{
+						"targets": [3],
+						"visible": false,
+						"searchable": false
+						},
+						{
+						"targets": [4],
+						"visible": false,
+						"searchable": false
+						},
+						{
+						"targets": [5],
+						"visible": false,
+						"searchable": false
+						},
+						{
+						"targets": [9],
+						"visible": false,
+						"searchable": false
+						}
+					],
+					dom: 'Bfrtip',
+					buttons: [
+					{
+						extend: 'copyHtml5',
+						text: 'Copiar',
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					{
+						extend: 'excelHtml5',
+						text: 'Excel',
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					/*
+					{
+						extend: 'pdfHtml5',
+						text: 'PDF',
+						title: 'Relatorio de Documentos',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						pageMargins: [ 0, 0, 0, 0 ], // try #1 setting margins
+						margin: [ 0, 0, 0, 0 ], // try #2 setting margins
+						key: { // press E for export PDF
+							key: 'e',
+							altKey: true
+						},
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					*/
+					{
+						text: 'JSON',
+						action: function(e, dt, button, config) 
+						{
+							var data = dt.buttons.exportData();
+							$.fn.dataTable.fileSave(new Blob([JSON.stringify(data)]), 'Export.json');
+						}
+					},
+					'colvis',
+					]
+				});
+				$('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .dt-button').addClass('btn btn-primary mr-1');
+			}
+
+			function populateDataSaldo(totalCredit, totalDebit, totalSaldo)
+			{
+				$('h3#totalCredit').text('R$ ' + parseFloat(totalCredit).toFixed(2));
+				$('h3#totalDebit').text('R$ ' + parseFloat(totalDebit).toFixed(2));
+				$('h3#totalSaldo').text('R$ ' + parseFloat(totalSaldo).toFixed(2));        	
+			}
+
+			function searchBankAccountByCompany()
+			{
+				$('form#formFilter select#bankAccounts').empty().trigger('change');
+				let companys = $('form#formFilter select#company').val(); 
+				if(''==companys){					
+					return;
+				}
+				$('form#formGetBankAccounts input#personsId').val(companys);
+				const form = $('form#formGetBankAccounts'); 			
+				const dataForm = form.serializeArray();
+
+				showLoading("Carregando Contas... Por favor aguarde...");  	
+
+				let message = 'Ocorreu um erro ao carregar contas.';
+				
+				$.ajax({
+					url : form.attr('action'),
+					type : "POST",
+					data : dataForm,
+					dataType : "json"
+				})
+				.done(function(data, textStatus, jqXHR) 
+				{	    		
+					if(true==data.status)
+					{
+						$.each(data.itens, function(key, value)
+						{
+							let optionKey = value.key;
+							let optionValue = value.value + ' (' + value.key + ')';
+
+							let newOption = new Option(optionValue, optionKey, true, true);
+							$('form#formFilter select#bankAccounts').append(newOption).trigger('change');	
+						});
+						$('form#formFilter input#selectAllBankAccounts').prop("checked", true);						
+					}
+					else
+					{
+						hideLoading();
+						showSweetalertWarning('Alerta!', data.message,'5000');
+					}
+				})
+				.fail(function(data, textStatus, jqXHR) 
+				{
+					if(''!=data.message)
+					{
+						message = data.message;
+					}
+					showSweetalertWarning('Alerta!', message,'5000');
+				}).always(function() 
+				{
+					$('#block1').hide();
+					$('#block2').hide();
+				});
+			}
+
+			function printDocuments(){
+				
+				let bankAccountsNames = '';
+				let countBankAccountsNames = 0;
+				$('form#formFilter select[id="bankAccounts"] option:selected').each(function(key,value){
+					if(countBankAccountsNames > 0){
+						bankAccountsNames += ', ';		
+					}
+				    bankAccountsNames += $(this).text().trim();				   
+				    countBankAccountsNames++;
+				});
+
+				$('form#formFilter input#bankAccountsNames').val(bankAccountsNames);
+				document.getElementById('formFilter').submit();
+			}
+
+			function searchDocuments()
+			{
+				let companys = $('form#formFilter select#company').val(); 
+				if(''==companys){
+					showSweetalertWarning('Alerta!', 'Pelo menos um fornecedor deve ser informado.','5000');
+					return;
+				}
+
+				const form = $('form#formFilter'); 			
+				const dataForm = form.serializeArray();
+				
+				showLoading("Carregando documentos... Por favor aguarde...");  	
+
+				let message = 'Ocorreu um erro ao carregar documentos.';
+				
+				$.ajax({
+					url : $('form#formFilterReportView').attr('action'),
+					type : "POST",
+					data : dataForm,
+					dataType : "json"
+				})
+				.done(function(data, textStatus, jqXHR) 
+				{	    		
+					if(true==data.status)
+					{
+						populateTable(data);
+					}
+					else
+					{
+						hideLoading();
+						showSweetalertWarning('Alerta!', data.message,'5000');
+					}
+				})
+				.fail(function(data, textStatus, jqXHR) 
+				{
+					if(''!=data.message)
+					{
+						message = data.message;
+					}
+					showSweetalertWarning('Alerta!', message,'5000');
+				}).always(function() 
+				{
+					$('#block1').hide();
+					$('#block2').hide();
+				});
+			}
+	    
+			function populateTable(data)
+			{
+				let trHTML = '<table id="table-relatorio" style="width: 100%;" class="table table-striped table-bordered display">';
+				trHTML += '<thead>';
+				trHTML += '<tr>';
+				trHTML += '<th class="text-center">Data de Mov.</th>';
+				trHTML += '<th class="text-center">Documento</th>';
+				trHTML += '<th class="text-center">Id</th>';
+				trHTML += '<th class="text-center">Grupo Financeiro</th>';
+				trHTML += '<th class="text-center">SubGrupo Financeiro</th>';
+				trHTML += '<th class="text-center">Empresa</th>';
+				trHTML += '<th class="text-center">Tipo Movimento</th>';
+				trHTML += '<th class="text-center">Descri&ccedil;&atilde;o</th>';
+				trHTML += '<th class="text-center">Valor</th>';
+				trHTML += '<th class="text-center">Valor Hidden</th>';
+				trHTML += '<th class="text-center">Total</th>';
+				trHTML += '</tr>';
+				trHTML += '</thead>';
+				trHTML += '<tbody>';
+
+				let totalCredit = new Number(0);
+				let totalDebit = new Number(0);
+				let totalSaldo = new Number(0);
+				const initialBalance = new Number(parseFloat(data.report.initialProviderAvaliable));
+				
+				$.each(data.report.itens, function(key, value)
+				{													
+					trHTML += '<tr>';
+					trHTML += '<td class="text-center">'+value.documentDate+'</td>';
+					trHTML += '<td class="text-center">'+value.documentParentId+'</td>';
+					trHTML += '<td class="text-center">'+value.documentId+'</td>';
+					trHTML += '<td class="text-left">'+value.financialGroupDescription+ '('+value.financialGroupId+')'+'</td>';
+					trHTML += '<td class="text-left">'+value.financialSubGroupDescription+ '('+value.financialSubGroupId+')'+'</td>';
+					trHTML += '<td class="text-left">'+value.companyDescription+ '('+value.companyId+')'+'</td>';
+					trHTML += '<td class="text-left">'+value.typeMovementDescription+'</td>';
+					trHTML += '<td class="text-left">'+value.movementDescription+'</td>';
+					if(value.documentValue>=0)
+					{
+						trHTML += '<td style="text-align: right"><span class="positive-value">'+parseFloat(value.documentValue).toFixed(2)+'</span></td>';
+					}
+					else
+					{
+						trHTML += '<td style="text-align: right"><span class="negative-value">'+parseFloat(value.documentValue).toFixed(2)+'</span></td>';
+					}
+					trHTML += '<td style="text-align: right">'+parseFloat(value.documentValue).toFixed(2)+'</td>';
+					trHTML += '<td class="text-right" id="balance_'+value.documentId+'_'+value.documentParentId+'">'+parseFloat(value.finalProviderAvaliable).toFixed(2)+'</td>';
+				
+					if(value.documentValue < 0){
+						totalDebit += value.documentValue;
+					} else {
+						totalCredit += value.documentValue;
+					}
+				});
+				
+				trHTML += '</tbody>';
+				trHTML += '</table>';
+				$('div#report-table').html(trHTML);
+
+				createTable();
+				
+				totalSaldo = (initialBalance + totalCredit + totalDebit);
+				populateDataSaldo(totalCredit, totalDebit, totalSaldo);
+								
+				$('h3#totalInitial').text('R$ ' + parseFloat(initialBalance).toFixed(2));
+			}
+
+			$( document ).ready(function() {
+					'use strict';						
+					$('.collapse').collapse('show');
+						
+					$.fn.dataTable.moment('DD/MM/YYYY');
+
+					/** Force input numeric only */
+					$('.force-numeric-only').ForceNumericOnly();
+
+			        const timezone = "America/Sao_Paulo";
+			        let fromDate = moment().startOf('week').format('dddd') === 'Sunday' ? moment().startOf('week').add('d',1) : moment().startOf('week');                       
+			        		
+			        let fromDateTimeZone = moment.tz(fromDate, timezone);
+			        fromDateTimeZone.set('hour',  0); 
+			        fromDateTimeZone.set('minute', 0);
+			        fromDateTimeZone.set('second',  0);
+			        
+			        if(moment().startOf('week').format('dddd') === 'Sunday'){
+			            let fromDateNowTimeZone = moment.tz(moment(), timezone);
+			         	if(new Number(fromDateTimeZone.format('YYYYMMDD')) > new Number(fromDateNowTimeZone.format('YYYYMMDD'))){
+			         		fromDateTimeZone = fromDateTimeZone.clone().day(-6);
+			         	}               
+			        }        
+			        
+			        let toDate = fromDateTimeZone.clone().day(7);
+			        let toDateTimeZone = moment.tz(toDate, timezone);
+			        toDateTimeZone.set('hour', 23); 
+			        toDateTimeZone.set('minute', 59);
+			        toDateTimeZone.set('second', 59);
+			        
+
+					$('.timeseconds').daterangepicker({
+					ranges: {
+					'Hoje': [moment(), moment()],
+					'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+					'Ult. 7 Dias': [moment().subtract(6, 'days'), moment()],
+					'Ult. 30 Dias': [moment().subtract(29, 'days'), moment()],
+					'Este M&ecirc;s': [moment().startOf('month'), moment().endOf('month')],
+					'Ult. M&ecirc;s': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+					},
+					autoApply: true,
+					autoUpdateInput: true,
+		            startDate: fromDateTimeZone,
+		            endDate: toDateTimeZone,
+					locale: {
+						format: 'DD/MM/YYYY', 
+						"separator": " - ",
+						"applyLabel": "Aplicar",
+						"cancelLabel": "Cancelar",
+						"fromLabel": "De",
+						"toLabel": "At&eacute;",
+						"customRangeLabel": "Custom",
+						"daysOfWeek": [
+							"Dom",
+							"Seg",
+							"Ter",
+							"Qua",
+							"Qui",
+							"Sex",
+							"S&aacute;b"
+						],
+						"monthNames": [
+							"Janeiro",
+							"Fevereiro",
+							"Mar&ccedil;o",
+							"Abril",
+							"Maio",
+							"Junho",
+							"Julho",
+							"Agosto",
+							"Setembro",
+							"Outubro",
+							"Novembro",
+							"Dezembro"
+						],
+						"firstDay": 0
+					},
+					showDropdowns: true
+				});
+					
+		        $('form#formFilter select#company')
+		        .select2({
+		  			theme: "bootstrap",
+			    	language: {
+			        	noResults: function (params) {
+			            return "Nenhum registro encontrado.";
+			          },
+			          searching: function ()
+			          {
+			              return 'Buscando...';
+			          },
+			          loadingMore: function () {
+			              return 'Carregando mais resultados...';
+			          },
+			          errorLoading: function () {
+			              return 'Os resultados nao puderam ser carregados.';
+			          },
+			          inputTooLong: function (args) {
+			              var overChars = args.input.length - args.maximum;
+
+			              var message = 'Apague ' + overChars + ' caracter';
+
+			              if (overChars != 1) {
+			                message += 'es';
+			              }
+
+			              return message;
+			            },
+			            inputTooShort: function (args) {
+			              var remainingChars = args.minimum - args.input.length;
+
+			              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+			              return message;
+			            }
+			        },
+		  			ajax: {
+		  				url : $('form#formAutocomplete').attr('action'),
+		                type : "POST",
+		  	            dataType: 'json',
+		  	            delay: 250,
+		  	            data: function (params)
+		  	            {
+		  	                return {
+		  	                	description: params.term, // search term
+		  	                	inactive: '0',
+		  	                	objectType: 'COM'
+		  	                };
+		  	            },
+		  	            processResults: function (data, params) {
+		  	                //console.log(data);
+		  	                var results = $.map(data.report, function (value, key)
+		  	                {
+		  	                    return {
+		  	                    	id: value.key,
+		  	                        text: value.value + ' (' + value.key + ')' 
+		  	                    };
+		  	                });
+		  	                //console.log(results);
+		  	                return {
+		  	                    results: results
+		  	                };
+		  	            },
+		  	            cache: true
+		  	        },
+		  	        minimumInputLength: 3,
+		  	        templateSelection: formatRepoSelection
+		  	    }).on('change', function (data)
+		  		{
+					searchBankAccountByCompany();
+		  		}).on('select2:close', function (e) 
+		  		{
+		  			//console.log(this.value);
+		  		});
+				
+				$('form#formFilter select#userChildrensParentCombobox')
+		  		.select2({ 
+			    	width: '100%',
+			    	theme: "bootstrap",
+			    	language: 
+			    	{
+			        	noResults: function (params) 
+			        	{
+			            	return "Nenhum registro encontrado.";
+			          	}
+			        }
+				});
+				
+				$('form#formFilter input#selectAllUsers').click(function()
+				{
+				    if($('input#selectAllUsers').is(':checked') )
+				    {
+				        $('form#formFilter select#userChildrensParentCombobox > option').prop('selected','selected');
+				    }
+				    else
+				    {
+				        $('form#formFilter select#userChildrensParentCombobox > option').prop('selected',false);
+				    }
+				    $('form#formFilter select#userChildrensParentCombobox').trigger('change');
+				 });
+				 
+				 const mainCompanyId = $('form#formFilter input#mainCompanyId').val();
+				 const mainCompanyDescription = $('form#formFilter input#mainCompanyDescription').val();
+				
+				 if(mainCompanyId > 0){
+					let optionKey = mainCompanyId;
+					let optionValue = mainCompanyDescription + ' (' +mainCompanyId + ')';
+					const newOption = new Option(optionValue, optionKey, true, true);
+					$('form#formFilter select#company').append(newOption).trigger('change');
+				 }
+				 
+				 $('form#formFilter select#groupBy')
+				 .select2({ 
+					width: '100%',
+					theme: "bootstrap",
+					language: 
+					{
+						noResults: function (params) 
+						{
+							return "Nenhum registro encontrado.";
+						}
+					}
+				 });
+				 
+				 $('form#formFilter select#analitic')
+				 .select2({ 
+					width: '100%',
+					theme: "bootstrap",
+					language: 
+					{
+						noResults: function (params) 
+						{
+							return "Nenhum registro encontrado.";
+						}
+					}
+				 });
+				 
+				 $('form#formFilter select#incomeExpense')
+				 .select2({ 
+					width: '100%',
+					theme: "bootstrap",
+					language: 
+					{
+						noResults: function (params) 
+						{
+							return "Nenhum registro encontrado.";
+						}
+					}
+				 });
+				 
+				$('form#formFilter select#bankAccounts')
+				.select2({ 
+					width: '100%',
+					theme: "bootstrap",
+					language: 
+					{
+						noResults: function (params) 
+						{
+							return "Nenhum registro encontrado.";
+						}
+					}
+				});
+				
+				$('form#formFilter select#financialCostCenter')
+		        .select2({ 
+		        	//tags : true,
+		            width: '100%',
+		            theme: "bootstrap",
+		            placeholder: "SELECIONE...",
+				    allowClear: true,
+		            language: {
+		                noResults: function() {
+		               return `<button style="width: 100%" type="button"
+		               class="btn btn-primary btn-sm" 
+		               onClick="saveNewCostCenter('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+		               </li>`;
+		               }
+		            },
+		          
+		           escapeMarkup: function (markup) {
+		               return markup;
+		           }
+		        }).on('change', function (e)
+		        {
+		        
+		        });
+				 
+				function searchBankAccountByCompany()
+				{
+					$('form#formFilter select#bankAccounts').empty().trigger('change');
+					let companys = $('form#formFilter select#company').val(); 
+					if(''==companys){					
+						return;
+					}
+					$('form#formGetBankAccounts input#personsId').val(companys);
+					const form = $('form#formGetBankAccounts'); 			
+					const dataForm = form.serializeArray();
+	
+					showLoading("Carregando Contas... Por favor aguarde...");  	
+	
+					let message = 'Ocorreu um erro ao carregar contas.';
+					
+					$.ajax({
+						url : form.attr('action'),
+						type : "POST",
+						data : dataForm,
+						dataType : "json"
+					})
+					.done(function(data, textStatus, jqXHR) 
+					{	    		
+						if(true==data.status)
+						{
+							$.each(data.itens, function(key, value)
+							{
+								let optionKey = value.key;
+								let optionValue = value.value + ' (' + value.key + ')';
+								
+								if(value.key2 === '1'){
+									let newOption = new Option(optionValue, optionKey, true, true);
+									$('form#formFilter select#bankAccounts').append(newOption).trigger('change');									
+								} else {
+									let newOption = new Option(optionValue, optionKey, false, false);
+									$('form#formFilter select#bankAccounts').append(newOption).trigger('change');
+								}
+							});
+							$('form#formFilter input#selectAllBankAccounts').prop("checked", false);						
+						}
+						else
+						{
+							hideLoading();
+							showSweetalertWarning('Alerta!', data.message,'5000');
+						}
+					})
+					.fail(function(data, textStatus, jqXHR) 
+					{
+						if(''!=data.message)
+						{
+							message = data.message;
+						}
+						showSweetalertWarning('Alerta!', message,'5000');
+					}).always(function() 
+					{
+						$('#block1').hide();
+						$('#block2').hide();
+					});
+				}
+				
+				$('form#formFilter input#selectAllBankAccounts').click(function()
+				{
+				    if($('form#formFilter input#selectAllBankAccounts').is(':checked') )
+				    {
+				        $('form#formFilter select#bankAccounts > option').prop('selected','selected');
+				    }
+				    else
+				    {
+				        $('form#formFilter select#bankAccounts > option').prop('selected', false);
+				    }
+				    $('form#formFilter select#bankAccounts').trigger('change');
+				});				 
+
+				//createTable();
+			});
+		</script>
+	</th:block>
+</html>

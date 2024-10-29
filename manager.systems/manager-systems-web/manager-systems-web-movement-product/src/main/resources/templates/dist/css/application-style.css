@@ -1,0 +1,21 @@
+.hr-admin {
+  margin-top: 0rem;
+  margin-bottom: 1rem;
+  border: 0;
+  border-top: 3px solid rgba(0, 0, 0, 0.1); 
+  width: 100% !important;
+}
+
+.footer-common {
+	background: #dbdbdb; 
+	color: #414755;
+	text-align: center !important;
+}
+
+.uppercase-text {
+	text-transform: uppercase !important;
+}
+
+.lowercase-text {
+	text-transform: lowercase !important;
+}

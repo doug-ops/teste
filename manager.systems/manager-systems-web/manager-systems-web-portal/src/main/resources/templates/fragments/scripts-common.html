@@ -1,0 +1,51 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts-common">
+		<!-- All Jquery -->
+	    <!-- ============================================================== -->
+	    <script th:src="@{/assets/libs/jquery/dist/jquery.min.js}"></script>
+	    <!-- Bootstrap tether Core JavaScript -->
+	    <script th:src="@{/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
+	    <script th:src="@{/assets/libs/bootstrap/dist/js/bootstrap.min.js}"></script>
+	    <!-- apps -->
+	    <script th:src="@{/dist/js/app.js}"></script>
+	    <script th:src="@{/dist/js/app.init.overlay.js}"></script>
+	     <!-- slimscrollbar scrollbar JavaScript -->
+	    <script th:src="@{/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
+	    <script th:src="@{/assets/extra-libs/sparkline/sparkline.js}"></script>
+	    <!--Wave Effects -->
+	    <script th:src="@{/dist/js/waves.js}"></script>
+	    <!--Menu sidebar -->
+	    <script th:src="@{/dist/js/sidebarmenu.js}"></script>
+	    <!--Custom JavaScript -->
+	    <script th:src="@{/dist/js/custom.min.js}"></script>
+	    <script th:src="@{/dist/js/application.js}"></script>
+	    
+	    <script>
+	    	function fireLogout(){
+		    	document.getElementById('logoutLink').click();	    		
+	    	}
+	    	
+	    	function searchLog()
+		    {	   
+		  		var formFilter = $('form#formLogSystemFilter');        
+		  		var dataForm = formFilter.serializeArray();
+		  		
+		  		$('div#report_table-logs').html('');	    	
+		  		
+				$.ajax({
+		            url : formFilter.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{						
+						populateTableLog(data);
+	             	}
+		    	});
+			}
+	    </script>
+	</th:block>
+</html>

@@ -1,0 +1,231 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+		<div class="col-12">
+			<div class="card">
+	            <div class="card-body" style="padding: 5px;">
+	                   <h4 class="p-20 text-center">Preview Fechamento de Caixa</h4>    
+	                <div class="col-md-12">
+	                    <div style="float: right;">
+	                        <a id="btnFilter" name="btnFilter" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="ti-filter" style="font-size: 14px;"></i></a>
+	                        <a id="btnCloseCash" href="javascript:onclick:showModalCashierClosing();" name="btnCloseCash" type="button" class="btn waves-effect waves-light btn-outline-info m-t-10">Despesas</a>
+	                        <a id="btnCloseCash" href="javascript: savePreview();" name="btnCloseCash" type="button" class="btn waves-effect waves-light btn-outline-info m-t-10" style="font-size: 11px;">Gravar</a>
+	                        <a id="btnView" href="javascript: searchUserMovement();" name="btnView" type="button" class="btn waves-effect waves-light btn-outline-success m-t-10" style="font-size: 11px;">Visualizar</a>
+	                        <a id="btnPreview" href="javascript: showModalReportPdf();" name="btnPreview" type="button" class="btn waves-effect waves-light btn-outline-warning m-t-10" style="font-size: 11px;"><i class="mdi mdi-bank" aria-hidden="true"></i>&nbsp;Imprimir</a>
+	                    </div>
+	                </div>
+	                <!-- Nav tabs -->
+	                <ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+	                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" id="tabReport" href="#report" role="tab"></a> </li>
+	                </ul>
+	                <!-- Tab panes -->
+	                <div class="tab-content tabcontent-border">
+	                    <div class="tab-pane active" id="report" role="tabpanel">
+	                        <div class="row">
+	                            <div class="col-12">
+	                                <!-- Filter -->
+	                                <div class="collapse" id="collapseFilter">
+	                                <!-- Filter Form -->
+	                                    <form id="formFilter" name="formFilter" th:action="@{/cashierClosingPreview/cashier-closing/filter}" method="post" autocomplete="off">
+	                                    	<input type="hidden" id="companysId" name="companysId"/>
+	                                    	<input type="hidden" id="isManager" name="isManager" th:value="${is_manager}"/>
+	                                    	
+	                                    	<!--
+											<input type="hidden" id="bankAccountDestinyKey" name="bankAccountDestinyKey" th:value="${bankAccountDestiny.key}"/>
+											<input type="hidden" id="bankAccountDestinyDescription" name="bankAccountDestinyDescription" th:value="${bankAccountDestiny.value}"/>
+											<input type="hidden" id="bankAccountDestinyCompany" name="bankAccountDestinyCompany" th:value="${bankAccountDestiny.key1}"/>
+											-->
+											
+	                                        <!-- Card -->
+	                                        <div class="card">
+	                                            <!-- Card Body -->
+	                                            <div class="card-body" style="padding: 0px;margin: 0px;">
+	                                                <!-- Row Title Filter -->
+	                                                <div class="row">
+	                                                    <div class="col-12">
+	                                                        <h4 class="card-title text-center font-weight-bold" style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+	                                                    </div>
+	                                                </div>
+	                                                <!--/ Row Title Filter -->
+	                                                <!-- Row Fields Filter -->					
+	                                                <div class="row">                                                    
+	                                                    <div class="col-md-7 mb-3">
+															<label for="filterData">Usu&aacute;rio</label>
+															<select class="m-b-20 m-r-10 custom-select" id="userChildrensParentCombobox" name="userChildrensParentCombobox">
+																<option th:each="item : ${userChidrensParent}" th:value="${item.key}" th:text="${item.value}" th:selected="(${item.key} == ${session.user?.id})"></option>
+															</select>
+														</div>
+														<div class="col-md-5 mb-3">
+	                                                        <label for="filterData">Caixas</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="cashingClose" name="cashingClose">	
+																<option th:each="item : ${cashMovements}" th:value="${item.weekYear}" th:text="${item.movementLabel}"></option>
+															</select>
+	                                                    </div>
+	                                                    <div class="col-md-10 mb-3">
+	                                                        <label for="companyId">Empresa</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="companyId" name="companyId" multiple>	
+																<option th:each="item : ${companies}" th:value="${item.key}" th:text="${item.value}"></option>
+															</select>
+		                                                </div>		                                                
+		                                                <div class="col-md-2 mb-3">
+	                                                        <label for="cashStatus">Status Caixa</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="cashStatus" name="cashStatus">	
+																<option value="0">Abertos</option>
+																<option value="1">Lan&ccedil;ados</option>
+																<option value="2">Fechados</option>
+																<option value="9" selected>Todos</option>
+															</select>
+		                                                </div>
+	                                                </div>													
+	                                                <!--/ Row Fields Filtro -->
+	                                            </div>
+	                                            <!--/ Card Body -->
+	                                        </div>
+	                                        <!--/ Card -->
+	                                    </form>
+	                                    <!--/ Form Filter -->
+	                                </div>
+	                                <!--/ Filter -->    
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-primary" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-plus" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalMovement" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;Total Movimentos</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-warning" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-plus" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalPendingBefore" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;P. Anteriores</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card" style="margin: 0px;">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-success" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-bank" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalStore" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;Total Receber</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card" style="margin: 0px;">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-danger" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-minus" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalDiscount" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;Descontos</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card" style="margin: 0px;">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-success" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-bank" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalPay" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;Total Recebido</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card" style="margin: 0px;">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-warning" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-coin" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalPendingAfter" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;Pend&ecirc;ncia Atual</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->	  
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card" style="margin: 0px;">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-danger" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-minus" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="expenseOrigin" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;Despesas Origem</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->                          
+	                            <!-- Column -->
+	                            <div class="col-lg-3 col-md-3 col-6" style="height: 49px; margin: 0px; margin-top: 15px;">
+	                                <div class="card" style="margin: 0px;">
+	                                    <div class="card-body" style="padding: 0px;">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-danger" style="line-height: 40px; width: 40px; height: 37px; font-size: 20px;">
+	                                            	<i class="mdi mdi-minus" style="width: 30px; height: 30px; line-height: 0px;"></i>
+	                                            </div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="expenseDestiny" style="font-size: 15px;"></h3>
+	                                                <h5 class="text-muted m-b-0" style="font-size: 12px;">&nbsp;Despesas Destino</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                        </div>
+	                        <div class="col-12">
+	                            <div id="report-table" class="table-responsive">
+	                               
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</th:block>
+</html>

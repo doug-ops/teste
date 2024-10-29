@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. --><!-- The contents of this file will be loaded for each web application -->
+<Context>
+
+	<!-- Default set of monitored resources. If one of these changes, the -->
+	<!-- web application will be reloaded. -->
+	<WatchedResource>WEB-INF/web.xml</WatchedResource>
+	<WatchedResource>WEB-INF/tomcat-web.xml</WatchedResource>
+	<WatchedResource>${catalina.base}/conf/web.xml</WatchedResource>
+
+	<!-- Uncomment this to disable session persistence across Tomcat restarts -->
+	<!-- <Manager pathname="" /> -->
+	<Resource name="jdbc/portal_dev" auth="Container"
+		type="javax.sql.DataSource" maxActive="50" maxIdle="30"
+		maxWait="10000" username="bmaws" password="BMAWSElectro@123"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://54.89.222.132:3306/manager_test?useSSL=false"
+		validationQuery="select 1" />
+		
+	<!-- 
+	<Resource name="jdbc/portal" auth="Container"
+		type="javax.sql.DataSource" maxActive="50" maxIdle="30"
+		maxWait="10000" username="root" password="root"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://10.0.0.24:3306/manager?useSSL=false"
+		validationQuery="select 1" />
+	 -->	
+
+	<Resource name="jdbc/portal" auth="Container"
+		type="javax.sql.DataSource" maxActive="50" maxIdle="30"
+		maxWait="10000" username="bmaws" password="BMAWSElectro@123"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://54.89.222.132:3306/manager?useSSL=false"
+		validationQuery="select 1" />
+
+	<Resource name="jdbc/portal_local" auth="Container"
+		type="javax.sql.DataSource" maxActive="50" maxIdle="30"
+		maxWait="10000" username="bmaws" password="bmawselectro"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://127.0.0.1:3306/manager?useSSL=false"
+		validationQuery="select 1" />
+
+	<Resource name="jdbc/retaguarda" auth="Container"
+		type="javax.sql.DataSource" maxActive="50" maxIdle="30"
+		maxWait="10000" username="bmaws" password="bmawselectro"
+		driverClassName="net.sourceforge.jtds.jdbc.Driver"
+		url="jdbc:jtds:sqlserver://bmaws.cxzqn3pftnpb.eu-central-1.rds.amazonaws.com:1433;DatabaseName=REMOTO"
+		validationQuery="select 1" />
+
+	<Resource name="jdbc/quarterhorse" auth="Container"
+		type="javax.sql.DataSource" maxActive="50" maxIdle="30"
+		maxWait="10000" username="COLECTIVA" password="QUARTER2012"
+		driverClassName="net.sourceforge.jtds.jdbc.Driver"
+		url="jdbc:jtds:sqlserver://167.86.69.52:1135;DatabaseName=QuarterHorse"
+		validationQuery="select 1" />
+
+	<Resources cachingAllowed="false" />
+</Context>

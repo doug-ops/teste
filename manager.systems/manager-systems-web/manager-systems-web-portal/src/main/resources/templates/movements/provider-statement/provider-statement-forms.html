@@ -1,0 +1,8 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formFilterReportView" name="formFilterReportView" th:action="@{/movement/providerStatement/filter}" method="post" autocomplete="off">
+		</form>
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off">		
+		</form>
+	</th:block>
+</html>

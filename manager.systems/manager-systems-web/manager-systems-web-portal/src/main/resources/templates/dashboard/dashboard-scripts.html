@@ -1,0 +1,406 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	    
+	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	    
+	    <!-- This Page CSS -->
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/daterangepicker/daterangepicker.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-document-movement.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-currency.css}"/>
+
+	    <script th:src="@{/assets/libs/moment/moment.js}"></script>
+	    <script th:src="@{/assets/libs/daterangepicker/daterangepicker.js}"></script>
+	    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+	    
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js}"></script>
+	    
+	    <!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>	
+    	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    	
+    	<!-- Date Picker -->
+	    <link rel="stylesheet" type="text/css" href="../../assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+	    <script src="../../assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+			
+			.modal-body{
+			    height: 250px;
+			    overflow-y: auto;
+			}
+			
+			@media (min-height: 500px) {
+			    .modal-body { height: 500px; }
+			}
+			
+			@media (min-height: 800px) {
+			    .modal-body { height: 700px; }
+			}
+			
+			.dataTables_wrapper {
+			    padding: 0;
+			    width: 100%;
+			}
+		</style>
+		
+	    <script>
+	    
+	    var isOpenFormNewDocument = true;
+	    var isSetFinancialGroup = false;
+	    
+  		function formatRepoSelection(repo)
+  		{
+  		  return repo.text;
+  		  
+  		}
+  		function editWeek(){
+
+  			const dateFrom = $('.dashboardWeek').data('daterangepicker').startDate;
+  			const dateTo = $('.dashboardWeek').data('daterangepicker').endDate;
+  			
+  			$('form#formEditWeekMovement input#dateFrom').val(dateFrom.format("DD/MM/YYYY"));
+  			
+  			$('form#formEditWeekMovement input#dateTo').val(dateTo.format("DD/MM/YYYY"));
+  			
+  			$('form#formEditWeekMovement').submit();
+
+  		}
+  		
+  		function searchDashboard()
+ 		{
+  			
+   			const form = $('form#formFilter'); 			
+   			const dataForm = form.serializeArray();
+   			showLoading("Carregando documentos... Por favor aguarde...");  	
+   			
+   			let message = 'Ocorreu um erro ao carregar documentos.';
+ 			$.ajax({
+ 				url : form.attr('action'),
+ 				type : "POST",
+ 				data : dataForm,
+ 				dataType : "json"
+ 			})
+ 			.done(function(data, textStatus, jqXHR) 
+ 			{	    		
+ 				if(true==data.status)
+ 				{
+ 					//populateDashboard(data);
+ 				}
+ 				else
+ 				{
+ 					hideLoading();
+ 					showSweetalertWarning('Alerta!', data.message,'5000');
+ 				}
+ 			})
+ 			.fail(function(data, textStatus, jqXHR) 
+ 			{
+ 				if(''!=data.message)
+ 				{
+ 					message = data.message;
+ 				}
+ 				showSweetalertWarning('Alerta!', message,'5000');
+ 			}).always(function() 
+ 			{
+ 				$('#block1').hide();
+ 				$('#block2').hide();
+ 			});
+ 		}
+  		
+
+	    function populateDashboard(data)
+	    {
+	    	$('div#itens-dashboard').html('');
+	    	if (true == data.status) {
+                let trHTML = '';
+                	 trHTML += '<div class="col-sm-12 col-lg-12" style="padding-right: 0px;">';
+                     trHTML += '<div class="card">';
+                     trHTML += '<div class="card-body">';
+                     trHTML += '<div class="d-md-flex align-items-center">';
+                     trHTML += '<div class="row" style="width: 100%;">';
+                     trHTML += '<div class="col-md-12 mb-3">';
+                     trHTML += '<h4 class="card-title">Romaneio</h4>';
+                     trHTML += '</div>';
+                     trHTML += '<div class="col-md-12 mb-3">';
+                     trHTML += '<label for="filterData">Data</label>';
+                     trHTML += '<div class="input-group">';
+                     trHTML += '<input type="text" class="form-control dashboardWeek text-center" id="date" name="date" />';
+                     trHTML += '<div class="input-group-append">';
+                     trHTML += '<span class="input-group-text">';
+                     trHTML += '<span class="ti-calendar"></span>';
+                     trHTML += '</span>';
+                     trHTML += '<a id="btnView" onclick="searchDashboard();" name="btnView" type="button" class="btn waves-effect waves-light btn-outline-success m-t-10">Buscar</a>';
+                     trHTML += '</div>';
+                     trHTML += '</div>';
+                     trHTML += '</div>';
+
+                     trHTML += '<div class="col-md-12 mb-3">';
+                         trHTML += '<ul class="nav nav-pills custom-pills m-t-40" id="pills-tab" role="tablist">';
+                
+                let count = 0;
+            $.each(data.report.itens, function (key, value) {
+
+
+                    trHTML += '<li class="nav-item p-l-10">';
+                    trHTML += '<a class="nav-link'+(count == 0 ? ' active' : '') +'" id="pills-home-tab_'+value.weekYear+'" data-toggle="pill" href="#tab_'+value.weekYear+'" role="tab" aria-selected="false">'+value.weekYearString+'</a>';                             
+                    trHTML += '</li>';
+
+                    count = count+1;
+            });
+
+            trHTML += '</ul>';
+           
+            
+            trHTML += '<div class="tab-content m-t-20" id="pills-tabContent">';
+            count = 0;
+            $.each(data.report.itens, function (key, value) {
+                 
+                    trHTML += '<div class="tab-pane fade'+(count == 0 ? ' show active' : '') +'" id="tab_'+value.weekYear+'" role="tabpanel" aria-labelledby="pills-home-tab_'+value.weekYear+'">';
+                    trHTML += '<div id="div_' + value.weekYear + '" class="col-lg-12 col-xl-12">';
+                    trHTML += '<div class="card card-hover">';
+                    trHTML += '<div class="card-body">';
+                    trHTML += '<div class="p-t-20 text-center">';
+                     trHTML += '<a onclick="editWeek();">';
+                    trHTML += '<i class="mdi mdi-file-chart display-4 text-orange d-block" style="font-size: 4.5rem;"></i>';
+                    trHTML += '<span class="display-4 d-block font-medium" style="font-size: 4.5rem;">' + value.countMovement + '</span>';
+                    trHTML += '<span><h1>'+value.weekYearString+'>Semana</h1></span>';
+                    trHTML += '</a>';
+                    trHTML += '<p class="m-b-0 font-medium"><h6>'+ value.initialDateWeekString +' at&#233; ' + value.finalDateWeekString + '</h6></p>';
+                    trHTML += '<!-- row -->';
+                    trHTML += '<div class="row m-t-30 m-b-20">';
+                    trHTML += '<!-- column -->';
+                    trHTML += '<div class="col-sm-6 col-md-2 col-lg-2 border-right text-center">';
+                    trHTML += '<h2 class="m-b-0 font-medium">'+value.countExecuted+'</h2><h3>Executada</h3>';
+                    trHTML += '</div>';
+                    trHTML += '<div class="col-sm-6 col-md-2 col-lg-2 border-center">';
+                    trHTML += '<h2 class="m-b-0 font-medium">'+value.countNotExecuted+'</h2><h3>N&atilde;o Executado</h3>';
+                    trHTML += '</div>';
+                    trHTML += '<!-- column -->';
+                    trHTML += '<div class="col-sm-6 col-md-2 col-lg-2 text-center">';
+                    trHTML += '<h2 class="m-b-0 font-medium">'+value.countNegative+'</h2><h3>Negativo</h3>';
+                    trHTML += '</div>';
+                    trHTML += '<!-- column -->';
+                    trHTML += '<div class="col-sm-6 col-md-2 col-lg-2 text-center">';
+                    trHTML += '<h2 class="m-b-0 font-medium">'+value.countLowMovement+'</h2><h3>Baixo Movimento</h3>';
+                    trHTML += '</div>';
+                    trHTML += '<!-- column -->';
+                    trHTML += '<div class="col-sm-6 col-md-2 col-lg-2 text-center">';
+                    trHTML += '<h2 class="m-b-0 font-medium">'+value.countOthers+'</h2><h3>Outros</h3>';
+                    trHTML += '</div>';
+                    trHTML += '<!-- column -->';
+                    trHTML += '<div class="col-sm-6 col-md-2 col-lg-2 text-center">';
+                    trHTML += '<h2 class="m-b-0 font-medium">'+value.countNotInformed+'</h2><h3>N&atilde;o Informado</h3>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+                    trHTML += '</div>';
+
+                    count = count+1;
+            });
+
+                     trHTML += '</div>';
+
+                     trHTML += '</div>';
+                     trHTML += '</div>';
+                 
+                 trHTML += '</div>';
+                 trHTML += '</div>';
+                 trHTML += '</div>';
+                 trHTML += '</div>';
+
+
+                 
+                 // content += '<!-- Progress -->';
+                 // content += '<div class="progress m-t-40" style="height:4px;">';
+                 // content += '<div class="progress-bar bg-info" role="progressbar" style="width: 15%"';
+                 // content += 'aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>';
+                 // content += '<div class="progress-bar bg-orange" role="progressbar" style="width: 30%"';
+                 // content += 'aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>';
+                 // content += '<div class="progress-bar bg-warning" role="progressbar" style="width: 65%"';
+                 // content += 'aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>';
+                 // content += '</div>';
+                 // content += '<!-- Progress -->';
+
+                $('div#itens-dashboard').html(trHTML);
+                
+        		$('.dashboardWeek').daterangepicker({
+        			
+        			ranges: {
+        			'Hoje': [moment(), moment()],
+        			'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+        			'Ult. 7 Dias': [moment().subtract(6, 'days'), moment()],
+        			'Ult. 30 Dias': [moment().subtract(29, 'days'), moment()],
+        			'Este M&ecirc;s': [moment().startOf('month'), moment().endOf('month')],
+        			'Ult. M&ecirc;s': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        			},
+        			autoApply: true,
+        			autoUpdateInput: true,
+        			locale: {
+        				format: 'DD/MM/YYYY', 
+        				"separator": " - ",
+        				"applyLabel": "Aplicar",
+        				"cancelLabel": "Cancelar",
+        				"fromLabel": "De",
+        				"toLabel": "At&eacute;",
+        				"customRangeLabel": "Custom",
+        				"daysOfWeek": [
+        					"Dom",
+        					"Seg",
+        					"Ter",
+        					"Qua",
+        					"Qui",
+        					"Sex",
+        					"S&aacute;b"
+        				],
+        				"monthNames": [
+        					"Janeiro",
+        					"Fevereiro",
+        					"Mar&ccedil;o",
+        					"Abril",
+        					"Maio",
+        					"Junho",
+        					"Julho",
+        					"Agosto",
+        					"Setembro",
+        					"Outubro",
+        					"Novembro",
+        					"Dezembro"
+        				],
+        				"firstDay": 0
+        			},
+        			showDropdowns: true
+        		});
+        		
+    			$('.dashboardWeek').data('daterangepicker').setStartDate(data.report.dateFromString);
+    			$('.dashboardWeek').data('daterangepicker').setEndDate(data.report.dateToString);
+        		
+            }
+	    	       
+	    }
+	    
+	    
+	    function format(d)
+	    {
+	         // `d` is the original data object for the row
+	         return d.detail;  
+	    }
+	    
+	    function exportTableToCSV($table, filename) {
+	    	 
+	        //rescato los titulos y las filas
+	        var $Tabla_Nueva = $table.find('tr:has(td,th)');
+	        // elimino la tabla interior.
+	        var Tabla_Nueva2= $Tabla_Nueva.filter(function() {
+	             return (this.childElementCount != 1 );
+	        });
+	    
+	        var $rows = Tabla_Nueva2,
+	            // Temporary delimiter characters unlikely to be typed by keyboard
+	            // This is to avoid accidentally splitting the actual contents
+	            tmpColDelim = String.fromCharCode(11), // vertical tab character
+	            tmpRowDelim = String.fromCharCode(0), // null character
+	    
+	            // Solo Dios Sabe por que puse esta linea
+	            colDelim = (filename.indexOf("xls") !=-1)? '"\t"': '","',
+	            rowDelim = '"\r\n"',
+	    
+	    
+	            // Grab text from table into CSV formatted string
+	            csv = '"' + $rows.map(function (i, row) {
+	                var $row = $(row);
+	                var   $cols = $row.find('td:not(.hidden),th:not(.hidden)');
+	    
+	                return $cols.map(function (j, col) {
+	                    var $col = $(col);
+	                    var text = $col.text().replace(/\./g, '');
+	                    return text.replace('"', '""'); // escape double quotes
+	    
+	                }).get().join(tmpColDelim);
+	                csv =csv +'"\r\n"' +'fin '+'"\r\n"';
+	            }).get().join(tmpRowDelim)
+	                .split(tmpRowDelim).join(rowDelim)
+	                .split(tmpColDelim).join(colDelim) + '"';
+	    
+	    
+	         download_csv(csv, filename);
+	    
+	    
+	    }
+	    
+	   function download_csv(csv, filename) {
+	        var csvFile;
+	        var downloadLink;
+	    
+	        // CSV FILE
+	        csvFile = new Blob([csv], {type: "text/csv"});
+	    
+	        // Download link
+	        downloadLink = document.createElement("a");
+	    
+	        // File name
+	        downloadLink.download = filename;
+	    
+	        // We have to create a link to the file
+	        downloadLink.href = window.URL.createObjectURL(csvFile);
+	    
+	        // Make sure that the link is not displayed
+	        downloadLink.style.display = "none";
+	    
+	        // Add the link to your DOM
+	        document.body.appendChild(downloadLink);
+	    
+	        // Lanzamos
+	        downloadLink.click();
+	    }
+	  
+	   
+	    (function() {
+	    'use strict';
+	    	
+	 
+        $('.collapse').collapse('show');  
+                
+	    $('.nav-tabs a').click(function(e){
+	    	  tabId = this.id;
+	    	  if('tabCreate'==tabId)
+	    	  {
+	    		  $('a#btnView').hide();
+	    	  }
+	    	  else
+	          {
+	    		  $('a#btnView').show();
+	    		  search();
+	          }
+	    });
+	    
+	    //searchDashboard(); 
+	    
+	    })();
+	    </script>
+	</th:block>
+</html>

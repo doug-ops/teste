@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.manager.systems</groupId>
+		<artifactId>manager-systems-common</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>manager-systems-common-model</artifactId>
+	<name>manager-systems-common-model</name>
+	<description>Manager Systems Common Model</description>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.manager.systems</groupId>
+			<artifactId>manager-systems-common-vo</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.manager.systems</groupId>
+			<artifactId>manager-systems-common-dto</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+	</dependencies>
+		<properties>
+		<manager-systems-common-vo>0.0.1</manager-systems-common-vo>
+	</properties>
+</project>

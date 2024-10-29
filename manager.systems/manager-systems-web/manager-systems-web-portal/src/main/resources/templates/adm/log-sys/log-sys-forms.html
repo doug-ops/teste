@@ -1,0 +1,15 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off">		
+		</form>
+		<form id="formReportPdf" name="formReportPdf" th:action="@{/logsystem/filterReport}" target="_blank" method="post">
+			<input type="hidden" id="date" name="date"/>
+			<input type="hidden" id="analitic" name="analitic"/>
+		</form>	
+		<form id="formLogSystemDetail" name="formLogSystemDetail" th:action="@{/logsystem/detail}" method="post" autocomplete="off">
+	    	<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>													
+	    	<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="changeDate" name="changeDate"/>
+		</form>
+	</th:block>
+</html>

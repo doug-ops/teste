@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formNextCode" name="formNextCode" th:action="@{/adm/common/nextCode}" method="post" autocomplete="off">		
+			<input type="hidden" id="tableName" name="tableName"/>
+			<input type="hidden" id="initialCode" name="initialCode"/>
+		</form>
+		<form id="formInactive" name="formInactive" th:action="@{/adm/product/inactive}" method="post" autocomplete="off">		
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="inactive" name="inactive"/>
+		</form>
+		<form id="formDetail" name="formDetail" th:action="@{/adm/product/detail}" method="post" autocomplete="off">		
+			<input type="hidden" id="id" name="id"/>
+		</form>
+		<form id="formAutocompleteSubGroup" name="formAutocompleteSubGroup" th:action="@{/adm/product-sub-group/autocomplete}" method="post" autocomplete="off">		
+			<input type="hidden" id="productGroup" name="productGroup"/>
+		</form>
+		<form id="formSincBravo" name="formSincBravo" th:action="@{/bravo-movement/synchronizeProduct}" method="post" autocomplete="off">	
+		</form>		
+		<form id="formLogSystemFilter" name="formLogSystemFilter" th:action="@{/logsystem/filter}" method="post" autocomplete="off">
+			<input type="hidden" id="systemId" name="systemId" />
+			<input type="hidden" id="objectId" name="objectId" />
+		</form>
+		<form id="formSaveGameType" name="formSaveGameType" th:action="@{/adm/gameType/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+		</form>
+		<form id="formSaveMachineType" name="formSaveMachineType" th:action="@{/adm/machineType/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+		</form>
+	</th:block>
+</html>

@@ -1,0 +1,136 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+		<div class="col-md-12">
+			<div class="card">
+	            <div class="card-body" style="padding: 5px;">
+	               	<h4 class="p-20 text-center">Relat&oacute;rio de Fluxo de Caixa por Grupo Financeiro</h4>    
+	                <div class="col-md-12">
+	                    <div style="float: right;">
+	                        <a id="btnFilter" name="btnFilter" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="ti-filter" style="font-size: 14px;"></i></a>
+							<!--
+							<a id="btnView" href="javascript: searchDocuments();" name="btnView" type="button" class="btn waves-effect waves-light btn-outline-success m-t-10">Visualizar</a>
+							-->
+							<a id="btnPrint" href="javascript: printDocuments();" name="btnPrint" type="button" class="btn waves-effect waves-light btn-outline-info m-t-10"><i class="mdi mdi-printer"></i>&nbsp;Imprimir</a>
+	                	</div>
+		                <!-- Nav tabs -->
+		                <ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+		                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" id="tabReport" href="#report" role="tab"><span class="hidden-sm-up"><i class="fas fa-list"></i></span> <span class="hidden-xs-down">Relat&oacute;rio</span></a> </li>
+		                </ul>
+		                <!-- Tab panes -->
+		                <div class="tab-content tabcontent-border">
+		                    <div class="tab-pane active" id="report" role="tabpanel">
+		                        <div class="row">
+		                            <div class="col-md-12">
+		                                <!-- Filter -->
+		                                <div class="collapse" id="collapseFilter">
+		                                <!-- Filter Form -->
+		                                    <form id="formFilter" name="formFilter" th:action="@{/financial/cashFlow/grouping/reportPdf}" method="post" autocomplete="off" target="_blank">
+												<input type="hidden" id="mainCompanyId" name="mainCompanyId" th:value="${session.user?.mainCompanyId}"/>	
+		                                        <input type="hidden" id="mainCompanyDescription" name="mainCompanyDescription" th:value="${session.user?.mainCompanyDescription}"/>
+		                                        <input type="hidden" id="bankAccountsNames" name="bankAccountsNames"/>
+		                                        <!-- Card -->
+		                                        <div class="card">
+		                                            <!-- Card Body -->
+		                                            <div class="card-body">
+		                                                <!-- Row Title Filter -->
+		                                                <div class="row">
+		                                                    <div class="col-md-12">
+		                                                        <h4 class="card-title text-center font-weight-bold" style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+		                                                    </div>
+		                                                </div>
+		                                                <!--/ Row Title Filter -->
+		                                                <!-- Row Fields Filter -->					
+		                                                <div class="row">
+															<div class="col-md-3 mb-3">
+		                                                        <label for="filterData">Data</label>
+		                                                        <div class="input-group">
+		                                                            <input type="text" class="form-control timeseconds text-center" id="date" name="date" />
+		                                                            <div class="input-group-append">
+		                                                                <span class="input-group-text">
+		                                                                    <span class="ti-calendar"></span>
+		                                                                </span>
+		                                                            </div>
+		                                                        </div>
+															</div>															
+		                                                    <div class="col-md-5 mb-3">
+		                                                        <label for="company">Empresa</label>
+		                                                        <select class="m-b-20 m-r-10 custom-select" id="company" name="company">	
+																</select>
+		                                                    </div>
+		                                                	<div class="col-md-4 mb-3">
+																<div class="form-group" style="margin-bottom: 7px;">
+																	<div
+																		class="form-check custom-control custom-checkbox mr-sm-2">
+																		<input type="checkbox"
+																			class="custom-control-input form-check-input"
+																			id="selectAllBankAccounts" name="selectAllBankAccounts" /> 
+																			<label
+																			class="custom-control-label form-check-label"
+																			for="selectAllBankAccounts">Selecionar todas Contas Banc&aacute;rias</label>
+																	</div>
+																</div>
+		                                                        <select class="m-b-3 custom-select" id="bankAccounts" name="bankAccounts" multiple>
+		                                                        </select>
+															</div>
+		                                                    <div class="col-md-5 mb-3">
+		                                                   		<div class="form-group" style="width: 300px; height: 13px;">
+																	<div
+																		class="form-check custom-control custom-checkbox mr-sm-2">
+																		<input type="checkbox"
+																			class="custom-control-input form-check-input"
+																			id="selectAllUsers" name="selectAllUsers" /> <label
+																			class="custom-control-label form-check-label"
+																			for="selectAllUsers">Selecionar todos os usu&aacute;rios vinculados</label>
+																	</div>
+																</div>
+																<select class="m-b-20 m-r-10 custom-select" id="userChildrensParentCombobox"
+																	name="userChildrensParentCombobox" multiple="multiple">
+																	<option th:each="item : ${userChidrensParent}" th:value="${item.key}"
+																		th:text="${item.value}"></option>
+																	<option th:value="${session.user?.id}" selected th:text="${session.user?.name}"></option>
+																</select>
+															</div>	
+															<div class="col-md-3 mb-3">
+		                                                        <label for="groupBy">Tipo Agrupamento</label>
+		                                                        <select class="m-b-20 m-r-10 custom-select" id="groupBy" name="groupBy">
+																	<option value="0">Diario</option>
+																	<option value="1">Semanal</option>
+																	<option value="2">Mensal</option>
+																</select>
+		                                                    </div>	
+		                                                    <div class="col-md-1 mb-2">
+		                                                        <label for="analitic">Tipo Relat&oacute;rio</label>
+		                                                        <select class="m-b-20 m-r-10 custom-select" id="analitic" name="analitic">
+																	<option value="0" selected>Sintetico</option>
+																	<option value="1">Analitico</option>
+																</select>
+		                                                    </div>
+		                                                    <div class="col-md-3 mb-2">
+		                                                        <label for="incomeExpense">Tipo Documento</label>
+		                                                        <select class="m-b-20 m-r-10 custom-select" id="typeDocument" name="typeDocument" multiple>
+																	<option value="0">Saldo anterior</option>
+																	<option value="1" selected>Recebimentos</option>
+																	<option value="2" selected>Pagamentos</option>
+																	<option value="4" selected>Transf. Contas</option>
+																</select>
+		                                                    </div>                                                       
+		                                                </div>													
+		                                                <!--/ Row Fields Filtro -->
+		                                            </div>
+		                                            <!--/ Card Body -->
+		                                        </div>
+		                                        <!--/ Card -->
+		                                    </form>
+		                                    <!--/ Form Filter -->
+		                                </div>
+		                                <!--/ Filter -->    
+		                            </div>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+	        	</div>
+			</div>
+		</div>
+	</th:block>
+</html>

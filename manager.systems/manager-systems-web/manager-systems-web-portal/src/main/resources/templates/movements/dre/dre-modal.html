@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="modal">
+	<!-- ============================================================== -->
+    <!--Modals-->
+    <!-- ============================================================== -->
+     <!-- ============================================================== -->
+    <!--Report Pdf Modal 16/02/2022--> 
+    <!-- ============================================================== -->
+     <div id="new-report-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="vcenter" style="height:100%;">
+     	<div class="modal-dialog modal-dialog-centered">
+           <div class="modal-content" style="border-radius:5px;">
+              <div class="modal-header">
+                 <div class="col-md-12">
+					<h4 class="modal-title" id="titleModal">Escolha os filtros para impress\u00e3o</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+				</div>
+                </div>
+                <div class="modal-body" style="height:170px;">
+                     <form id="formReportPdf" name="formReportPdf" th:action="@{/dre/open}" method="post" autocomplete="off">
+					 	<div class="row">
+							<div class="col-md-12" id="divSincSema">
+								<div class="form-SincSema">
+									<label for="sinteticoAnalitic">Sintetico/Analitico:</label> 
+									<select class="m-b-20 m-r-10 custom-select" id="sinteticoAnalitic" name="sinteticoAnalitic" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+							        	<option value="0" selected="selected">Sintetico</option>
+							        	<option value="1">Analitico</option>
+							        </select>
+							   	</div>            
+							</div>
+						</div>
+					</form>  
+				</div>                                          
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-warning" id="btnCancReportPdf" data-dismiss="modal">Fechar</button>
+			        <button type="button" class="btn btn-primary" id="btnReportPdf" onclick="printReportPdf();">Imprimir</button>
+                </div>
+             </div>
+     	  </div>  
+       </div>
+    <!-- ============================================================== -->
+    <!--End Report Pdf Modal-->
+    <!-- ============================================================== -->
+	</th:block>
+</html>

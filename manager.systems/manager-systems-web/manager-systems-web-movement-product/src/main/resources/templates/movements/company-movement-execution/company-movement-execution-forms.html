@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+	    <form id="formGetDataCompany" name="formGetDataCompany" th:action="@{/companyMovementExecution/filterCompanyMovementExecution}" method="post" autocomplete="off">		
+	        <input type="hidden" id="companyId" name="companyId"/>
+	        <input type="hidden" id="expirationDate" name="expirationDate"/>
+	        <input type="hidden" id="bankAccountOriginId" name="bankAccountOriginId"/>
+	        <input type="hidden" id="bankAccountDestinyId" name="bankAccountDestinyId"/>
+	        <input type="hidden" id="weekYear" name="weekYear"/>
+	    </form>
+	    <form id="formSave" name="formSave" th:action="@{/companyMovementExecution/save}" method="post" autocomplete="off">		
+        	<input type="hidden" id="fildChange" name="fildChange"/>
+    	</form>
+	</th:block>
+</html>

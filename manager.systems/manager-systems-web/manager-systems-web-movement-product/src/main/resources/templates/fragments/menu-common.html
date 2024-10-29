@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="menu">
+		<!-- Sidebar scroll-->
+		<div class="scroll-sidebar">
+		    <!-- Sidebar navigation-->
+		    <nav class="sidebar-nav">
+		        <ul id="sidebarnav">
+		            <!-- User Profile-->
+		            <li>
+		                <!-- User Profile-->
+		                <div class="user-profile d-flex no-block dropdown m-t-20">
+		                    <div class="user-pic"><img th:src="@{/assets/images/users/1.jpg}" alt="users" class="rounded-circle" width="40" /></div>
+		                    <div class="user-content hide-menu m-l-10">
+		                        <a href="javascript:void(0)" class="" id="Userdd" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		                            <h5 class="m-b-0 user-name font-medium" th:text="${session.user?.name}"><i class="fa fa-angle-down"></i></h5>
+		                            <span class="op-5 user-email" th:text="${session.user?.contactData?.email}"></span>
+		                        </a>
+		                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="Userdd">
+		                            <a class="dropdown-item" th:href="@{/logout}"><i class="fa fa-power-off m-r-5 m-l-5"></i> Sair</a>
+		                        </div>
+		                    </div>
+		                </div>
+		                <!-- End User Profile-->
+		            </li>
+		            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/home}" aria-expanded="false"><i class="ti-loop"></i><span class="hide-menu">Home</span></a></li>
+		            <li class="sidebar-item selected" th:if="${session.permissions['MENU_OFF_LINE_MOVIMENTO_PRODUTO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link active" th:href="@{/product-movement/open}" aria-expanded="false"><i class="fas fa-pencil-alt"></i><span class="hide-menu">Movimento Produto</span></a></li>
+		            <li class="sidebar-item selected" th:if="${session.permissions['MENU_OFF_LINE_PROCESSA_EMPRESA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link active" th:href="@{/company-movement/open}" aria-expanded="false"><i class="mdi mdi-table-edit"></i><span class="hide-menu">Processa Empresa</span></a></li>
+		            <li class="sidebar-item selected" th:if="${session.permissions['MENU_OFF_LINE_RETIRADA_PRODUTO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link active" th:href="@{/product-movement/productWithdrawalMovement}" aria-expanded="false"><i class="far fa-edit"></i><span class="hide-menu">Retirada do Produto</span></a></li>
+		            <li class="sidebar-item selected" th:if="${session.permissions['MENU_OFF_LINE_FECHAMENTO_CAIXA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/cashierClosingPreview/cashier-closing/open}" aria-expanded="false"><i class="mdi mdi-coin"></i><span class="hide-menu">Fechamanto de Caixa</span></a></li>			        		        
+		    	</ul>
+		    </nav>
+		    <!-- End Sidebar navigation -->
+		</div>
+		<!-- End Sidebar scroll-->
+	</th:block>
+</html>

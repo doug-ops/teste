@@ -1,0 +1,1590 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	
+	<style type="text/css">
+			#dataTables_scrollHeadInner{
+			width: 274px;
+			}
+		</style>
+	    <script>
+	    
+	    
+	    function processPermissonBankAccount(){
+			let companysValues = [];
+			$('form#formSave select#company option:selected').each(function(){
+		    	companysValues.push($(this).val());
+		    });
+		    
+			let hasCompanyPrincipal = companysValues.includes('182');
+			if(!hasCompanyPrincipal){
+				hasCompanyPrincipal = companysValues.includes('1');
+			}
+			
+			if(!hasCompanyPrincipal){
+				$('form#formSave select#bankAccountsCompany > option').prop('selected',false);
+				$('form#formSave select#bankAccountsCompany').trigger('change');
+				$('form#formSave select#bankAccountsCompany').prop("disabled", true);
+			} else {
+				$('form#formSave select#bankAccountsCompany').prop("disabled", false);
+			}
+		}
+	    
+	    function transferProductsToCompany(id, inactivePerson)
+	    {	    	
+	    	var objectType =  $('form#formSave input#objectType').val();
+	    	$('form#formInactive input#objectType').val(objectType);
+			if('COM' == objectType){
+				if(true == inactivePerson){
+        			$('#btnOk').show();
+        			$('#btnExtOk').hide();
+        			$('#btnCancel').show();
+        			showModalDiscardProduct(id);					
+				}else{
+					$('form#formProductDiscard select#companyDestiny').val(0).trigger('change');
+				}								 
+			}else{
+				inactive(id, inactivePerson);
+			}
+	    }
+	    
+		function processDiscardProduct(){	
+			var companyDestiny = $('form#formProductDiscard select#companyDestiny').val();
+			if ('' == companyDestiny) 
+			{
+	            return; 	            
+			}
+			else
+			{
+				$('form#formInactive input#companyDestiny').val(companyDestiny);
+				$('div#transf-products-modal').modal('hide');
+				const id = $('form#formProductDiscard input#idPerson').val();
+				inactive(id, true);
+			}	
+			
+		};
+ 
+		function showModalDiscardProduct(id)
+        {
+			const clientIdParameter = $('form#formFilter input#clientId').val();
+			
+			if(clientIdParameter == 2){
+				$('form#formProductDiscard select#companyDestiny').val('').trigger('change');			
+			} else {
+				$('form#formProductDiscard select#companyDestiny').val('142').trigger('change');				
+			}
+			
+			$('form#formProductDiscard input#idPerson').val(id);
+
+			$('a#btnCancel').hide();
+        	$('div#divSincSema').show();
+			
+			$('div#divSincSema').removeClass('col-md-12').addClass('col-md-12');
+            $('div#transf-products-modal').modal('show'); 	            
+        }  
+	    
+	    function saveNewEstablishmentType(){
+  			let descriptionEstablishmentType = '';
+  			
+  	  		descriptionEstablishmentType = $('form#formSave select#establishmentTypeId').data("select2").dropdown.$search.val();
+
+  			$('form#formSaveEstablishmentType input#description').val(encodeURIComponent(descriptionEstablishmentType));
+
+  			const form = $('form#formSaveEstablishmentType');			
+	  		let dataForm = form.serializeArray();
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(res, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==res.status)
+             	{
+            		const optionKey = res.data.id;
+            		const optionValue = res.data.description + ' (' + optionKey + ')';
+
+            		const newOption = new Option(optionValue, optionKey, true, true);
+
+                		$('form#formSave select#establishmentTypeId').append(newOption).trigger('change');
+    					$('form#formSave select#establishmentTypeId').select2("close");
+               	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', res.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    { 
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+  		}
+	    
+	    function saveNewPersonType(){
+  			let descriptionPersonType = '';
+  			
+  			descriptionPersonType = $('form#formSave select#personTypeId').data("select2").dropdown.$search.val();
+  			
+  			$('form#formSavePersonType input#description').val(encodeURIComponent(descriptionPersonType));
+  			$('form#formSavePersonType input#objectType').val($('form#formSave input#objectType').val());
+
+  			const form = $('form#formSavePersonType');			
+	  		let dataForm = form.serializeArray();
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(res, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==res.status)
+             	{
+            		const optionKey = res.data.id;
+            		const optionValue = res.data.description + ' (' + optionKey + ')';
+
+            		const newOption = new Option(optionValue, optionKey, true, true);
+
+                		$('form#formSave select#personTypeId').append(newOption).trigger('change');
+    					$('form#formSave select#personTypeId').select2("close");
+               	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', res.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    { 
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+  		}
+	    
+	    function searchFinancialSubGroup()
+	    {	   
+	  		var form = $('form#formAutocompleteFinancialSubGroup');        
+	  		var dataForm = form.serializeArray();
+	  		
+	  		$('form#formSave select#financialSubGroupId').empty().trigger('change');
+	  		showLoading("Carregando dados... Por favor aguarde...");
+	  			  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					$('form#formSave select#financialSubGroupId').append('<option value="">Selecione...</option>');
+					$.each(data.financialSubGroups, function(key, value)
+		    	   	{
+						$('form#formSave select#financialSubGroupId').append('<option value="'+value.key+'">'+value.value+' ('+value.key+')'+'</option>');
+		    	   	});
+					$('form#formSave select#financialSubGroupId').trigger('change');						
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados de Subgrupo de Financeiro.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function formatRepoSelection(repo)
+  		{
+  		  return repo.text;
+  		}
+	
+		function clearForms()
+		{
+			clearDataFormSave();
+			$('form#formFilter input#personIdFrom').val('');
+			$('form#formFilter input#personIdTo').val('');
+			$('form#formFilter input#description').val('');
+			//$('form#formFilter input#lastAccessDate').val($.format.date(data.person.lastAccessDate));
+			$('form#formFilter select#inactive').val('0').trigger('change');
+			$('form#formFilter select#filterPersonType').val('F').trigger('change');
+			$('div#report-table').html('');
+		}
+
+		function clearDataFormSave()
+		{
+			$('form#formSave input#id').val('');
+			$('form#formSave input#name').val('');
+			$('form#formSave input#aliasName').val('');
+			$('form#formSave input#accessDataUser').val('');
+			$('form#formSave input#accessDataPassword').val('');
+			$('form#formSave input#cpfCnpj').val('');
+			$('form#formSave input#email').val('');
+			$('form#formSave input#lastAccessDate').val('');
+			$('form#formSave input#negativeClose').prop("checked", false);
+			$('form#formSave input#movementAutomatic').prop("checked", false);
+			$('form#formSave input#active').prop("checked", true);
+			$('form#formSave input#addressZipCodeSide').val('');
+			$('form#formSave input#addressZipCode').val('');
+			$('form#formSave input#addressStreet').val('');
+			$('form#formSave input#addressStreetNumber').val('');
+			$('form#formSave input#addressStreetComplement').val('');
+			$('form#formSave input#addressDistrict').val('');
+			$('form#formSave input#addressStateIbge').val('');
+			$('form#formSave input#addressState').val('');
+			$('form#formSave input#addressCityIbge').val('');
+			$('form#formSave input#addressCity').val('');
+			$('form#formSave input#changeDate').val('');
+			$('form#formSave input#changeUser').val('');
+			$('form#formSave select#bankAccount').val('').trigger('change');
+			$('form#formSave select#bankAccountOthers').val('').trigger('change');
+			$('form#formSave select#registerType').val('0').trigger('change');
+			$('form#formSave select#creditProvider').val('').trigger('change');
+			$('form#formSave select#debitProvider').val('').trigger('change');
+			$('form#formSave select#financialGroupId').val('').trigger('change');
+			$('form#formSave select#financialSubGroupId').empty().trigger('change');
+			$('form#formSave select#integrationSystemValues').empty().trigger('change');
+			$('form#formSave select#accessProfile').val('1').trigger('change');
+			$('form#formSave select#company > option').prop('selected',false);
+			$('form#formSave select#company').trigger('change');
+			$('form#formSave select#bankAccountsCompany > option').prop('selected',false);
+			$('form#formSave select#bankAccountsCompany').trigger('change');
+			$('form#formSave select#companyType').val('').trigger('change');
+			$('form#formSave select#personCompanyType').val('').trigger('change');
+			$('form#formSave select#establishmentTypeId').val('').trigger('change');
+			$('form#formSave input#blocked').prop("checked", false);
+			$('form#formSave select#userChildrensParentCombobox').val('').trigger('change');
+			$('form#formSave select#personType').val('').trigger('change');
+			$('form#formSave select#mainCompanyBankAccountId').val('').trigger('change');
+			$('form#formSave select#usersCompanyCombobox').val('').trigger('change');
+			$('form#formSave select#personType').val('personTypeId').trigger('change');
+			$('form#formSave input#cashingClosingMaxDiscount').val('');
+			$('form#formSave select#financialCostCenterId').val('').trigger('change');
+		}
+
+		function cancelForm()
+		{
+			clearDataFormSave();
+			$('a#tabReport').trigger('click');
+			search();
+		}
+
+		function populateFormSave(data)
+		{
+			clearDataFormSave();
+
+			$('form#formSave input#id').val(data.person.personId);
+			$('form#formSave input#name').val(data.person.name);
+			$('form#formSave input#aliasName').val(data.person.aliasName);
+			$('form#formSave input#accessDataUser').val(data.person.accessDataUser);
+			$('form#formSave input#accessDataPassword').val(data.person.accessDataPassword);
+			$('form#formSave input#cpfCnpj').val(data.person.cpfCnpj);
+			$('form#formSave input#cpfCnpj').trigger('input');
+			$('form#formSave input#email').val(data.person.email);
+			$('form#formSave input#lastAccessDate').val(data.person.lastAccessDate);    
+			$('form#formSave input#negativeClose').prop("checked", data.person.negativeClose);
+			$('form#formSave input#movementAutomatic').prop("checked", data.person.movementAutomatic);
+			$('form#formSave input#active').prop("checked", (data.person.inactive ? false : true));
+			$('form#formSave input#addressZipCodeSide').val(data.person.addressZipCodeSide);
+			$('form#formSave input#addressZipCode').val(data.person.addressZipCode);
+			$('form#formSave input#addressZipCode').trigger('input');
+			$('form#formSave input#addressStreet').val(data.person.addressStreet);
+			$('form#formSave input#addressStreetNumber').val(data.person.addressNumber);
+			$('form#formSave input#addressStreetComplement').val(data.person.addressComplement);
+			$('form#formSave input#addressDistrict').val(data.person.addressDistrict);
+			$('form#formSave input#addressStateIbge').val(data.person.addressStateIbge);
+			$('form#formSave input#addressState').val(data.person.addressStateDescription);
+			$('form#formSave input#addressCityIbge').val(data.person.addressCityIbge);
+			$('form#formSave input#addressCity').val(data.person.addressCityDescription);
+			$('form#formSave input#changeDate').val(data.person.changeDateString);
+			$('form#formSave input#changeUser').val(data.person.userChangeName);
+			$('form#formSave select#accessProfile').val(data.person.accessProfileId).trigger('change');
+			$('form#formSave select#companyType').val(data.person.companyTypeId).trigger('change');
+			$('form#formSave select#personCompanyType').val(data.person.personCompanyTypeId).trigger('change');
+			$('form#formSave input#blocked').prop("checked", data.person.blocked);
+			$('form#formSave select#mainCompanyBankAccountId').val(data.person.mainCompanyId).trigger('change');
+			$('form#formSave select#establishmentTypeId').val(data.person.establishmentTypeId).trigger('change');
+			$('form#formSave input#cashingClosingMaxDiscount').val(data.person.cashClosingMaxDiscount.format(2, 3, '.', ','));
+			$('form#formSave select#financialCostCenterId').val(data.person.financialCostCenterId).trigger('change');
+
+			$.each(data.person.companys, function(key, value)
+    	   	{
+				$('form#formSave select#company option[value='+value.id+']').prop('selected','selected');
+    	   	});
+		    $('form#formSave select#company').trigger('change');
+		    
+		    $.each(data.person.banksAccountCompanysPermission, function(key, value)
+    	   	{
+				$('form#formSave select#bankAccountsCompany option[value='+value.bankAccountId+']').prop('selected','selected');
+    	   	});
+		    $('form#formSave select#bankAccountsCompany').trigger('change');
+		    	
+		    $.each(data.person.users, function(key, value)
+		    {
+				$('form#formSave select#userChildrensParentCombobox option[value='+value.id+']').prop('selected','selected');
+		    });
+			$('form#formSave select#userChildrensParentCombobox').trigger('change');
+				    	
+				    
+			 $.each(data.person.usersCompany, function(key, value)
+		    {
+				$('form#formSave select#usersCompanyCombobox option[value='+value.userId+']').prop('selected','selected');
+		    });
+			$('form#formSave select#usersCompanyCombobox').trigger('change');
+				    	
+	    
+			if(data.person.bankAccount>0)
+			{
+				var optionKey = data.person.bankAccount;
+				var optionValue = data.person.bankAccountDescription + ' ('+data.person.bankAccount+')';
+
+				var newOption = new Option(optionValue, optionKey, true, true);
+	            $('form#formSave select#bankAccount').append(newOption).trigger('change');	
+			}
+			
+			$('form#formSave select#bankAccountOthers').empty().trigger('change');
+			$.each(data.person.bankAccountOthers, function(key, value)
+    	   	{
+				var optionKey = value.bankAccountId;
+				var optionValue = value.description + ' ('+value.bankAccountId+')';
+
+				var newOption = new Option(optionValue, optionKey, true, true);
+                $('form#formSave select#bankAccountOthers').append(newOption).trigger('change');
+    	   	});
+			
+			$('form#formSave select#registerType').val(data.person.registerType).trigger('change');
+		    
+			$('form#formSave select#personType').val(data.person.personTypeId).trigger('change');
+			$('form#formSave select#personTypeId').val(data.person.personTypeId).trigger('change');
+
+		    
+			if(data.person.creditProvider>0)
+			{
+				var optionKey = data.person.creditProvider;
+				var optionValue = data.person.creditProviderDescription + ' ('+data.person.creditProvider+')';
+
+				var newOption = new Option(optionValue, optionKey, true, true);
+	            $('form#formSave select#creditProvider').append(newOption).trigger('change');	
+			}
+			if(data.person.debitProvider>0)
+			{
+				var optionKey = data.person.debitProvider;
+				var optionValue = data.person.debitProviderDescription + ' ('+data.person.debitProvider+')';
+
+				var newOption = new Option(optionValue, optionKey, true, true);
+	            $('form#formSave select#debitProvider').append(newOption).trigger('change');	
+			}
+            $('form#formSave select#financialGroupId').val(data.person.financialGroup).trigger('change');	
+			if(data.person.financialSubGroup>0)
+			{
+				var optionKey = data.person.financialSubGroup;
+				var optionValue = data.person.financialSubGroupDescription + ' ('+data.person.financialSubGroup+')';
+
+				var newOption = new Option(optionValue, optionKey, true, true);
+	            $('form#formSave select#financialSubGroupId').append(newOption).trigger('change');	
+			}
+
+			$('form#formSave select#integrationSystemValues').empty().trigger('change');
+			$.each(data.person.integrationSystemsValues, function(key, value)
+    	   	{
+				var optionKey = value.legacyId+';'+value.integrationSystemId;
+				var optionValue = value.legacyId + ' - ' + value.description;
+
+				var newOption = new Option(optionValue, optionKey, true, true);
+                $('form#formSave select#integrationSystemValues').append(newOption).trigger('change');	
+				
+    	   	});
+			
+			$('a#tabCreate').trigger('click');
+			setTimeout(function(){ 
+				$('form#formSave input#name').focus(); 
+			}, 1000);	
+			 
+			var objectType = data.person.objectType;
+			var personType = data.person.personType;
+			if('FOR' == objectType || 'F' == personType){           
+				$('form#formSave select#personType').val('F').trigger('change');
+			}else if('FOR' == objectType || 'O' == personType){	               
+				$('form#formSave select#personType').val('O').trigger('change');
+			}else if('FOR' == objectType || 'P' == personType){	               
+				$('form#formSave select#personType').val('P').trigger('change');
+			}else if('FOR' == objectType || 'C' == personType){		                
+				$('form#formSave select#personType').val('C').trigger('change');
+			}
+
+		}
+
+	    function populateTable(data)
+	    {
+	    	var trHTML = '<table id="table-report" class="table table-striped table-bordered display">';
+			trHTML += '<thead>';
+			trHTML += '<tr>';
+			trHTML += '<th style="text-align: center;" data-priority="1">A&ccedil;&otilde;es</th>';
+			trHTML += '<th style="text-align: center;" data-priority="3">Ativo</th>';
+			trHTML += '<th style="text-align: center;">C&oacute;digo</th>';
+			if('COM'==data.report.objectType)
+	    	{
+				trHTML += '<th style="text-align: center;" data-priority="3">Raz&atilde;o Social</th>';
+				trHTML += '<th style="text-align: center;" data-priority="2">Tipo</th>';
+				trHTML += '<th style="text-align: center;" data-priority="3">Estabelec.</th>';
+				trHTML += '<th style="text-align: center;" data-priority="2">Qtde Prod.</th>';	
+				trHTML += '<th style="text-align: center;" data-priority="2">Usu&aacute;rios Vinculados</th>';	
+	    	}
+			else if('FOR'==data.report.objectType){
+				trHTML += '<th style="text-align: center;" data-priority="2">Raz&atilde;o Social</th>';
+				trHTML += '<th style="text-align: center;" data-priority="2">Pessoa</th>';
+				trHTML += '<th style="text-align: center;" data-priority="4">Cpf/Cnpj</th>';
+				trHTML += '<th style="text-align: center;" data-priority="5">Email</th>';	
+	    	}
+	    	else if('USU'==data.report.objectType)
+	    	{
+				trHTML += '<th style="text-align: center;" data-priority="2">Nome</th>';
+				trHTML += '<th style="text-align: center;" data-priority="2">Tipo</th>';
+				trHTML += '<th style="text-align: center;" data-priority="4">Qt Emp.</th>';
+				trHTML += '<th style="text-align: center;" data-priority="5">Email</th>';
+				trHTML += '<th style="text-align: center;" data-priority="3">Ult. Acesso In&iacute;cio</th>';
+				trHTML += '<th style="text-align: center;" data-priority="3">Ult. Acesso Fim</th>';
+	    	}
+	    	else
+	    	{
+				trHTML += '<th style="text-align: center;" data-priority="2">Nome</th>';
+				trHTML += '<th style="text-align: center;" data-priority="4">Cpf</th>';
+				trHTML += '<th style="text-align: center;" data-priority="5">Email</th>';	    		
+	    	}
+			trHTML += '</tr>';
+			trHTML += '</thead>';
+			trHTML += '<tbody>';
+
+			let countCompanys = 0;
+			let countProducts = 0;
+			
+    		$.each(data.report.persons, function(key, value)
+    	   	{				   
+    			trHTML += '<tr role="row" class="odd">';                                                                                                                    
+        		trHTML += '<td class="text-center"><a href="#" data-toggle="tooltip" data-original-title="Editar" onclick="detail('+value.personId+',&quot;'+data.report.objectType+'&quot;)" style="cursor: pointer;"> <i class="fas fa-pencil-alt text-primary"></i></a></td>'
+        		if(false==value.inactive)
+        		{
+        			trHTML += '<td class="text-center"><a id="btnInativar_'+value.personId+'" data-toggle="tooltip" data-original-title="Inativar" onclick="transferProductsToCompany('+value.personId+', true);" style="cursor: pointer;"><i class="fas fa-check text-success" id="iconInativar_'+value.personId+'"></i></a></td>';
+        		}
+        		else
+        		{
+        			trHTML += '<td class="text-center"><a id="btnInativar_'+value.personId+'" data-toggle="tooltip" data-original-title="Ativar" onclick="inactive('+value.personId+', false);" style="cursor: pointer;"><i class="fas fa-minus text-danger" id="iconInativar_'+value.personId+'"></i></a></td>';
+        		}
+        		trHTML += '<td class="text-center">'+value.personId+'</td>';
+        		
+        		let personType = '';
+        		if('J' == value.personType){
+        			personType = 'Jur&iacute;dica';
+        		}else if('F' == value.personType){
+        			personType = 'F&iacute;sica';
+        		}else{
+        			personType = 'Cliente';
+        		}
+        		
+        		if('COM'==data.report.objectType)
+    	    	{
+	        		trHTML += '<td class="text-left">'+value.name+'</td>';
+	        		trHTML += '<td class="text-center">'+value.personTypeDescription+'</td>';
+	        		trHTML += '<td class="text-center">'+value.establishmentTypeDescription+'</td>';
+	        		trHTML += '<td class="text-center">'+value.countProducts+'</td>';
+	        		trHTML += '<td class="text-left">'+value.attachedUsers+'</td>';
+	        		
+					countCompanys++;
+					countProducts += value.countProducts;
+	        	}
+        		else if('FOR'==data.report.objectType){
+        			trHTML += '<td class="text-left">'+value.name+'</td>';
+        			trHTML += '<td class="text-left">'+personType+'</td>';
+	        		trHTML += '<td class="text-center">'+value.cpfCnpj+'</td>';
+	        		trHTML += '<td class="text-left">'+value.email+'</td>';
+        		}
+    	    	else if('USU'==data.report.objectType)
+    	    	{	
+	        		trHTML += '<td class="text-left">'+value.name+'</td>';
+	        		trHTML += '<td class="text-left">'+value.personTypeDescription+'</td>';
+	        		trHTML += '<td class="text-center">'+value.qtdeCompanys+'</td>';
+	        		trHTML += '<td class="text-left">'+value.email+'</td>'; 
+	        		trHTML += '<td class="text-center">'+value.userLastAcessDateString+'</td>'; 
+	        		if(value.userExitAcessDateString == null){
+	        			trHTML += '<td class="text-center">'+'-'+'</td>';
+	    	    	}else{
+	    	    		trHTML += '<td class="text-center">'+value.userExitAcessDateString+'</td>'; 	    	    		
+	    	    	}	        		 	    	
+    	    	}
+        		else
+        		{
+	        		trHTML += '<td class="text-left">'+value.name+'</td>';
+	        		trHTML += '<td class="text-center">'+value.cpfCnpj+'</td>';
+	        		trHTML += '<td class="text-left">'+value.email+'</td>';        			
+        		}
+        		trHTML += '</tr>';
+    	   	});
+    		trHTML += '<tbody>';
+			trHTML += '</table>';
+
+			$('div#report-table').html(trHTML);
+			
+			
+			if('COM'==data.report.objectType)
+    	    {
+				$('span#countCompanys').text(countCompanys);
+				$('span#countProducts').text(countProducts);
+				$('div#divCountsCompany').show();
+			} else {
+				$('div#divCountsCompany').hide();
+			}
+	    }
+	    
+	    function populateTableLog(data)
+		{
+	    	$('div#report_table-logs').html('');
+	    	var trHTML = '<table id="table-logs" class="table table-striped table-bordered display" style="width: 100%;">';
+          trHTML += '<thead>';
+          trHTML += '<tr>';
+          trHTML += '<th class="text-left"><b>Usuario</b></th>';
+          trHTML += '<th class="text-center"><b>Data</b></th>';
+          trHTML += '<th></th>';
+          trHTML += '</tr>';
+          trHTML += '</thead>';
+          trHTML += '<tbody>';
+
+                  if (true == data.status) {
+                      $.each(data.reportItems, function (key, value) {
+                          trHTML += '<tr id="6" class="gradeA">';
+                          trHTML += '<td class="text-left">'+value.userChangeName+'('+value.userChange+')</td>';
+                          trHTML += '<td class="text-center">'+value.changeDateString+'</td>';
+                          trHTML += '<td class="text-center">'+value.userChange+'</td>';
+                          trHTML += '</tr>';
+                      });
+                  }
+                  
+	    	trHTML += '</tbody>';
+	    	trHTML += '</table>';
+	    	
+	    	$('div#report_table-logs').html(trHTML);
+				
+				 $(document).ready(function() {
+				        var table = $('#table-logs').DataTable( {
+				            scrollY:        "200px",
+				            scrollX:        true,
+				            scrollCollapse: true,
+				            paging:         false,
+				        	'order': [ [ 1, 'asc' ] ],
+				            'language': {
+						           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+						           'zeroRecords': 'Nenhum registro encontrado',
+						           'info': 'Mostrando _TOTAL_ registro(s)',
+						           'infoEmpty': 'Nenhum registro encontrado',
+						           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+						           'search': 'Filtrar:',
+						           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+						           "decimal": ",",
+						           "thousands": ".",
+						           'paginate': {
+						               'next': 'Proximo',
+						               'previous': 'Anterior'
+						             }
+						    },
+				            "columnDefs": [
+				                   
+				                   {
+				                	   "targets":[0],
+				                	   "orderable": false
+				                   },
+				                   {
+				                	   "targets":[1],
+				                	   "orderable": false,
+				                	   "type":"date"
+				                   },
+				                   {
+				                     	 "targets": [2],
+				                          "visible": false,
+				                          "searchable": false
+				                    }
+				             ]
+				        } );
+				    } );
+		}
+		
+		function saveNewCostCenter(){
+  			let descriptionFinancialCostCenter = '';
+
+  		    descriptionFinancialCostCenter = $('form#formSave select#financialCostCenterId').data("select2").dropdown.$search.val();	
+
+  			$('form#formSaveFinancialCostCenter input#description').val(encodeURIComponent(descriptionFinancialCostCenter));
+
+  			const form = $('form#formSaveFinancialCostCenter');			
+	  		let dataForm = form.serializeArray();
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(res, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==res.status)
+             	{
+            		const optionKey = res.data.id;
+            		const optionValue = res.data.description + ' (' + optionKey + ')';
+
+            		const newOption = new Option(optionValue, optionKey, true, true);
+	                $('form#formSave select#financialCostCenterId').append(newOption).trigger('change');
+	    			$('form#formSave select#financialCostCenterId').select2("close");	
+               	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', res.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    { 
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+  		}
+
+	    (function() 
+	    {
+	        'use strict';
+	        
+	        $('form#formSave select#mainCompanyBankAccountId')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	placeholder: "SELECIONE...",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave input#addressZipCode').mask('00000-000');
+			
+			$('form#formSave input#cpfCnpj').keydown(function(){
+			    try 
+			    {
+			    	$('form#formSave input#cpfCnpj').unmask();
+			    } catch (e) {}
+
+			    var tamanho = $('form#formSave input#cpfCnpj').val().length;
+
+			    if(tamanho < 11)
+			    {
+			    	$('form#formSave input#cpfCnpj').mask("999.999.999-99");
+			    } 
+			    else 
+			    {
+			    	$('form#formSave input#cpfCnpj').mask("99.999.999/9999-99");
+			    }
+
+			    // ajustando foco
+			    var elem = this;
+			    setTimeout(function(){
+			        // mudo a posicao do seletor
+			        elem.selectionStart = elem.selectionEnd = 10000;
+			    }, 0);
+			    // reaplico o valor para mudar o foco
+			    var currentValue = $(this).val();
+			    $(this).val('');
+			    $(this).val(currentValue);
+			});
+	        
+	        $('form#formSave select#addressCountry')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave select#integrationSystem')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave select#integrationSystemValues')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        	        
+	        $('form#formSave select#accessProfile')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave select#company')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			}).on('change', function (data)
+	  		{
+	  		  	processPermissonBankAccount();
+	  		});
+	        
+	        $('form#formSave select#bankAccount')
+	        .select2({
+	  			theme: "bootstrap",
+	  			allowClear: true,
+		    	language: {
+		        	noResults: function (params) {
+		            return "Nenhum registro encontrado.";
+		          },
+		          searching: function ()
+		          {
+		              return 'Buscando...';
+		          },
+		          loadingMore: function () {
+		              return 'Carregando mais resultados...';
+		          },
+		          errorLoading: function () {
+		              return 'Os resultados nao puderam ser carregados.';
+		          },
+		          inputTooLong: function (args) {
+		              var overChars = args.input.length - args.maximum;
+
+		              var message = 'Apague ' + overChars + ' caracter';
+
+		              if (overChars != 1) {
+		                message += 'es';
+		              }
+
+		              return message;
+		            },
+		            inputTooShort: function (args) {
+		              var remainingChars = args.minimum - args.input.length;
+
+		              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+		              return message;
+		            }
+		        },
+	  			ajax: {
+	  				url : $('form#formAutocompleteBankAccount').attr('action'),
+	                type : "POST",
+	  	            dataType: 'json',
+	  	            delay: 250,
+	  	            data: function (params)
+	  	            {
+	  	                return {
+	  	                	description: params.term, // search term
+	  	                	inactive: '0',
+	  	                	unboundBankAccount: 1,
+	  	                	objectType: $('form#formSave input#objectType').val(),
+	  	                	id: $('form#formSave input#id').val()
+	  	                };
+	  	            },
+	  	            processResults: function (data, params) {
+	  	                //console.log(data);
+	  	                var results = $.map(data.report, function (value, key)
+	  	                {
+	  	                    return {
+	  	                    	id: value.key,
+	  	                        text: value.value + ' (' + value.key + ')' 
+	  	                    };
+	  	                });
+	  	                //console.log(results);
+	  	                return {
+	  	                    results: results
+	  	                };
+	  	            },
+	  	            cache: true
+	  	        },
+	  	        minimumInputLength: 3,
+	  	        templateSelection: formatRepoSelection
+	  	    }).on('change', function (data)
+	  		{
+	  			//$(this).valid();
+	  		  	//console.log(this.value);
+	  		}).on('select2:close', function (e) 
+	  		{
+	  			//console.log(this.value);
+	  		});
+	        
+	        $('form#formSave select#bankAccountOthers')
+	        .select2({
+	  			theme: "bootstrap",
+	  			allowClear: true,
+		    	language: {
+		        	noResults: function (params) {
+		            return "Nenhum registro encontrado.";
+		          },
+		          searching: function ()
+		          {
+		              return 'Buscando...';
+		          },
+		          loadingMore: function () {
+		              return 'Carregando mais resultados...';
+		          },
+		          errorLoading: function () {
+		              return 'Os resultados nao puderam ser carregados.';
+		          },
+		          inputTooLong: function (args) {
+		              var overChars = args.input.length - args.maximum;
+
+		              var message = 'Apague ' + overChars + ' caracter';
+
+		              if (overChars != 1) {
+		                message += 'es';
+		              }
+
+		              return message;
+		            },
+		            inputTooShort: function (args) {
+		              var remainingChars = args.minimum - args.input.length;
+
+		              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+		              return message;
+		            }
+		        },
+	  			ajax: {
+	  				url : $('form#formAutocompleteBankAccount').attr('action'),
+	                type : "POST",
+	  	            dataType: 'json',
+	  	            delay: 250,
+	  	            data: function (params)
+	  	            {
+	  	                return {
+	  	                	description: params.term, // search term
+	  	                	inactive: '0',
+	  	                	unboundBankAccount: 0,
+	  	                	objectType: $('form#formSave input#objectType').val(),
+	  	                	id: $('form#formSave input#id').val()
+	  	                };
+	  	            },
+	  	            processResults: function (data, params) {
+	  	                //console.log(data);
+	  	                var results = $.map(data.report, function (value, key)
+	  	                {
+	  	                    return {
+	  	                    	id: value.key,
+	  	                        text: value.value + ' (' + value.key + ')' 
+	  	                    };
+	  	                });
+	  	                //console.log(results);
+	  	                return {
+	  	                    results: results
+	  	                };
+	  	            },
+	  	            cache: true
+	  	        },
+	  	        minimumInputLength: 3,
+	  	        templateSelection: formatRepoSelection
+	  	    }).on('change', function (data)
+	  		{
+	  			//$(this).valid();
+	  		  	//console.log(this.value);
+	  		}).on('select2:close', function (e) 
+	  		{
+	  			//console.log(this.value);
+	  		});
+	        
+	        $('form#formSave select#creditProvider')
+	        .select2({
+	  			theme: "bootstrap",
+	  			allowClear: true,
+		    	language: {
+		        	noResults: function (params) {
+		            return "Nenhum registro encontrado.";
+		          },
+		          searching: function ()
+		          {
+		              return 'Buscando...';
+		          },
+		          loadingMore: function () {
+		              return 'Carregando mais resultados...';
+		          },
+		          errorLoading: function () {
+		              return 'Os resultados nao puderam ser carregados.';
+		          },
+		          inputTooLong: function (args) {
+		              var overChars = args.input.length - args.maximum;
+
+		              var message = 'Apague ' + overChars + ' caracter';
+
+		              if (overChars != 1) {
+		                message += 'es';
+		              }
+
+		              return message;
+		            },
+		            inputTooShort: function (args) {
+		              var remainingChars = args.minimum - args.input.length;
+
+		              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+		              return message;
+		            }
+		        },
+	  			ajax: {
+	  				url : $('form#formAutocomplete').attr('action'),
+	                type : "POST",
+	  	            dataType: 'json',
+	  	            delay: 250,
+	  	            data: function (params)
+	  	            {
+	  	                return {
+	  	                	description: params.term, // search term
+	  	                	inactive: '0',
+	  	                	objectType: 'FOR'
+	  	                };
+	  	            },
+	  	            processResults: function (data, params) {
+	  	                //console.log(data);
+	  	                var results = $.map(data.report, function (value, key)
+	  	                {
+	  	                    return {
+	  	                    	id: value.key,
+	  	                        text: value.value + ' (' + value.key + ')' 
+	  	                    };
+	  	                });
+	  	                //console.log(results);
+	  	                return {
+	  	                    results: results
+	  	                };
+	  	            },
+	  	            cache: true
+	  	        },
+	  	        minimumInputLength: 3,
+	  	        templateSelection: formatRepoSelection
+	  	    }).on('change', function (data)
+	  		{
+	  			//$(this).valid();
+	  		  	//console.log(this.value);
+	  		}).on('select2:close', function (e) 
+	  		{
+	  			//console.log(this.value);
+	  		});
+	        
+	        $('form#formSave select#debitProvider')
+	        .select2({
+	  			theme: "bootstrap",
+	  			allowClear: true,
+		    	language: {
+		        	noResults: function (params) {
+		            return "Nenhum registro encontrado.";
+		          },
+		          searching: function ()
+		          {
+		              return 'Buscando...';
+		          },
+		          loadingMore: function () {
+		              return 'Carregando mais resultados...';
+		          },
+		          errorLoading: function () {
+		              return 'Os resultados nao puderam ser carregados.';
+		          },
+		          inputTooLong: function (args) {
+		              var overChars = args.input.length - args.maximum;
+
+		              var message = 'Apague ' + overChars + ' caracter';
+
+		              if (overChars != 1) {
+		                message += 'es';
+		              }
+
+		              return message;
+		            },
+		            inputTooShort: function (args) {
+		              var remainingChars = args.minimum - args.input.length;
+
+		              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+		              return message;
+		            }
+		        },
+	  			ajax: {
+	  				url : $('form#formAutocomplete').attr('action'),
+	                type : "POST",
+	  	            dataType: 'json',
+	  	            delay: 250,
+	  	            data: function (params)
+	  	            {
+	  	                return {
+	  	                	description: params.term, // search term
+	  	                	inactive: '0',
+	  	                	objectType: 'FOR'
+	  	                };
+	  	            },
+	  	            processResults: function (data, params) {
+	  	                //console.log(data);
+	  	                var results = $.map(data.report, function (value, key)
+	  	                {
+	  	                    return {
+	  	                    	id: value.key,
+	  	                        text: value.value + ' (' + value.key + ')' 
+	  	                    };
+	  	                });
+	  	                //console.log(results);
+	  	                return {
+	  	                    results: results
+	  	                };
+	  	            },
+	  	            cache: true
+	  	        },
+	  	        minimumInputLength: 3,
+	  	        templateSelection: formatRepoSelection
+	  	    }).on('change', function (data)
+	  		{
+	  			//$(this).valid();
+	  		  	//console.log(this.value);
+	  		}).on('select2:close', function (e) 
+	  		{
+	  			//console.log(this.value);
+	  		});
+	        
+	        $('form#formSave select#financialGroupId')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            allowClear: true,
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        }).on('change', function (e)
+	        {
+	        	if(''!=this.value && !isNaN(this.value))
+				{
+		        	$('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+		        	searchFinancialSubGroup();
+				}
+	        });
+	        
+	        $('form#formSave select#registerType')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            allowClear: true,
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        });
+
+	        $('form#formSave select#financialSubGroupId')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            allowClear: true,
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        });
+	        
+		    $('form#formSave input#addressZipCode').focusout(function() 
+		    {
+		    	seachByZipCode();	
+		    });
+
+			$('form#formSave input#addressZipCode').keypress(function() 
+			{
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+	            if(keycode == '13')
+	            {
+					$('form#formSave input#addressStreetNumber').focus();
+				}
+			});
+		    
+			$('button#btnFilter').click(function() 
+			{
+				setTimeout(function() 
+				{ 
+					$('form#formFilter input#personIdFrom').focus(); 
+				}, 1000);	
+			});
+			
+			$('button#btnAddIntegrationValue').click(function() 
+			{
+				var key = $('form#formSave input#legacyId').val();
+				var value = $('form#formSave select#integrationSystem').val();
+				if(''!=key && ''!=value)
+				{
+					var optionKey = key+';'+value;
+					var optionValue = key + ' - ' + $('form#formSave select#integrationSystem option:selected').text();
+					
+					if($('form#formSave select#integrationSystemValues option[value="'+optionKey+'"]').length == 0 )
+					{
+						var newOption = new Option(optionValue, optionKey, true, true);
+		                $('form#formSave select#integrationSystemValues').append(newOption).trigger('change');	
+					}					
+				}
+				$('form#formSave input#legacyId').val('');
+				$('form#formSave select#integrationSystem').val('').trigger('change');
+			});
+
+			var objectType = $('form#formSave input#objectType').val();
+			if('COM'==objectType)
+			{
+				$('div#divBankAccountOthers').show();
+				$('div#divRegisterType').show();
+				$('div#divNegativeClose').show();
+				$('div#divFinancy').show();
+				$('div#divFinancyProvider').hide();
+				$('div#divIntegration').show();
+				$('div#divAliasName').show();
+				//$('div#divAccessDataUser').hide();
+				//$('div#divAccessDataPassword').hide();
+				$('div#divUserCompany').hide();
+				//$('div#divAliasRazaoSocial').removeClass('col-md-5').addClass('col-md-5');
+				//$('div#divAliasName').removeClass('col-md-5').addClass('col-md-5'); 
+				$('label#labelName').html('Raz&atilde;o Social');
+				$('form#formSave input#name').attr('placeholder', 'Raz&atilde;o Social');
+				$('form#formSave input#accessDataUser').prop('disabled',true);
+				$('form#formSave input#accessDataPassword').prop('disabled',true);
+				$('div#divEmail').show();
+				$('div#divPersonType').hide();
+				$('div#divDescription').addClass('col-md-5');
+				$('div#divFilterPersonType').hide();
+				$('div#divPersonId ').addClass('col-md-2'); 
+				$('form#formFilter select#filterPersonTypeId').val(1).trigger('change');
+				$('div#divChangeDate').show(); 
+				$('div#divChangeUser').show(); 
+				$('form#formSave select#personTypeId').val(1);
+				$('div#divEmail').removeClass('col-md-4').addClass('col-md-3');
+				$('div#divCashingClosingMaxDiscount').hide();
+				$('div#divFinancialCostCenterId').show();
+				
+				const newOptionPersonType = new Option('Juridica', 'J', false, true);                
+				$('form#formSave select#personType').append(newOptionPersonType).trigger('change');	
+			}
+			else if('FOR'==objectType)
+			{
+				$('div#divBankAccountOthers').hide();
+				$('div#divRegisterType').hide();
+				$('div#divNegativeClose').hide();
+				$('div#divFinancy').hide();
+				$('div#divFinancyProvider').show();
+				$('div#divIntegration').show();
+				$('div#divAliasName').show();
+				//$('div#divAccessDataUser').hide();
+				//$('div#divAccessDataPassword').hide();
+				$('div#divUserCompany').hide();
+				$('div#divAliasRazaoSocial').removeClass('col-md-5').addClass('col-md-4');
+				$('div#divAliasName').removeClass('col-md-5').addClass('col-md-4'); 
+				$('label#labelName').html('Raz&atilde;o Social');
+				$('form#formSave input#name').attr('placeholder', 'Raz&atilde;o Social');
+				$('form#formSave input#accessDataUser').prop('disabled',true);
+				$('form#formSave input#accessDataPassword').prop('disabled',true);
+				$('div#divPersonType').show(); 
+				$('div#divFilterPersonType').show();
+				$('div#divCompanyType').hide();
+				$('div#divCpfCnpj').addClass('col-md-3');
+				$('div#divEmail').addClass('col-md-7');
+				$('div#divPersonType').addClass('col-md-2');
+				$('div#Active').addClass('col-md-2');
+				$('div#divPersonId ').addClass('col-md-4'); 
+				$('div#divFilterPersonTypeId').hide();
+				$('div#divFilterEstablishmentTypeId').hide();
+				$('div#divEstablishmentTypeId').hide();
+				$('div#divPersonTypeId').hide();
+				$('div#divTableLog').hide(); 
+				$('div#divBlocked').hide();
+				$('div#divUsersCompany').hide();
+				$('div#divCashingClosingMaxDiscount').hide();
+				$('div#divFinancialCostCenterId').hide();
+								
+				const newOptionPersonType = new Option('Fornecedor', 'F', false, true);                
+				$('form#formSave select#personType').append(newOptionPersonType).trigger('change');
+				
+				const newOptionPersonTypeTwo = new Option('Operador', 'O', false, false);                
+				$('form#formSave select#personType').append(newOptionPersonTypeTwo).trigger('change');
+				
+				const newOptionPersonTypeThree = new Option('Principal', 'P', false, false);                
+				$('form#formSave select#personType').append(newOptionPersonTypeThree).trigger('change');
+				
+				const newOptionPersonTypeFour = new Option('Cliente', 'C', false, false);                
+				$('form#formSave select#personType').append(newOptionPersonTypeFour).trigger('change');
+			}
+			else if('USU'==objectType)
+			{
+				$('div#divBankAccountOthers').hide();
+				$('div#divRegisterType').hide();
+				$('div#divNegativeClose').hide();
+				$('div#divFinancy').hide();
+				$('div#divFinancyProvider').hide();
+				$('div#divIntegration').hide();
+				$('div#divAliasName').hide();
+				//$('div#divAccessDataUser').show();
+				//$('div#divAccessDataPassword').show();
+				$('div#divUserCompany').show();
+				$('div#divAliasRazaoSocial').removeClass('col-md-5').addClass('col-md-10');
+				$('label#labelName').html('Nome');
+				$('form#formSave input#name').attr('placeholder', 'Nome');
+				$('div#divPersonType').hide(); 
+				$('div#divDescription').addClass('col-md-6');
+				$('div#divFilterPersonType').hide();
+				$('div#divCompanyType').hide();
+				$('div#divCpfCnpj').addClass('col-md-3');
+				$('div#divEmail').removeClass('col-md-3').addClass('col-md-6');
+				$('div#divPersonType').addClass('col-md-2');
+				$('div#Active').addClass('col-md-2');
+				$('div#divPersonId ').addClass('col-md-4'); 
+				$('div#divFilterPersonTypeId').hide();
+				$('div#divFilterEstablishmentTypeId').hide();
+				$('div#divEstablishmentTypeId').hide();
+				$('label[for="personTypeId"]').html('Tipo Pessoa'); 
+				$('div#divPersonTypeId').show();
+				$('div#divTableLog').hide(); 
+				$('div#divBlocked').hide();
+				$('div#divUsersCompany').hide();
+				$('div#divCashingClosingMaxDiscount').show();
+				$('div#divFinancialCostCenterId').hide();
+				
+				const newOptionPersonType = new Option('Cliente', 2, false, true);                
+				$('form#formSave select#personType').append(newOptionPersonType).trigger('change');
+			}
+			
+			$('input#selectAllCompanys').click(function()
+			{
+			    if($('input#selectAllCompanys').is(':checked') )
+			    {
+			        $('form#formSave select#company > option').prop('selected','selected');
+			    }
+			    else
+			    {
+			        $('form#formSave select#company > option').prop('selected',false);
+			    }
+			    $('form#formSave select#company').trigger('change');
+			});
+			
+			$('input#selectAllBankAccountCompanys').click(function()
+			{
+			    if($('input#selectAllBankAccountCompanys').is(':checked') )
+			    {
+			        $('form#formSave select#bankAccountsCompany > option').prop('selected','selected');
+			    }
+			    else
+			    {
+			        $('form#formSave select#bankAccountsCompany > option').prop('selected',false);
+			    }
+			    $('form#formSave select#bankAccountsCompany').trigger('change');
+			});
+			
+			$('input#selectAllUsers').click(function()
+			{
+			    if($('input#selectAllUsers').is(':checked') )
+			    {
+			        $('form#formSave select#userChildrensParentCombobox > option').prop('selected','selected');
+			    }
+			    else
+			    {
+			        $('form#formSave select#userChildrensParentCombobox > option').prop('selected',false);
+			    }
+			    $('form#formSave select#userChildrensParentCombobox').trigger('change');
+			});
+			
+	        $('form#formFilter select#filterPersonType')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave select#personType')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+
+	        $('form#formSave select#personTypeId')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            //dropdownParent: $('form#formSave'),
+	            placeholder: "SELECIONE...",
+			    allowClear: true,
+	            language: {
+	                noResults: function() {
+	               return `<button style="width: 100%" type="button"
+	               class="btn btn-primary btn-sm" 
+	               onClick="saveNewPersonType()">+ Add novo tipo</button>
+
+	               </li>`;
+	               }
+	            },
+	          
+	           escapeMarkup: function (markup) {
+	               return markup;
+	           }
+	        });
+	        
+	        $('form#formFilter select#filterPersonTypeId')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	placeholder: "SELECIONE...",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave select#establishmentTypeId')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            //dropdownParent: $('form#formSave'),
+	            placeholder: "SELECIONE...",
+			    allowClear: true,
+	            language: {
+	                noResults: function() {
+	               return `<button style="width: 100%" type="button"
+	               class="btn btn-primary btn-sm" 
+	               onClick="saveNewEstablishmentType()">+ Add Tipo Estabelecimento</button>
+
+	               </li>`;
+	               }
+	            },
+	          
+	           escapeMarkup: function (markup) {
+	               return markup;
+	           }
+	        });
+	        
+	        $('form#formFilter select#filterEstablishmentTypeId')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	placeholder: "SELECIONE...",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave select#userChildrensParentCombobox')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+			
+			$('form#formSave select#usersCompanyCombobox')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+			    			
+	        $('form#formProductDiscard select#companyDestiny')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	placeholder: "SELECIONE...",
+		    	allowClear: true,
+		    	dropdownParent: $('#transf-products-modal'),
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			}).on('select2:close', function (e) 
+	  		{
+	        	if(''!=this.value && !isNaN(this.value))
+				{
+	        		$('form#formSave input#companyDestiny').val(this.value);
+				}
+	  		});
+				       
+	        $('#active').click(function() {
+	        	var objectType =  $('form#formSave input#objectType').val();
+	        	let check = document.querySelector("form#formSave input#active");
+	        	if('COM' == objectType){
+	        		if(false == check.checked){
+	        			$('#btnOk').hide();
+	        			$('#btnExtOk').show();
+	        			$('#btnCancel').show();
+	        			showModalDiscardProduct();
+
+        			}else{
+        				$('form#formProductDiscard select#companyDestiny').val(0).trigger('change');
+        			}
+	        	}
+
+	        });
+	        
+	       
+	        	        
+	        $('form#formProductDiscard').bootstrapValidator({
+	            excluded: ':disabled',
+	            feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            }
+	        });
+	        
+	        if('COM' == objectType){
+				const userSessionId = $('formSave input#userSessionId').val();
+				if(userSessionId){
+					$('form#formSave select#usersCompanyCombobox').val(userSessionId).trigger('change');		
+				}					
+			}
+			
+			$('form#formFilter select#userChildrensParentComboboxFilter').select2({
+				width : '100%',
+				theme : "bootstrap",
+				allowClear: true,
+				language : {
+					noResults : function(params) {
+						return "Nenhum registro encontrado.";
+					}
+				}
+			});
+
+			$('form#formFilter input#selectAllUsersFilter')
+			.click(
+					function() {
+						if ($('form#formFilter input#selectAllUsersFilter').is(':checked')) {
+							$(
+									'form#formFilter select#userChildrensParentComboboxFilter > option')
+									.prop('selected', 'selected');
+						} else {
+							$(
+									'form#formFilter select#userChildrensParentComboboxFilter > option')
+									.prop('selected', false);
+						}
+						$(
+								'form#formFilter select#userChildrensParentComboboxFilter')
+								.trigger('change');
+					});
+					
+	        $('form#formSave select#bankAccountsCompany')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	placeholder: "SELECIONE...",
+		    	allowClear: true,
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});					
+	       			
+			search();
+	    })();
+	    </script>
+	</th:block>
+</html>

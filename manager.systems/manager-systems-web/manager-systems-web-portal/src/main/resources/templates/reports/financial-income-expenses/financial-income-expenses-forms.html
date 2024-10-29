@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formGetBankAccounts" name="formGetBankAccounts" th:action="@{/adm/bank-account/getAllComoboboxByPerson}" method="post" autocomplete="off">
+			<input type="hidden" id="inactive" name="inactive" value="0"/>
+			<input type="hidden" id="personsId" name="personsId"/>
+			<input type="hidden" id="objectType" name="objectType" value="COM"/>
+		</form>
+		<form id="formFilterReportView" name="formFilterReportView" th:action="@{/movement/cashStatement/filter}" method="post" autocomplete="off">
+		</form>
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off">		
+		</form>
+		<form id="formSaveFinancialCostCenter" name="formSaveFinancialCostCenter" th:action="@{/financial/financialCostCenter/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+		</form>
+	</th:block>
+</html>

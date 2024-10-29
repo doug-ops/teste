@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="modal">
+	<!-- ============================================================== -->
+    <!--Modals-->
+    <!-- ============================================================== -->
+	<!--End Modal Transf Produtos-->
+    <!-- ============================================================== -->
+     <div id="transf-products-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="vcenter" style="height:100%;">
+     	<div class="modal-dialog modal-dialog-centered">
+           <div class="modal-content" style="border-radius:5px;">
+              <div class="modal-header">
+                 <div class="col-md-12">
+					<h4 class="modal-title" id="titleModal">Selecione a empresa destino que ser&aacute; enviado os produtos da empresa inativada.</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+				</div>
+                </div>
+                <div class="modal-body" style="height:170px;">
+					<form class="was-validated" novalidate id="formProductDiscard" name="formProductDiscard" method="post" autocomplete="off">
+						<input type="hidden" id="idPerson" name="idPerson" value="" />
+					 	<div class="form-row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="companyDestiny">Empresa Destino</label>
+	                                    <select class="m-b-20 m-r-10 custom-select" id="companyDestiny" name="companyDestiny" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+											<option value="" selected="selected">SELECIONE...</option>
+											<option th:each="item : ${companies}" th:value="${item.key}"
+												th:text="${item.value}"></option>
+									</select>
+                                </div>
+                    		</div>
+					</form>    
+				</div>                                          
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-success waves-effect" id="btnExtOk" data-dismiss="modal">OK</button> 
+                    <button type="button" class="btn btn-success waves-effect" id="btnOk" onclick="processDiscardProduct();">OK</button> 
+                	<button type="button" class="btn btn-danger waves-effect" id="btnCancel" data-dismiss="modal">Cancelar</button> 
+                </div>
+             </div>
+     	  </div>  
+       </div>
+    <!-- ============================================================== -->
+    <!--End Modal Transf Produtos-->
+    <!-- ============================================================== -->
+	</th:block>
+</html>

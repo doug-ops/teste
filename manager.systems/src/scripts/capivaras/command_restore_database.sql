@@ -1,0 +1,1 @@
+mysql.exe --defaults-file="C:\Users\Emerson\AppData\Local\Temp\tmpdleyfuat.cnf"  --protocol=tcp --host=54.89.222.132 --user=bmaws --port=3306 --default-character-set=utf8 --comments  < "C:\\Users\\Emerson\\OneDrive\\Documentos\\dumps\\Dump20240721.sql"

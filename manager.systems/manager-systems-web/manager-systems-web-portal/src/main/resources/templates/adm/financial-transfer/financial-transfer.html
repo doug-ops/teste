@@ -1,0 +1,499 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+		<div class="col-12">
+	        <div class="card">
+                <div class="card-body" style="padding: 5px;">
+   	                <h4 class="p-20 text-center">Configura&ccedil;&atilde;o Transfer&ecirc;ncia</h4>    
+                    <div class="col-md-12">
+                        <div style="float: right;">
+                            <a id="btnFilter" name="btnFilter" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="ti-filter" style="font-size: 14px;"></i></a>
+                            <a id="btnClear" href="javascript: clearForms();" name="btnClear" type="button" class="btn waves-effect waves-light btn-warning m-t-10">Limpar</a>
+                            <a id="btnView" href="javascript: search();" name="btnView" type="button" class="btn waves-effect waves-light btn-success m-t-10">Visualizar</a>
+                        </div>
+                    </div>
+	                <!-- Nav tabs -->
+	                <ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+	                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" id="tabReport" href="#report" role="tab"><span class="hidden-sm-up"><i class="fas fa-list"></i></span> <span class="hidden-xs-down">Relat&oacute;rio</span></a> </li>
+	                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tabCreate" href="#create" role="tab"><span class="hidden-sm-up"><i class="far fa-edit"></i></span> <span class="hidden-xs-down">Cadastro</span></a> </li>
+	                </ul>
+	                <!-- Tab panes -->
+	                <div class="tab-content tabcontent-border">
+	                    <div class="tab-pane active" id="report" role="tabpanel">
+	                    	<div class="row">
+	                    		<div class="col-12">
+									<!-- Filter -->
+									<div class="collapse" id="collapseFilter">
+									<!-- Filter Form -->
+										<form id="formFilter" name="formFilter" th:action="@{/adm/financial-transfer/filter}" method="post" autocomplete="off">
+											<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+											<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+											<!-- Card -->
+											<div class="card">
+												<!-- Card Body -->
+												<div class="card-body">
+													<!-- Row Title Filter -->
+													<div class="row">
+														<div class="col-12">
+															<h4 class="card-title text-center font-weight-bold" style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+														</div>
+													</div>
+													<!--/ Row Title Filter -->
+													<!-- Row Fields Filter -->					
+													<div class="row">
+														<div class="col-md-4 mb-3">
+						                                    <label for="bankAccountOrigin">Conta Origem</label>
+						                                    <select class="m-b-20 m-r-10 custom-select" id="filterBankAccountOrigin" name="filterBankAccountOrigin" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+						                                        <option value="" selected="selected">Selecione...</option>
+						                                        <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+						                                    </select>
+						                                </div>
+					                                    <div class="col-md-4 mb-3">
+					                                        <label for="bankAccountDestiny">Conta Destino</label>
+					                                        <select class="m-b-20 m-r-10 custom-select" id="filterBankAccountDestiny" name="filterBankAccountDestiny">
+					                                            <option value="" selected="selected">Selecione...</option>
+					                                            <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+					                                        </select>
+					                                    </div>					
+														<div class="col-md-2">
+															<h5 class="m-t-30 m-b-10">Ativo</h5>
+															<select class="m-b-20 m-r-10 select2-bootstrap-select" id="inactive" name="inactive">
+																<option value="0" selected="selected">Sim</option>
+																<option value="1">N&#227;o</option>
+																<option value="2">Todos</option>
+															</select>
+														</div>									                                
+													</div>													
+													<!--/ Row Fields Filtro -->
+												</div>
+												<!--/ Card Body -->
+											</div>
+											<!--/ Card -->
+										</form>
+										<!--/ Form Filter -->
+									</div>
+									<!--/ Filter -->    
+								</div>
+	                    	</div>
+	                        <div class="col-12">
+	                            <div id="report-table" class="table-responsive">
+                                    <table id="table-relatorio" class="table table-striped table-bordered display">
+                                        
+                                    </table>
+                                </div>
+	                        </div>
+	                    </div>
+	                    <div class="tab-pane" style="padding: 15px;" id="create" role="tabpanel">
+                            <form class="was-validated" novalidate id="formSave" name="formSave" th:action="@{/adm/financial-transfer/save}" method="post" autocomplete="off">
+                            	<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>
+                            	<input type="hidden" id="saveAll" name="saveAll" value="true"/>  
+                                <div class="form-row">
+	                                <hr class="hr-admin"/>
+	                                <h4 class="card-title">Dados da Conta</h4>
+	                                <hr class="hr-admin"/>
+	                                <div class="col-md-3 mb-3">
+	                                    <label for="bankAccountOrigin">Conta Origem</label>
+	                                    <select class="m-b-20 m-r-10 custom-select" id="bankAccountOrigin" name="bankAccountOrigin" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+	                                        <option value="" selected="selected">Selecione...</option>
+	                                        <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                                    </select>
+	                                </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="bankAccountDestiny">Conta Destino</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="bankAccountDestiny" name="bankAccountDestiny">
+                                            <option value="" selected="selected">Selecione...</option>
+                                            <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="bankAccountDestiny">Conta Transf. Autom.</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="bankAccountAutomaticTransfer" name="bankAccountAutomaticTransfer">
+                                            <option value="0" selected="selected">Selecione...</option>
+                                            <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                        </select>
+                                    </div>
+									<div class="col-md-3">
+										<div style="float: right;">
+											<a id="btnSave" name="btnClear" href="javascript: clearFormSave(true);" type="button" class="btn waves-effect waves-light btn-warning m--10"><i class="fas fa-eraser"></i>&nbsp;Limpar</a>
+											<a id="btnSearchConfigTransfer" href="javascript: searchConfigTransfer();" type="button" class="btn waves-effect waves-light btn-success m-t-0"><i class="fas fa-search"></i>&nbsp;Visualizar</a>
+											<a id="btnCloneConfigTransfer" href="javascript: showModalClone();" type="button" class="btn waves-effect waves-light btn-primary m-t-0"><i class="fas fa-copy"></i>&nbsp;Copiar</a>																									
+										</div>
+									</div>        
+                                    <div class="col-md-2 mb-1">
+		                                <label for="initialExecution">Inicio Execu&ccedil;&atilde;o</label>
+		                                <div class="input-group date">
+		                                    <input type="text" class="form-control text-center" id="initialExecution" name="initialExecution" maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+		                                    <span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>
+		                                </div>
+		                            </div>
+		                            <!--
+                                    <div class="col-md-1 mb-3">
+                                        <label for="executionPeriod">Execu&ccedil;&atilde;o</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="executionPeriod" name="executionPeriod">
+                                            <option th:each="i : ${#numbers.sequence(1, 365)}" th:value="${i}" th:text="${i}" 
+	      									th:selected="${i==7}"></option>
+                                        </select>
+                                    </div>
+                                    -->
+                                   <div class="col-md-1 mb-3">
+										<div class="form-group">
+											<div class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox" class="custom-control-input form-check-input" id="fixedDay" name="fixedDay" checked="checked"/>
+												<label class="custom-control-label form-check-label" for="fixedDay">Fixar dia semana</label>
+											</div>
+										</div>
+									</div> 
+                                    <div class="col-md-2 mb-3">
+                                        <label for="weekDay">Dia da Semana</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="weekDay" name="weekDay">
+                                             <option id="weekDay0" value="" selected>Selecione...</option>
+                                             <option id="weekDay1" value="0">Segunda</option>
+                                             <option id="weekDay2" value="1">Ter&ccedil;a</option>
+                                             <option id="weekDay3" value="2">Quarta</option>
+                                             <option id="weekDay4" value="3">Quinta</option>
+                                             <option id="weekDay5" value="4">Sexta</option>
+                                             <option id="weekDay6" value="5">S&aacute;bado</option>
+                                             <option id="weekDay7" value="6">Domingo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+										<div class="form-group">
+											<div class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox" class="custom-control-input form-check-input" id="fixedDayMonth" name="fixedDayMonth"/>
+												<label class="custom-control-label form-check-label" for="fixedDayMonth">Fixar dia m&ecirc;s</label>
+											</div>
+										</div>
+									</div> 
+                                    <div class="col-md-3 mb-3">
+                                        <label for="executionDays">Dias do M&ecirc;s</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="executionDays" name="executionDays" multiple>
+                                            <option th:each="i : ${#numbers.sequence(1, 31)}" th:value="${i}" th:text="${i}"/>
+                                        </select>
+                                    </div>
+									<div class="col-md-1 mb-3">
+										<div class="form-group">
+											<div class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox" class="custom-control-input form-check-input" id="automaticProcessing" name="automaticProcessing"/>
+												<label class="custom-control-label form-check-label" for="automaticProcessing">Processa Autom&aacute;tico</label>
+											</div>
+										</div>
+									</div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="executionTime">Hora</label>
+                                        <input class="form-control" id="executionTime" name="executionTime" placeholder="Execucao">
+                                    </div> 									
+                                    <hr class="hr-admin"/>
+                                    <div style="float: right;">
+										<a id="btnNewGroup" href="javascript: newGroupRegister();" type="button" class="btn waves-effect waves-light btn-success m-t-0" style="display: none;"><i class="fa fa-fa-plus"></i>&nbsp;Novo Grupo de Transfer&ecirc;ncia</a> 
+                                    </div>
+                                    <hr class="hr-admin"/>
+                                    <div class="col-md-1 mb-2">
+										<label for="groupId">C&oacute;digo</label>
+										<div class="input-group">
+											<input type="text" class="form-control uppercase-text" id="groupId" name="groupId" maxlength="8" placeholder="C&oacute;digo" aria-describedby="inputGroupPrepend" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+										</div>
+									</div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="descriptionGroup">Descri&ccedil;&atilde;o do Grupo</label>
+                                        <div class="input-group">
+                                        	<div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-edit"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control uppercase-text" id="descriptionGroup" name="descriptionGroup" maxlength="100" placeholder="Descri&ccedil;&atilde;o" aria-describedby="inputGroupPrepend" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="executionOrderGroup">Ordem</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="executionOrderGroup" name="executionOrderGroup" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                            <option value="" selected>...</option>
+                                            <option id="selectg1" value="1">01</option>
+                                            <option id="selectg2" value="2">02</option>
+                                            <option id="selectg3" value="3">03</option>
+                                            <option id="selectg4" value="4">04</option>
+                                            <option id="selectg5" value="5">05</option>
+                                            <option id="selectg6" value="6">06</option>
+                                            <option id="selectg7" value="7">07</option>
+                                            <option id="selectg8" value="8">08</option>
+                                            <option id="selectg9" value="9">09</option>
+                                            <option id="selectg10" value="10">10</option>
+                                            <option id="selectg11" value="11">11</option>
+                                            <option id="selectg12" value="12">12</option>
+                                            <option id="selectg13" value="13">13</option>
+                                            <option id="selectg14" value="14">14</option>
+                                            <option id="selectg15" value="15">15</option>
+                                            <option id="selectg16" value="16">16</option>
+                                            <option id="selectg17" value="17">17</option>
+                                            <option id="selectg18" value="18">18</option>
+                                            <option id="selectg19" value="19">19</option>
+                                            <option id="selectg20" value="20">20</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+										<div class="form-group">
+											<div class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox" class="custom-control-input form-check-input" id="active" name="active" checked="checked" disabled="disabled"/>
+												<label class="custom-control-label form-check-label" for="active">Ativo</label>
+											</div>
+										</div>
+									</div> 
+									<div class="col-md-1 mb-3">
+                                        <button type="button" id="btnSaveConfigTransferGroup" name="btnSaveConfigTransferGroup" class="btn btn-info btn-circle" disabled="disabled"><i class="fas fa-save"></i> </button>
+                                    </div>  
+                                    <!--
+                                    <div class="col-md-2 mb-3">
+									<label for="id">C&oacute;digo</label> <a
+										href="javascript:nextCode();" type="button"
+										class="btn btn-sm btn-outline-primary">Pr&oacute;ximo</a>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text" id="inputGroupPrepend"><i
+												class="fas fa-key"></i></span>
+										</div>
+										<input type="text" class="form-control force-numeric-only"
+											id="id" name="id" maxlength="8" placeholder="C&oacute;digo"
+											aria-describedby="inputGroupPrepend" required
+											data-bv-notempty-message="Campo obrigat&oacute;rio.">
+									</div>
+								</div>
+                                    -->
+                                    
+                                    <!--
+                                    <div class="col-md-12 mb-3">
+                                        <label for="products">Produtos</label>
+                                        <a id="btnSincrProducts" href="javascript:getAllProducts();" type="button" class="btn btn-sm btn-outline-primary" style="display: none;">Adic. Todos</a>                                       
+                                        <select class="m-b-20 m-r-10 custom-select" id="products" name="products" multiple="multiple" disabled="disabled"></select>
+                                    </div>	
+                                    -->
+                                    <hr class="hr-admin"/>
+                                    <div style="float: right;">
+                                        <a id="btnNewConfigTransfer" href="javascript: newConfgTransfer();" type="button" class="btn waves-effect waves-light btn-success m-t-0" style="display: none;"><i class="fa fa-fa-plus"></i>&nbsp;Nova Configura&ccedil;&atilde;o Transfer&ecirc;ncia</a> 
+                                    </div>
+                                    <hr class="hr-admin"/>
+                                    <div class="col-md-1 mb-2">
+										<label for="groupItemId">C&oacute;digo</label>
+										<div class="input-group">
+											<input type="text" class="form-control uppercase-text" id="groupItemId" name="groupItemId" maxlength="8" placeholder="C&oacute;digo" aria-describedby="inputGroupPrepend" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+										</div>
+									</div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="provider">Fornecedor</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="provider" name="provider" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="financialGroup">Grupo Financeiro</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="financialGroup"
+												name="financialGroup" disabled="disabled" required
+												data-bv-notempty-message="Campo obrigat&oacute;rio.">
+												<option value="" selected="selected">Selecione...</option>
+	                                       		<option th:each="item : ${financialGroups}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+										</select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="financialSubGroup">SubGrupo Financeiro</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="financialSubGroup"
+												name="financialSubGroup" disabled="disabled" required
+												data-bv-notempty-message="Campo obrigat&oacute;rio.">
+												<option value="" selected="selected">Selecione...</option>
+										</select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="bankAccount">Conta Lan&ccedil;amento</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="bankAccount" name="bankAccount" disabled="disabled">
+                                           <option value="" selected="selected">Selecione...</option>
+	                                       <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="groupProduct">SubGrupo Produto</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="subGroupProduct" name="subGroupProduct" disabled="disabled">
+                                           <option value="" selected="selected">Selecione...</option>
+	                                       <option th:each="item : ${productSubGroups}" th:value="${item.keyKey3Concact}" th:text="${item.key4ValueKeyConcact}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="transferState">Status</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="transferState" name="transferState" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                            <!--<option value="0">Aberto</option>-->
+                                            <option value="1" selected="selected">Baixado</option>
+                                             <!--<option value="2">Conferido</option>-->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+										<label for="transferType">Tipo Transfer&ecirc;ncia</label>
+										<select class="m-b-20 m-r-10 custom-select" id="transferType" name="transferType" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+											<option value="1">Porcentagem</option>
+											<option value="2" selected="selected">Valor</option>
+										</select>
+									</div>	
+									<div class="col-md-2 mb-3">
+										<label for="valueTransfer">Valor</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-dollar-sign"></i></span>
+											</div>
+											<input type="text" class="form-control money" id="valueTransfer" name="valueTransfer" maxlength="10" placeholder="Valor" aria-describedby="inputGroupPrepend" disabled="disabled" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+										</div>
+									</div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="expense">Despesa</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="expense" name="expense" required data-bv-notempty-message="Campo obrigat&oacute;rio." disabled="disabled">
+                                            <option value="0">Movimento</option>
+                                            <option value="1">Di&aacute;ria</option>
+                                            <option value="2">Semanal</option>
+                                            <option value="5">Quinzenal</option>
+                                            <option value="3">Mensal</option>
+                                            <option value="4">Despesa Vari&aacute;vel</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="expense">Lan&ccedil;ar como?</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="launchType" name="launchType" required data-bv-notempty-message="Campo obrigat&oacute;rio." disabled="disabled">
+                                            <option value="1" selected>Despesa</option>
+                                            <option value="3">Lan&ccedil;amento</option>
+                                            <option value="2">Transfer&ecirc;ncia Saldo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+                                        <label for="executionOrderGroupItem">Ordem</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="executionOrderGroupItem" name="executionOrderGroupItem" required data-bv-notempty-message="Campo obrigat&oacute;rio." disabled="disabled">
+                                            <option value="" selected="selected">...</option>
+											<option id="selects1" value="1">01</option>
+                                            <option id="selects2" value="2">02</option>
+                                            <option id="selects3" value="3">03</option>
+                                            <option id="selects4" value="4">04</option>
+                                            <option id="selects5" value="5">05</option>
+                                            <option id="selects6" value="6">06</option>
+                                            <option id="selects7" value="7">07</option>
+                                            <option id="selects8" value="8">08</option>
+                                            <option id="selects9" value="9">09</option>
+                                            <option id="selects10" value="10">10</option>
+                                            <option id="selects11" value="11">11</option>
+                                            <option id="selects12" value="12">12</option>
+                                            <option id="selects13" value="13">13</option>
+                                            <option id="selects14" value="14">14</option>
+                                            <option id="selects15" value="15">15</option>
+                                            <option id="selects16" value="16">16</option>
+                                            <option id="selects17" value="17">17</option>
+                                            <option id="selects18" value="18">18</option>
+                                            <option id="selects19" value="19">19</option>
+                                            <option id="selects20" value="20">20</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-3 ml-5">
+                                        <div class="form-group">
+                                            <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input form-check-input" id="isOverTotal" name="isOverTotal" disabled="disabled"/>
+                                                <label class="custom-control-label form-check-label" for="isOverTotal">Sobre Total</label>
+                                            </div>
+                                        </div>                                       
+                                        <div class="form-group">
+                                            <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input form-check-input" id="isUseRemainingBalance" name="isUseRemainingBalance" checked="checked" disabled="disabled"/>
+                                                <label class="custom-control-label form-check-label" for="isUseRemainingBalance">Incide Saldo</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <div class="form-group">
+                                            <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input form-check-input" id="creditDebit" name="creditDebit" disabled="disabled"/>
+                                                <label class="custom-control-label form-check-label" for="creditDebit">Cr&eacute;dito</label>
+                                            </div>
+                                        </div>                                      
+                                        <div class="form-group">
+                                            <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input form-check-input" id="activeItem" name="activeItem" checked="checked" disabled="disabled"/>
+                                                <label class="custom-control-label form-check-label" for="activeItem">Ativo</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 mb-3">
+                                        <button type="button" id="btnAddConfigTransfer" name="btnAddConfigTransfer" class="btn btn-info btn-circle" disabled="disabled"><i class="fa fa-save"></i> </button>
+                                    </div>                                 
+                                </div>   
+                                <div class="form-row" style="width: 100%;">
+                                    <hr class="hr-admin"/>
+                                    <h4 class="page-title">Transfer&ecirc;ncias Configuradas</h4>
+                                    <hr class="hr-admin"/>                                   
+                                    <div class="table-responsive" id="report_table-itens"></div>
+                                </div>  
+                                <div class="form-row">
+                                    <hr class="hr-admin">
+                                    <h4 class="page-title">Dados de Altera&ccedil;&atilde;o</h4>
+                                    <hr class="hr-admin">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="changeDate">Data</label>
+                                        <input type="text" class="form-control" id="changeDate" name="changeDate" maxlength="100" placeholder="Data Altera&ccedil;&atilde;o" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="changeUser">Usu&aacute;rio</label>
+                                        <input type="text" class="form-control" id="changeUser" name="changeUser" maxlength="100" placeholder="Usu&aacute;rio" readonly="readonly"/>
+                                    </div>                                    
+                                </div> 
+                                <hr style="width: 100%">                                         
+                                <div class="action-form">
+                                    <div class="form-group m-b-0 text-right">
+                                       
+                                    </div>
+                                </div>     
+                            </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div id="modal-clone-config" class="modal" tabindex="-1" role="dialog" aria-labelledby="myCloneConfig" style="display: none;" aria-hidden="true">
+	        <div class="modal-dialog modal-clone-config">
+	            <div class="modal-content">
+	            	<div class="alert alert-warning" id="alertErrorCopyTransfer" style="display: none;">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">X</span> </button>
+                        <h3 class="text-warning"><i class="fa fa-exclamation-triangle"></i> Alerta</h3> 
+                        <span id="msgErrorCopyTransfer"></span>
+                    </div>
+	                <div class="modal-header">
+	                    <h4 class="modal-title" id="myCloneConfig">Copiar Configura&ccedil;&atilde;o Transfer&ecirc;ncia</h4>
+	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+	                </div>
+	                <div class="modal-body">
+	                	<form class="was-validated" novalidate id="formCloneConfig" name="formCloneConfig" th:action="@{/adm/financial-transfer/clone}" method="post" autocomplete="off">
+	                    	<div class="form-row">
+	                            <div class="col-md-4 mb-3">
+	                                <label for="bankAccountOriginClone">Conta Origem</label>
+	                                <select class="m-b-20 m-r-10 custom-select" id="bankAccountOriginClone" name="bankAccountOriginClone" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+	                                    <option value="" selected="selected">Selecione...</option>
+	                                    <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                                </select>
+	                            </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="bankAccountDestinyClone">Conta Destino</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="bankAccountDestinyClone" name="bankAccountDestinyClone" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                        <option value="" selected="selected">Selecione...</option>
+                                        <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+	                                <div style="float: right;">
+					                	<button type="button" class="btn btn-success waves-effect text-center" onclick="cloneConfigTransfer();">Copiar</button>
+	            				        <button type="button" class="btn btn-danger waves-effect text-center" data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+                    		</div>
+	                	</form>
+	                	<div class="form-row" style="width: 100%;">
+	                        <hr class="hr-admin"/>
+	                        <h4 class="page-title">Transfer&ecirc;ncias Configuradas</h4>
+	                        <hr class="hr-admin"/>                                   
+	                        <div class="table-responsive" id="report_table-itens-clone"></div>
+	                    </div>  
+	                </div>
+	                <div class="modal-footer">
+	                	<button type="button" class="btn btn-success waves-effect text-center" onclick="cloneConfigTransfer();">Copiar</button>
+	                    <button type="button" class="btn btn-danger waves-effect text-center" data-dismiss="modal">Fechar</button>
+	                </div>
+	            </div>
+	            <!-- /.modal-content -->
+	        </div>
+	        <!-- /.modal-dialog -->
+	    </div>
+	</th:block>
+</html>

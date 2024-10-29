@@ -1,0 +1,653 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+		<!-- Select2 -->
+	    <link th:href="@{/assets/libs/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+	    <link th:href="@{/assets/libs/select2/dist/css/select2-bootstrap.css}" rel="stylesheet" type="text/css"/>
+	    <script th:src="@{/assets/libs/select2/dist/js/select2.full.min.js}"></script>
+	    <script th:src="@{/assets/libs/select2/dist/js/select2.min.js}"></script>    
+	    
+   		<!-- SweetAlert -->   	
+    	<link th:href="@{/assets/libs/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet"/>
+    	<script th:src="@{/assets/libs/sweetalert2/dist/sweetalert2.all.min.js}"></script>
+
+	    <!-- Jquery Mask -->
+	    <script th:src="@{/assets/libs/jquery.mask/jquery.mask.min.js}"></script>
+
+	    <!-- Boostrap Validator -->
+	    <link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+	    <script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+	    <script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+     
+	    <!-- Css Boostrap Validator Select2 -->
+	    <style type="text/css">
+	        .was-validated .custom-select:invalid + .select2 .select2-selection{
+	            border-color: #f62d51!important;
+	            padding-right: 2.0625rem;
+	            background-repeat: no-repeat;
+	            background-position: center right calc(6.0625rem / 4);
+	            background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+	            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+	        }
+	        .was-validated .custom-select:valid + .select2 .select2-selection{
+	            border-color: #36bea6!important;
+	            padding-right: 3.29688rem;
+	            background: url(../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+	        }
+	        *:focus{
+	            outline:0px;
+	        }
+	        
+	        table.dataTable > tbody > tr.child ul.dtr-details {
+	            display: inline-block;
+	            list-style-type: none;
+	            margin: 0;
+	            padding: 0;
+	            width: 100%;
+	        }
+	
+	        .help-block{
+	            color: #f62d51!important;
+	        }
+	    </style>
+
+	    <script>
+	    	function processReportCompany(){
+				const documentParentId = $('form#formPrintPdfMovement input#documentParentId').val();
+				const companyId = $('form#formPrintPdfMovement input#companyId').val();
+				
+				if(!isNaN(documentParentId) && !isNaN(companyId)){
+		    		const url = $('form#formPrintPdfMovement').attr('action');
+		    		window.open(url+'/'+documentParentId+'/'+companyId, '_blank').focus();					
+				}
+			}
+		
+		    function processCompany(){
+		    	
+		    	var companyId = $('form#formSave select#companyId option:selected').val();
+	            if(''==companyId)
+	            {
+	            	return;
+	            }
+	            
+	            $('form#formProcessCompany input#selectedCompany').val(companyId);
+	            $('form#formProcessCompany').submit();         
+					            
+			}
+	    
+		    function sincProductsBravo(){
+		    	
+		    	var companyId = $('form#formSave select#companyId option:selected').val();
+	            if(''==companyId)
+	            {
+	            	return;
+	            }
+	            
+	            $('form#formSincBravo input#companyId').val(companyId);
+		  		var form = $('form#formSincBravo');        
+		  		var dataForm = form.serializeArray();
+	            
+		  		showLoading("Sincronizando dados... Por favor aguarde...");	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+	            		$('form#formSave select#companyId').val('').trigger('change');
+	        			showSweetalertSuccess(data.message);
+	        			setTimeout(function() {
+	        				$('form#formSave select#companyId').val(companyId).trigger('change');
+	        			}, 500);	            		
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao sincronzar produtos da plataforma Bravo.','5000');
+			    }).always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+			}
+	    
+	        function getAllDataProduct()
+	        {
+	            var form = $('form#formGetAllDataProduct');        
+	            var dataForm = form.serializeArray();
+	              
+	            clearProductFields();
+	            
+	            var companyId = $('form#formGetAllDataProduct input#companyId').val();
+	            if(''==companyId || 0==Number(companyId))
+	            {
+	            	return;
+	            }
+	            var productId = $('form#formGetAllDataProduct input#productId').val();
+	            if(''==productId || 0==Number(productId))
+	            {
+	            	return;
+	            }              
+		  		
+		  		showLoading("Carregando dados do produto... Por favor aguarde...");	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+						hideLoading();
+						$('form#formSave input#movementId').val(data.product.movementId);
+	                    $('form#formSave input#initialInput').val(data.product.initialInput);
+	                    $('form#formSave input#finalInput').val(data.product.finalInput);
+	                    $('form#formSave input#initialOutput').val(data.product.initialOutput);
+	                    $('form#formSave input#finalOutput').val(data.product.finalOutput);
+	                    $('form#formSave input#initialClock').val(data.product.initialClock);
+	                    $('form#formSave input#finalClock').val(data.product.finalClock);	                    
+						$('form#formSave input#latestProductRelease').val(data.product.lastProcessing);
+						$('form#formSave input#enableClock').val(data.product.enableClockMovement ? 1 : 0);
+						
+			            if(data.product.enableClockMovement)
+			            {
+			                $('div#divInitialClock').show();
+			                $('div#divFinalClock').show();
+			            }
+			            else
+			            {
+			                $('div#divInitialClock').hide();
+			                $('div#divFinalClock').hide();
+			            }
+			            
+	                    var bootstrapValidator = $('form#formSave').data('bootstrapValidator');
+				        bootstrapValidator.validate();
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados de Produto.','5000');
+			    })
+			    .always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+	        }
+	
+	        function getAllProductsByCompany()
+	        {
+	            var form = $('form#formGetAllProductsByCompany');        
+		  		var dataForm = form.serializeArray();
+		  		
+	            clearProductSelect();
+	            clearProductFields();
+	            
+	            $('label#labelCompany').html('Empresa');
+	            
+	            $('form#formPrintPdfMovement input#companyId').val('');
+				$('form#formPrintPdfMovement input#documentParentId').val('');
+	            
+	            var companyId = $('form#formGetAllProductsByCompany input#companyId').val();
+	            if(''==companyId || 0==Number(companyId))
+	            {
+	            	return;
+	            }
+	            		  		
+		  		showLoading("Carregando produtos... Por favor aguarde...");	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+						hideLoading();
+						
+						const countProducts = data.products.length;
+						let countPopulate = 0;
+						$.each(data.products, function(key, value)
+			    	   	{
+							var icon = '';
+							var color = '';
+							if('1'==value.key1)
+							{
+								icon = 'fas fa-pencil-alt';
+								color = 'text-success';
+								countPopulate = countPopulate + 1;
+							}							
+							$('form#formSave select#productId').append('<option value="'+value.key+'" data-product="'+value.key+'" data-icon="'+icon+'" data-color="'+color+'">'+value.value+' ('+value.key+')</option>');
+			    	   	});
+						$('form#formSave select#productId').append('<option value="" selected>('+countPopulate+' / '+countProducts +') Produtos Informados</option>');
+
+						$('form#formSave select#productId').trigger('change');	
+						
+						if(data.lastMovementCompany && data.lastMovementCompany.dateTimeExecution){
+							$('form#formPrintPdfMovement input#companyId').val(data.lastMovementCompany.companyId);
+							$('form#formPrintPdfMovement input#documentParentId').val(data.lastMovementCompany.documentParentId);
+							$('label#labelCompany').html('<a type="button" class="" style="width: 100%;" href="javascript: processReportCompany();"><span style="color: #3e5569;">Empresa&nbsp;&nbsp;</span><i class="mdi mdi-printer"></i>&nbsp;Ult Mov: '+data.lastMovementCompany.dateTimeExecution+'</a>');	
+						}				
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar produto da Empresa.','5000');
+			    })
+			    .always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+	        }
+	
+	        function saveForm()
+	        {
+	            var bootstrapValidator = $('form#formSave').data('bootstrapValidator');
+				bootstrapValidator.validate();
+				
+				if (bootstrapValidator.isValid() === false) 
+				{
+					return;
+		        }
+	
+				var form = $('form#formSave'); 			
+		  		var dataForm = form.serializeArray();
+		  		
+		  		showLoading("Gravando dados... Por favor aguarde...");  	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{     		
+            			$('form#formSave select#productId option:selected').data('icon','fas fa-pencil-alt').data('color','text-success');
+            			$('form#formSave select#productId').trigger('change');	
+	        			showSweetalertSuccess(data.message);
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+			    }).always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+	        }
+	
+	        function clearForm()
+	        {
+	            clearProductFields();
+	            clearProductSelect();
+	            clearCompanySelect();
+	            $('label#labelCompany').html('Empresa');
+	        }
+	
+	        function clearProductFields()
+	        {
+	            $('form#formSave input#initialInput').val('');
+	            $('form#formSave input#finalInput').val('');
+	            $('form#formSave input#initialOutput').val('');
+	            $('form#formSave input#finalOutput').val('');
+	            $('form#formSave input#initialClock').val('');
+	            $('form#formSave input#finalClock').val('');
+				$('form#formSave input#latestProductRelease').val('');
+	        }
+	
+	        function clearProductSelect()
+	        {
+	            $('form#formSave select#productId').empty().trigger('change');
+	        }
+	
+	        function clearCompanySelect()
+	        {
+	            $('form#formSave select#companyId').val('').trigger('change');
+	        }
+	
+	        function checkFinalInput(input) 
+	        {
+	            var initialInput = $('form#formSave input#initialInput').val();
+	            if(''==initialInput)
+	            {
+	                initialInput = 0;
+	            }
+	            if(isNaN(initialInput))
+	            {
+	                initialInput = 0;        
+	            }
+	            var finalInput = input.value;
+	            if(isNaN(finalInput))
+	            {
+	                input.setCustomValidity('Entrada Final Inv&aacute;lida');
+	                return;        
+	            }
+	            if (Number(initialInput) > Number(input.value)) 
+	            {
+	                input.setCustomValidity('Entrada Final Inv&aacute;lida precisa ser maior ou igual a ' + initialInput);
+	            } 
+	            else 
+	            {
+	                // input is fine -- reset the error message
+	                input.setCustomValidity('');
+	            }
+	        }
+	
+	        function checkFinalOutput(input) 
+	        {
+	            var inititalOutput = $('form#formSave input#initialOutput').val();
+	            if(''==inititalOutput)
+	            {
+	                inititalOutput = 0;
+	            }
+	            if(isNaN(inititalOutput))
+	            {
+	                inititalOutput = 0;        
+	            }
+	            var finalOutput = input.value;
+	            if(isNaN(finalOutput))
+	            {
+	                input.setCustomValidity('Sa&iacute;da Final Inv&aacute;lida');
+	                return;        
+	            }
+	            if (Number(inititalOutput) > Number(input.value)) 
+	            {
+	                input.setCustomValidity('Sa&iacute;da Final Inv&aacute;lida precisa ser maior ou igual a ' + inititalOutput);
+	            } 
+	            else 
+	            {
+	                // input is fine -- reset the error message
+	                input.setCustomValidity('');
+	            }
+	        }
+	
+	        function checkFinalClock(input) 
+	        {
+	            var inititalClock = $('form#formSave input#initialClock').val();
+	            if(''==inititalClock)
+	            {
+	                inititalClock = 0;
+	            }
+	            if(isNaN(inititalClock))
+	            {
+	                inititalClock = 0;        
+	            }
+	            var finalClock = input.value;
+	            if(isNaN(finalClock))
+	            {
+	                input.setCustomValidity('Rel&oacute;gio Final Inv&aacute;lido');
+	                return;        
+	            }
+	            if (Number(inititalClock) > Number(input.value)) 
+	            {
+	                input.setCustomValidity('Rel&oacute;gio Final Inv&aacute;lido precisa ser maior ou igual a ' + inititalClock);
+	            } 
+	            else 
+	            {
+	                // input is fine -- reset the error message
+	                input.setCustomValidity('');
+	            }
+	        }
+	        
+		    (function() 
+		    {
+	            'use strict';
+	            
+	            /** Force input numeric only */
+				$('.force-numeric-only').ForceNumericOnly();
+	            
+	            /**Mask to money*/
+	            $('.money').mask("#.##0,00", {reverse: true});
+	            
+	            $('form#formSave').bootstrapValidator({
+		            excluded: ':disabled',
+		            feedbackIcons: {
+		                valid: 'glyphicon glyphicon-ok',
+		                invalid: 'glyphicon glyphicon-remove',
+		                validating: 'glyphicon glyphicon-refresh'
+	                },
+	                fields: {
+	                        'companyId': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Empresa n&atilde;o Informada'
+				                    }
+				                }
+				            },
+	                        'productId': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Produto n&atilde;o Informado'
+				                    }
+				                }
+				            },
+	                        'initialInput': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Entrada Inicial Inv&aacute;lida'
+				                    },
+	                                digits: 
+	                                {
+				                        message: 'Entrada Inicial Inv&aacute;lida'
+				                    }
+				                }
+				            },
+	                        'finalInput': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Entrada Final Inv&aacute;lida'
+				                    },
+	                                digits: 
+	                                {
+				                        message: 'Entrada Final Inv&aacute;lida'
+	                                },
+	                                callback: 
+	                                {
+				                        message: 'Entrada Final Inv&aacute;lida precisa ser maior ou igual a Entrada Inicial',
+				                        callback: function(value, validator) 
+				                        {
+				                            value = parseInt(value, 10);
+				                            var initial = $('form#formSave input#initialInput').val();
+	      									if(parseInt(initial)>value){
+	      										return false;	
+	      									}else{
+	      										return true;
+	      									}										
+				                        }
+				                    }
+				                }
+				            },
+	                        'initialOutput': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Sa&iacute;da Inicial Inv&aacute;lida'
+				                    },
+	                                digits: 
+	                                {
+				                        message: 'Sa&iacute;da Inicial Inv&aacute;lida'
+				                    }
+				                }
+				            },
+	                        'finalOutput': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Sa&iacute;da Final Inv&aacute;lida'
+				                    },
+	                                digits: 
+	                                {
+				                        message: 'Sa&iacute;da Final Inv&aacute;lida'
+				                    },
+	                                callback: 
+	                                {
+				                        message: 'Sa&iacute;da Final Inv&aacute;lida precisa ser maior ou igual a Sa&iacute;da Inicial',
+				                        callback: function(value, validator) 
+				                        {
+				                            value = parseInt(value, 10);
+				                            var initial = $('form#formSave input#initialOutput').val();
+	      									if(parseInt(initial)>value){
+	      										return false;	
+	      									}else{
+	      										return true;
+	      									}										
+				                        }
+				                    }
+				                }
+	                        },
+	                        'initialClock': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Rel&oacute;gio Inicial Inv&aacute;lido'
+				                    },
+	                                digits: 
+	                                {
+				                        message: 'Rel&oacute;gio Inicial Inv&aacute;lido'
+				                    }
+				                }
+				            },
+	                        'finalClock': 
+	                        {
+	                            validators: 
+	                            {
+	                                notEmpty: 
+	                                {
+				                        message: 'Rel&oacute;gio Final Inv&aacute;lido'
+				                    },
+	                                digits: 
+	                                {
+				                        message: 'Rel&oacute;gio Final Inv&aacute;lido'
+				                    },
+				                    callback: 
+	                                {
+				                        message: 'Rel&oacute;gio Final Inv&aacute;lido precisa ser maior ou igual ao Rel&oacute;gio Inicial',
+				                        callback: function(value, validator) 
+				                        {
+				                            value = parseInt(value, 10);
+				                            var initial = $('form#formSave input#initialClock').val();
+	      									if(parseInt(initial)>value){
+	      										return false;	
+	      									}else{
+	      										return true;
+	      									}										
+				                        }
+				                    }
+				                }
+				            }
+				        }
+	            });
+	            
+		        $('form#formSave select#companyId')
+	            .select2({ 
+	                width: '100%',
+	                theme: "bootstrap",
+	                language: 
+	                {
+	                    noResults: function (params) 
+	                    {
+	                        return "Nenhum registro encontrado.";
+	                    }
+	                }
+	            }).on('change', function (e)
+	            {
+	                $('form#formGetAllProductsByCompany input#companyId').val(this.value);
+	                getAllProductsByCompany();
+	            });    
+	
+	            $('form#formSave select#productId')
+	            .select2({ 
+	                width: '100%',
+	                theme: "bootstrap",
+	                templateSelection: iformat,
+					templateResult: iformat,
+	                language: 
+	                {
+	                    noResults: function (params) 
+	                    {
+	                        return "Nenhum registro encontrado.";
+	                    }
+	                }
+	            }).on('change', function (e)
+	            {
+	            	clearProductFields();
+	                if(''!=this.value && !isNaN(this.value))
+	                {	                	 
+	                    $('form#formGetAllDataProduct input#productId').val(this.value);
+	                    $('form#formGetAllDataProduct input#companyId').val($('form#formSave select#companyId').val());
+	                    getAllDataProduct();
+	                }
+	            });   
+	            
+	            function iformat(item) 
+	            {
+					var originalOption = item.element;
+					var color = $(originalOption).data('color');
+					return $('<span><i class="fa ' + $(originalOption).data('icon') + ' ' +color+ '"></i> ' + item.text + '</span>');
+				}
+	            
+                $('div#divInitialClock').hide();
+                $('div#divFinalClock').hide();
+                
+                const selectedCompany = $('form#formSave input#selectedCompany').val();
+                if(selectedCompany !=null && selectedCompany.length > 0){
+                	$('form#formSave select#companyId').val(selectedCompany).trigger('change');
+                }
+
+		    })();
+		</script>
+	</th:block>
+</html>

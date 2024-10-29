@@ -1,0 +1,621 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	    
+	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	    
+	    <!-- This Page CSS -->
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/daterangepicker/daterangepicker.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-document-movement.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-currency.css}"/>
+
+	    <script th:src="@{/assets/libs/moment/moment.js}"></script>
+	    <script th:src="@{/assets/libs/daterangepicker/daterangepicker.js}"></script>
+	    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+	    
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js}"></script>
+	    
+	    <!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>	
+    	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    	
+    	<!-- Date Picker -->
+	    <link rel="stylesheet" type="text/css" href="../../assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+	    <script src="../../assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+			
+			.modal-body{
+			    height: 250px;
+			    overflow-y: auto;
+			}
+			
+			@media (min-height: 500px) {
+			    .modal-body { height: 500px; }
+			}
+			
+			@media (min-height: 800px) {
+			    .modal-body { height: 700px; }
+			}
+			
+			.dataTables_wrapper {
+			    padding: 0;
+			    width: 100%;
+			}
+		</style>
+		
+	    <script>
+	    
+	    var isOpenFormNewDocument = true;
+	    var isSetFinancialGroup = false;
+	    
+  		function formatRepoSelection(repo)
+  		{
+  		  return repo.text;
+  		  
+  		}
+
+
+  		function searchCompanyMovement()
+		{
+  			let companys = $('form#formFilter select#company').val(); 
+  		
+  			$('form#formFilter input#company').val(companys); 
+  			const form = $('form#formFilter'); 			
+  			const dataForm = form.serializeArray();
+
+  			showLoading("Carregando documentos... Por favor aguarde...");  	
+
+  			let message = 'Ocorreu um erro ao carregar documentos.';
+			$.ajax({
+				url : $('form#formFilterReportView').attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			})
+			.done(function(data, textStatus, jqXHR) 
+			{	    		
+				if(true==data.status)
+				{
+					populateTable(data);
+				}
+				else
+				{
+					hideLoading();
+					showSweetalertWarning('Alerta!', data.message,'5000');
+				}
+			})
+			.fail(function(data, textStatus, jqXHR) 
+			{
+				if(''!=data.message)
+				{
+					message = data.message;
+				}
+				showSweetalertWarning('Alerta!', message,'5000');
+			}).always(function() 
+			{
+				$('#block1').hide();
+				$('#block2').hide();
+			});
+		}
+  		
+  		
+  	   // $('#editable-datatable').editableTableWidget().numericInputExample().find('td:first').focus();
+  	    $(function() {
+  	        $('#editable-datatable').DataTable();
+  	    });
+  	    $('#data_4').focus(function(){
+  	        $(this).calendario({
+  	            target :'#data_4',
+  	            dateDefault:$(this).val()
+  	        });
+  	    });
+  	    
+  	   function createTable()
+	    { 
+  		   
+  	 		 var table =  $('table#table-pending-itens').DataTable({
+              "paging": false,
+              "columns": [
+  	            	{ 
+     	           	 "className": 'text-center',
+     	           	 "data": "company" 
+     	            },
+     	         	{ 
+        	         "className": 'text-center',
+        	         "data": "expiryData" 
+     	            },
+     	         	{ 
+     	           	 "className": 'text-center',
+     	           	 "data": "executedData" 
+     	            },
+     	           //{ 
+     	           // "className": 'text-center',
+     	          // 	 "data": "actions" 
+     	           // },
+     	         	{ 
+     	           	 "className": 'text-center',
+     	           	 "data": "motive" 
+     	            },
+     	         	{ 
+     	           	 "className": 'text-center',
+     	           	 "data": "documentNote" 
+     	            }
+  	        ],
+              "columnDefs": [
+                   
+                   {
+                	   "targets":[1],
+                	   "orderable": false
+                   },
+                   {
+                	   "targets":[2],
+                	   "orderable": false
+                   },
+                   {
+                	   "targets":[3],
+                	   "orderable": false
+                   },
+                   {
+                	   "targets":[4],
+                	   "orderable": false
+                   },
+                   // {
+                   //   "targets":[5],
+                //	   "orderable": false
+                   // },
+                   {
+                	   "targets":[5],
+                          "visible": false,
+                          "searchable": false
+                    }
+              ]
+          });
+  	 		 
+  	 	  table.order( [ 5, 'desc' ] ).draw();
+
+         $('.classMotive')
+				.select2({ 
+					width: '100%',
+					theme: "bootstrap",
+					language: 
+					{
+						noResults: function (params) 
+						{
+							return "Nenhum registro encontrado.";
+						}
+					}
+				}).on('change', function (e)
+				{
+              const fildValue = this.value;
+              const fildId = this.id;
+              if(fildId.indexOf('motive_') > -1){
+                  $('form#formSave input#fildChange').val(fildId+';'+fildValue);
+              }
+              saveNewDate();
+				});
+
+          $('.classNote')
+				.on('change', function (e)
+				{
+              const fildValue = this.value;
+              const fildId = this.id;
+              if(fildId.indexOf('documentNote_') > -1){
+                  $('form#formSave input#fildChange').val(fildId+';'+encodeURIComponent(fildValue));
+              }
+              saveNewDate();
+				});
+
+          $('.classDate').datepicker({
+              autoclose: true,
+              todayHighlight: true,
+              toggleActive: true,
+              format: 'dd/mm/yyyy',
+              language: 'pt-BR',
+              showOn: "button",
+              buttonImage: "http://jqueryui.com/resources/demos/datepicker/images/calendar.gif",
+              buttonImageOnly: true
+          })
+				.on('change', function (e)
+				{
+              const fildValue = this.value;
+              const fildId = this.id;
+              if(fildId.indexOf('expiryData_') > -1){
+                  $('form#formSave input#fildChange').val(fildId+';'+fildValue);
+              }else if(fildId.indexOf('executionDate_') > -1){
+                  $('form#formSave input#fildChange').val(fildId+';'+fildValue);
+              }
+              saveNewDate();
+				});
+		  }
+  	   
+  	  
+	    function populateTable(data)
+	    {
+	    	$('div#itens-dashboardItem').html('');
+	    	var trHTML = '<table id="table-pending-itens" class="table table-striped table-bordered display">';
+          trHTML += '<thead>';
+          trHTML += '<tr>';
+          trHTML += '<th><b><h4>Empresa</h4></b></th>';
+          trHTML += '<th><b><h4>Data Vencimento</h4></b></th>';
+          trHTML += '<th><b><h4>Data Execu&ccedil;&atilde;o</h4></b></th>';
+          //trHTML += '<th><b><h4>Ativo</h4></b></th>';
+          trHTML += '<th><b><h4>Motivo</h4></b></th>';
+          trHTML += '<th><b><h4>Observa&ccedil;&atilde;o</h4></b></th>';
+          trHTML += '<th></th>';
+          trHTML += '</tr>';
+          trHTML += '</thead>';
+          trHTML += '<tbody>';
+
+                  if (true == data.status) {
+                      $.each(data.report.itens, function (key, value) {
+                          trHTML += '<tr id="6" class="gradeA">';
+                          trHTML += '<td>'+value.company+'</td>';
+                          trHTML += '<td><div class="input-group"><input class="classDate" type="text" name="expiryData_'+value.id+'" id="expiryData_'+value.id+'" size="10" maxlength="10" value="'+value.expiryData+'" readonly/><div class="input-group-append"><span class="ml-1 input-group-text"><i class="fas fa-calendar-alt"></i></span></div></div></td>';
+                          if(null == value.executedData){
+                        	  trHTML += '<th class="text-center"><b><h1>-</h1></b></th>'; 
+                        	  }else{
+                                  trHTML += '<td><div class="input-group"><input class="classDate type="text" name="executionDate_'+value.id+'" id="executionDate_'+value.id+'" size="10" maxlength="10" value="'+value.executedData+'" readonly/><div class="input-group-append"><span class="ml-1 input-group-text"><i class="fas fa-calendar-alt"></i></span></div></div></td></td>';                                                                 
+                        	  }
+                          //if(true == value.inactive){
+                          //    trHTML += '<td class="text-center"><a id="inactive_'+value.id+'" name="inactive_'+value.id+'" data-toggle="tooltip" data-original-title="Ativar" onclick="inactive('+value.id+', 0, &quot;inactive_'+value.id+'&quot;);" style="cursor: pointer;" value="0"><i class="fas fa-minus text-danger" id="iconInactive_'+value.id+'"></i></a></td>';
+                         // }else{
+                          //    trHTML += '<td class="text-center"><a id="inactive_'+value.id+'" name="inactive_'+value.id+'" data-toggle="tooltip" data-original-title="Inativar" onclick="inactive('+value.id+', 1, &quot;inactive_'+value.id+'&quot;);" style="cursor: pointer;" value="1"><i class="fas fa-check text-success" id="iconInactive_'+value.id+'"></i></a></td>';
+                         // }
+                          if(0 != value.documentParentId){
+                        	  trHTML += '<th class="text-center"><b><h1>-</h1></b></th>'; 
+                        	  trHTML += '<th class="text-center"><b><h1>-</h1></b></th>'; 
+                        	  }else{
+		                          trHTML += '<td class="text-center"><select class="classMotive" name="motive_'+value.id+'" id="motive_'+value.id+'"><option value="0">Selecione...</option><option value="2" '+(value.motive == '2' ? 'selected' : '')+'>Baixo Movimento</option><option value="1" '+(value.motive == '1' ? 'selected' : '')+'>Negativo</option><option value="4" '+(value.motive == '4' ? 'selected' : '')+'>Bloqueado</option><option value="3" '+(value.motive == '3' ? 'selected' : '')+'>Outros</option></select></td>';
+		                          if(null == value.documentNote){
+			                          trHTML += '<td class="text-center"><textarea class="classNote" id="documentNote_'+value.id+'" name="documentNote_'+value.id+'" rows="1" cols="30"> </textarea></td>';
+
+		                          }else{
+			                          trHTML += '<td class="text-center"><textarea class="classNote" id="documentNote_'+value.id+'" name="documentNote_'+value.id+'" rows="1" cols="30">'+value.documentNote+'</textarea></td>';
+
+		                          }
+                        	  }
+                          trHTML += '<td class="text-center">'+value.motive+'</td>';
+                          trHTML += '</tr>';
+                      });
+                  }
+                  
+                  trHTML += '</tbody>';
+                  trHTML += '<tfoot>';
+                  trHTML += '<tr>';
+                  trHTML += '<th><b><h4>Empresa</h4></b></th>';
+                  trHTML += '<th><b><h4>Data Vencimento</h4></b></th>';
+                  trHTML += '<th><b><h4>Data Execu&ccedil;&atilde;o</h4></b></th>';
+                  //trHTML += '<th><b><h4>Ativo</h4></b></th>';
+                  trHTML += '<th><b><h4>Motivo</h4></b></th>';
+                  trHTML += '<th><b><h4>Observa&ccedil;&atilde;o</h4></b></th>';
+	    	
+	    	trHTML += '</tbody>';
+	    	trHTML += '</table>';
+	    	
+	    	$('div#itens-dashboardItem').html(trHTML);
+
+	    	createTable();
+	    }
+	    	
+	    
+	    function format(d)
+	    {
+	         // `d` is the original data object for the row
+	         return d.detail;  
+	    }
+	    
+	    function exportTableToCSV($table, filename) {
+	    	 
+	        //rescato los titulos y las filas
+	        var $Tabla_Nueva = $table.find('tr:has(td,th)');
+	        // elimino la tabla interior.
+	        var Tabla_Nueva2= $Tabla_Nueva.filter(function() {
+	             return (this.childElementCount != 1 );
+	        });
+	    
+	        var $rows = Tabla_Nueva2,
+	            // Temporary delimiter characters unlikely to be typed by keyboard
+	            // This is to avoid accidentally splitting the actual contents
+	            tmpColDelim = String.fromCharCode(11), // vertical tab character
+	            tmpRowDelim = String.fromCharCode(0), // null character
+	    
+	            // Solo Dios Sabe por que puse esta linea
+	            colDelim = (filename.indexOf("xls") !=-1)? '"\t"': '","',
+	            rowDelim = '"\r\n"',
+	    
+	    
+	            // Grab text from table into CSV formatted string
+	            csv = '"' + $rows.map(function (i, row) {
+	                var $row = $(row);
+	                var   $cols = $row.find('td:not(.hidden),th:not(.hidden)');
+	    
+	                return $cols.map(function (j, col) {
+	                    var $col = $(col);
+	                    var text = $col.text().replace(/\./g, '');
+	                    return text.replace('"', '""'); // escape double quotes
+	    
+	                }).get().join(tmpColDelim);
+	                csv =csv +'"\r\n"' +'fin '+'"\r\n"';
+	            }).get().join(tmpRowDelim)
+	                .split(tmpRowDelim).join(rowDelim)
+	                .split(tmpColDelim).join(colDelim) + '"';
+	    
+	    
+	         download_csv(csv, filename);
+	    
+	    
+	    }
+	    
+	   function download_csv(csv, filename) {
+	        var csvFile;
+	        var downloadLink;
+	    
+	        // CSV FILE
+	        csvFile = new Blob([csv], {type: "text/csv"});
+	    
+	        // Download link
+	        downloadLink = document.createElement("a");
+	    
+	        // File name
+	        downloadLink.download = filename;
+	    
+	        // We have to create a link to the file
+	        downloadLink.href = window.URL.createObjectURL(csvFile);
+	    
+	        // Make sure that the link is not displayed
+	        downloadLink.style.display = "none";
+	    
+	        // Add the link to your DOM
+	        document.body.appendChild(downloadLink);
+	    
+	        // Lanzamos
+	        downloadLink.click();
+	    }
+	    
+	 	    
+	    function inactive(id, inactive, name)
+      {
+          const fildValue = inactive;
+              const fildId = id;
+              const fildName = name;
+              if(fildName.indexOf('inactive_') > -1){
+                  $('form#formSave input#fildChange').val(fildName+';'+fildValue);
+              }
+              saveNewDate();
+
+              if(0 == inactive)
+				{
+                  $('a#inactive_'+id).attr('onclick','inactive('+id+','+0+','+'"'+name+'"'+')');
+	   				$('i#iconInactive_'+id).attr('class', 'fas fa-check text-success');
+	   				$('a#inactive_'+id).tooltip('hide').attr('data-original-title', 'Ativar');
+				}
+				else
+				{
+                  $('a#inactive_'+id).attr('onclick','inactive('+id+','+1+','+'"'+name+'"'+')');
+	   				$('i#iconInactive_'+id).attr('class', 'fas fa-minus text-danger');
+	   				$('a#inactive_'+id).tooltip('hide').attr('data-original-title', 'Inativar');
+				}
+      }
+
+      function saveNewDate(){
+
+          var form = $('form#formSave');        
+          var dataForm = form.serializeArray();
+
+          $.ajax({
+              url : form.attr('action'),
+              type : "POST",
+              data : dataForm,
+              dataType : "json"
+          })
+          .done(function(data, textStatus, jqXHR) 
+          {	    		
+              if(true==data.status)
+       	{
+            	  showSweetalertSuccess(data.message);
+				
+       	}
+       	else
+       	{
+       		showSweetalertWarning('Alerta!', data.message,'5000');
+       	}
+  	})
+  	.fail(function() 
+    	{
+  			showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+	    }).always(function() 
+	    {
+    		$('#block1').hide();
+  		$('#block2').hide();
+	    });
+  	        
+	}
+      function searchBankAccountByCompany()
+		{
+			let companys = $('form#formFilter select#company').val(); 
+			if(''==companys){
+				return;
+			}
+		
+		}
+        
+	    (function() {
+	    'use strict';
+	    	
+	 
+        $('.collapse').collapse('show');  
+        
+			$('.timeseconds').daterangepicker({
+			
+			ranges: {
+			'Hoje': [moment(), moment()],
+			'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+			'Ult. 7 Dias': [moment().subtract(6, 'days'), moment()],
+			'Ult. 30 Dias': [moment().subtract(29, 'days'), moment()],
+			'Este M&ecirc;s': [moment().startOf('month'), moment().endOf('month')],
+			'Ult. M&ecirc;s': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+			},
+			autoApply: true,
+			autoUpdateInput: true,
+			locale: {
+				format: 'DD/MM/YYYY', 
+				"separator": " - ",
+				"applyLabel": "Aplicar",
+				"cancelLabel": "Cancelar",
+				"fromLabel": "De",
+				"toLabel": "At&eacute;",
+				"customRangeLabel": "Custom",
+				"daysOfWeek": [
+					"Dom",
+					"Seg",
+					"Ter",
+					"Qua",
+					"Qui",
+					"Sex",
+					"S&aacute;b"
+				],
+				"monthNames": [
+					"Janeiro",
+					"Fevereiro",
+					"Mar&ccedil;o",
+					"Abril",
+					"Maio",
+					"Junho",
+					"Julho",
+					"Agosto",
+					"Setembro",
+					"Outubro",
+					"Novembro",
+					"Dezembro"
+				],
+				"firstDay": 0
+			},
+			showDropdowns: true
+		});
+			
+			$('.timeseconds').data('daterangepicker').setStartDate($('form#formFilter input#dateFrom').val());
+			$('.timeseconds').data('daterangepicker').setEndDate($('form#formFilter input#dateTo').val());
+			
+        $('form#formFilter select#company')
+        .select2({
+  			theme: "bootstrap",
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'COM'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+			searchBankAccountByCompany();
+  		}).on('select2:close', function (e) 
+  		{
+  			//console.log(this.value);
+  		});
+        
+	    $('.nav-tabs a').click(function(e){
+	    	  tabId = this.id;
+	    	  if('tabCreate'==tabId)
+	    	  {
+	    		  $('a#btnFilter').hide();
+	    		  $('a#btnNew').show();
+	    		  $('a#btnClear').show();
+	    		  $('a#btnView').hide();
+	    	  }
+	    	  else
+	          {
+	    		  $('a#btnFilter').show();
+	    		  $('a#btnNew').show();
+	    		  $('a#btnClear').show();
+	    		  $('a#btnView').show();
+	    		  search();
+	          }
+	    });
+               
+        createTable();
+        searchCompanyMovement();
+	    })();
+	    </script>
+	</th:block>
+</html>

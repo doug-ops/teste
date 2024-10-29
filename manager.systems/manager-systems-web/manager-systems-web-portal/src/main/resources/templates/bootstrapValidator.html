@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<form class="was-validated" novalidate id="formSave" name="formSave" th:action="@{/adm/person/save}" method="post" autocomplete="off">
+                            	<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>
+                            	<input type="hidden" id="personType" name="personType" value="J"/>
+                                <div class="action-form m-b-10">
+                                    <div class="form-group m-b-0 text-right">
+                                        <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+                                        <a href="javascript: cancelForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+                                    </div>
+                                </div>        
+                                <div class="form-row">
+                                    <hr class="hr-admin">
+                                    <h4 class="card-title">Dados Principais</h4>
+                                    <hr class="hr-admin">
+                                    <div class="col-md-2 mb-3">
+                                        <label for="id">C&oacute;digo</label>
+                                        <a href="javascript:nextCode();" type="button" class="btn btn-sm btn-outline-primary">Pr&oacute;ximo</a>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-key"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control force-numeric-only" id="id" name="id" maxlength="8" placeholder="C&oacute;digo" aria-describedby="inputGroupPrepend" required>
+                                            <div class="invalid-feedback">
+                                                Campo obrigat&oacute;rio.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3" id="divName">
+                                        <label for="name">Nome</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="far fa-user"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control uppercase-text" id="name" name="name" maxlength="100" placeholder="Nome" aria-describedby="inputGroupPrepend" required data-bv-notempty-message="The username is required">
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3" id="divAccessDataUser">
+                                        <label for="accessDataUser">Usu&aacute;rio de Acesso</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-at"></i></span>
+                                            </div>
+                                            <input type="email" class="form-control lowercase-text" id="accessDataUser" name="accessDataUser" maxlength="50" placeholder="Usu&aacute;rio de Acesso" aria-describedby="inputGroupPrepend" required>
+                                            <div class="invalid-feedback">
+                                                Campo obrigat&oacute;rio.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3" id="divAccessDataPassword">
+                                        <label for="accessDataPassword">Senha de Acesso</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-key"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control" id="accessDataPassword" name="accessDataPassword" maxlength="8" placeholder="Senha de Acesso" aria-describedby="inputGroupPrepend" required>
+                                            <div class="invalid-feedback">
+                                                Campo obrigat&oacute;rio.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 mb-3" id="divSocialName">
+                                        <label for="name">Raz&atilde;o Social</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="far fa-user"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control uppercase-text" id="name" name="name" maxlength="100" placeholder="Raz&atilde;o Social" aria-describedby="inputGroupPrepend" required>
+                                            <div class="invalid-feedback">
+                                                Campo obrigat&oacute;rio.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 mb-3" id="divAliasName">
+                                        <label for="aliasName">Nome Fantasia</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="far fa-user"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control uppercase-text" id="aliasName" name="aliasName" maxlength="100" placeholder="Nome Fantasia" aria-describedby="inputGroupPrepend">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="cpfCnpj">Cpf/Cnpj</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-address-card"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control force-numeric-only" id="cpfCnpj" name="cpfCnpj" maxlength="20" placeholder="Cpf/Cnpj">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 mb-3">
+                                        <label for="email">Email</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-at"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control lowercase-text" id="email" name="email" maxlength="100" placeholder="Email">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3" id="divNegativeClose">
+                                        <div class="form-group">
+                                            <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input form-check-input" id="negativeClose" name="negativeClose"/>
+                                                <label class="custom-control-label form-check-label" for="negativeClose">Fecha Negativo</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <div class="form-group">
+                                            <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input form-check-input" id="active" name="active"/>
+                                                <label class="custom-control-label form-check-label" for="active">Ativo</label>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                    <hr class="hr-admin">
+                                    <h4 class="page-title">Dados de Endere&ccedil;o</h4>
+                                    <hr class="hr-admin">
+                                    <div class="col-md-2 mb-3">
+                                        <label for="addressZipCode">Cep</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                                            </div>
+                                            <input type="hidden" id="addressZipCodeSide" name="addressZipCodeSide" value="A"/>
+                                            <input type="text" class="form-control force-numeric-only" id="addressZipCode" name="addressZipCode" maxlength="9" placeholder="Cep"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 mb-3">
+                                        <label for="addressStreet">Rua</label>
+                                        <input type="text" class="form-control uppercase-text" id="addressStreet" name="addressStreet" maxlength="100" placeholder="Rua" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="addressStreetNumber">N&uacute;mero</label>
+                                        <input type="text" class="form-control uppercase-text" id="addressStreetNumber" name="addressStreetNumber" maxlength="20" placeholder="N&uacute;mero"/>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="addressStreetComplement">Complemento</label>
+                                        <input type="text" class="form-control uppercase-text" id="addressStreetComplement" name="addressStreetComplement" maxlength="50" placeholder="Complemento"/>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="addressDistrict">Bairro</label>
+                                        <input type="text" class="form-control uppercase-text" id="addressDistrict" name="addressDistrict" maxlength="100" placeholder="Bairro" readonly="readonly"/>
+                                    </div>	
+                                    <div class="col-md-2 mb-3">
+                                        <label for="addressState">Estado</label>
+                                        <input type="hidden" id="addressStateIbge" name="addressStateIbge" readonly="readonly"/>
+                                        <input type="text" class="form-control" id="addressState" name="addressState" maxlength="2" placeholder="Estado" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="addressCity">Cidade</label>
+                                        <input type="hidden" id="addressCityIbge" name="addressCityIbge" readonly="readonly"/>
+                                        <input type="text" class="form-control" id="addressCity" name="addressCity" maxlength="100" placeholder="Cidade" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label for="addressCountry">Pa&iacute;s</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="addressCountry" name="addressCountry" required>
+											<option th:each="item : ${session.addressCountries}" th:value="${item.key}" th:text="${item.value}"></option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Campo obrigat&oacute;rio.
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="divIntegration" style="width: 100%;">
+	                                    <hr class="hr-admin">
+	                                    <h4 class="page-title">Dados de Integra&ccedil;&atilde;o</h4>
+	                                    <hr class="hr-admin">                                   
+	                                    <div class="col-md-2 mb-3">
+	                                    	<label for="integrationSystem">Sistema</label>
+	                                        <select class="m-b-20 m-r-10 select2-bootstrap-select" id="integrationSystem" name="integrationSystem">
+												<option value="" selected="selected">Selecione...</option>
+												<option th:each="item : ${integrationSystems}" th:value="${item.key}" th:text="${item.value}"></option>
+	                                        </select>
+	                                    </div>
+	                                    <div class="col-md-2 mb-3">
+	                                        <label for="legacyId">C&oacute;digo</label>
+	                                        <input type="text" class="force-numeric-only form-control" id="legacyId" name="legacyId" maxlength="20" placeholder="C&oacute;digo"/>
+	                                    </div>
+	                                    <div class="col-md-1 mb-3">
+		                                    <button type="button" id="btnAddIntegrationValue" name="btnAddIntegrationValue" class="btn btn-info btn-circle"><i class="fa fa-plus"></i> </button>
+		                                </div>
+	                                    <div class="col-md-7 mb-3">
+	                                    	<label for="integrationSystemValues">Dados</label>
+	                                        <select class="m-b-20 m-r-10 select2-bootstrap-select" style="height: 36px;width: 100%;" id="integrationSystemValues" name="integrationSystemValues" multiple="multiple">
+	                                        </select>
+	                                    </div>
+                                    </div>
+                                    <hr class="hr-admin">
+                                    <h4 class="page-title">Dados de Altera&ccedil;&atilde;o</h4>
+                                    <hr class="hr-admin">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="changeDate">Data</label>
+                                        <input type="text" class="form-control" id="changeDate" name="changeDate" maxlength="100" placeholder="Data Altera&ccedil;&atilde;o" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="changeUser">Usu&aacute;rio</label>
+                                        <input type="text" class="form-control" id="changeUser" name="changeUser" maxlength="100" placeholder="Usu&aacute;rio" readonly="readonly"/>
+                                    </div>                                    
+                                </div> 
+                                <hr style="width: 100%">                                         
+                                <div class="action-form">
+                                    <div class="form-group m-b-0 text-right">
+                                        <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+                                        <a href="javascript: cancelForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+                                    </div>
+                                </div>     
+                            </form>
+
+<link href="dist/css/style.min.css" rel="stylesheet">
+<link href="dist/css/application-style.css" rel="stylesheet">
+
+<script src="assets/libs/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
+<script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- apps -->
+<script src="dist/js/app.js"></script>
+<script src="dist/js/app.init.overlay.js"></script>
+ <!-- slimscrollbar scrollbar JavaScript -->
+<script src="assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+<script src="assets/extra-libs/sparkline/sparkline.js"></script>
+<!--Wave Effects -->
+<script src="dist/js/waves.js"></script>
+<!--Menu sidebar -->
+<script src="dist/js/sidebarmenu.js"></script>
+<!--Custom JavaScript -->
+<script src="dist/js/custom.min.js"></script>
+<script src="dist/js/application.js"></script>
+
+<!-- Boostrap Validator -->
+<link href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"  rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
+
+<script>
+function saveForm()
+{
+    var bootstrapValidator = $('form#formSave').data('bootstrapValidator');
+    bootstrapValidator.validate();
+    
+    if (bootstrapValidator.isValid() === false) 
+    {
+        return;
+    }
+    formToValidate.classList.add('was-validated');
+
+    var form = $('form#formSave'); 			
+      var dataForm = form.serializeArray();
+      
+      showLoading("Gravando dados... Por favor aguarde...");  	
+      
+    $.ajax({
+        url : form.attr('action'),
+        type : "POST",
+        data : dataForm,
+        dataType : "json"
+    })
+    .done(function(data, textStatus, jqXHR) 
+    {	    		
+        if(true==data.status)
+         {
+            clearDataFormSave();           		
+            showSweetalertSuccess(data.message);
+         }
+         else
+         {
+            hideLoading();
+            showSweetalertWarning('Alerta!', data.message,'5000');
+         }
+    })
+    .fail(function() 
+      {
+        showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+    }).always(function() 
+    {
+          $('#block1').hide();
+        $('#block2').hide();
+    });
+}
+
+(function() {
+    'use strict';
+    $('form#formSave').bootstrapValidator();                    
+})();                
+</script>		        
+</body>
+</html>

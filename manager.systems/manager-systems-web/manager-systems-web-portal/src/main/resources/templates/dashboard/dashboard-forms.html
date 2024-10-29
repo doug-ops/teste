@@ -1,0 +1,11 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+    	<form id="formDashboard" name="formDashboard" th:action="@{/dashboard/filterDashboardCompanyExecutionWeek}" method="get" autocomplete="off">		
+		</form>
+		<form id="formEditWeekMovement" name="formEditWeekMovement" th:action="@{/companyMovementexecution/open}" method="get" autocomplete="off">		
+			<input type="hidden" id="dateFrom" name="dateFrom"/>
+			<input type="hidden" id="dateTo" name="dateTo"/>
+		</form>
+		
+	</th:block>
+</html>

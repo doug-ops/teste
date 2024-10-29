@@ -1,0 +1,73 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formAutocompleteFinancialSubGroup" name="formAutocompleteFinancialSubGroup" th:action="@{/adm/financial-sub-group/autocomplete}" method="post" autocomplete="off">		
+			<input type="hidden" id="financialGroup" name="financialGroup"/>
+		</form>					
+		<form id="formInactive" name="formInactive" th:action="@{/financial/document/inactive}" method="post" autocomplete="off">
+			<input type="hidden" id="documentId" name="documentId"/>
+			<input type="hidden" id="documentParentId" name="documentParentId"/>
+			<input type="hidden" id="documentType" name="documentType"/>
+			<input type="hidden" id="inactive" name="inactive"/>		
+		</form>	
+		<form id="formUngroup" name="formUngroup" th:action="@{/financial/document/ungroup}" method="post" autocomplete="off">	
+		<input type="hidden" id="ids" name="ids"/>	
+		</form>	
+		<form id="formGroupParent" name="formGroupParent" th:action="@{/financial/document/groupParent}" method="post" autocomplete="off">	
+			<input type="hidden" id="ids" name="ids"/>	
+		</form>	
+		<form id="formChangeStatus" name="formChangeStatus" th:action="@{/financial/document/changeStatus}" method="post" autocomplete="off">	
+			<input type="hidden" id="ids" name="ids"/>
+			<input type="hidden" id="documentStatus" name="documentStatus"/>
+			<input type="hidden" id="operation" name="operation" value="1"/>				
+		</form>
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off">		
+		</form>
+		<form id="formFilterReport" name="formFilterReport" th:action="@{/movement/document-movement/reportPdf}" target="_blank" method="post">				
+			<input type="hidden" id="documentParentId" name="documentParentId" />
+			<input type="hidden" id="companyId" name="companyId" />											
+		</form>	
+		<form id="formDetailDocumentItem" name="formDetailDocumentItem" th:action="@{/movement/document-movement/detailDocument}" method="post" autocomplete="off">
+			<input type="hidden" id="documentId" name="documentId"/>
+			<input type="hidden" id="documentParentId" name="documentParentId"/>
+			<input type="hidden" id="documentType" name="documentType"/>
+		</form>
+		<form id="formChangeDocument" name="formChangeDocument" th:action="@{/financial/document/change}" method="post" autocomplete="off">
+		</form>
+		<form id="formReportPdf" name="formReportPdf" th:action="@{/movement/document-movement/filterReport}" target="_blank" method="post">
+			<input type="hidden" id="documentsParentId" name="documentsParentId"/>
+			<input type="hidden" id="companysId" name="companysId"/>
+			<input type="hidden" id="date" name="date"/>
+			<input type="hidden" id="analitic" name="analitic"/>
+		</form>	
+		<form id="formGetBankAccounts" name="formGetBankAccounts" th:action="@{/adm/bank-account/getAllComoboboxByPerson}" method="post" autocomplete="off">
+			<input type="hidden" id="inactive" name="inactive" value="0"/>
+			<input type="hidden" id="personsId" name="personsId"/>
+			<input type="hidden" id="objectType" name="objectType" value="COM"/>
+		</form>
+		<form id="formSaveFinancialGroup" name="formSaveFinancialGroup" th:action="@{/adm/financial-group/save}" method="post" autocomplete="off">
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="description" name="description"/>
+			<input type="hidden" id="active" name="active"value="on"/>
+			<input type="hidden" id="descriptionSubGroup_1" name="descriptionSubGroup_1"/>
+			<input type="hidden" id="idSubgroup_1" name="idSubgroup_1"/>
+			<input type="hidden" id="revenueSource_1" name="revenueSource_1" value ="4"/>
+			<input type="hidden" id="revenueType_1" name="revenueType_1" value ="1"/>
+			<input type="hidden" id="isSaveDynamic" name="isSaveDynamic" value ="0"/>
+		</form>
+		<form id="formAutocompleteSubGroup" name="formAutocompleteSubGroup" th:action="@{/adm/product-sub-group/autocomplete}" method="post" autocomplete="off">		
+			<input type="hidden" id="productGroup" name="productGroup"/>
+		</form>
+		<form id="formSaveFinancialCostCenter" name="formSaveFinancialCostCenter" th:action="@{/financial/financialCostCenter/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+		</form>
+		<form id="formTransferValue" name="formTransferValue" th:action="@{/movement/transfer-value/open}" method="post">	
+			<input type="hidden" id="companyIdTransf" name="companyIdTransf"/>	
+			<input type="hidden" id="companyTransf" name="companyTransf"/>
+			<input type="hidden" id="paymentValueTransf" name="paymentValueTransf"/>
+			<input type="hidden" id="documentTypeTransf" name="documentTypeTransf"/>
+			<input type="hidden" id="paymentExpiryDateTransf" name="paymentExpiryDateTransf"/>
+			<input type="hidden" id="documentId" name="documentId"/>
+			<input type="hidden" id="documentParentId" name="documentParentId"/>
+		</form>
+	</th:block>
+</html>

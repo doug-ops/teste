@@ -1,0 +1,128 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+		<div class="col-12">
+			<div class="card">
+	            <div class="card-body" style="padding: 5px;">
+	                   <h4 class="p-20 text-center">Relat&oacute;rio Log do Sistema</h4>    
+	                <div class="col-md-12">
+	                    <div style="float: right;">
+	                        <a id="btnFilter" name="btnFilter" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="ti-filter" style="font-size: 14px;"></i></a>  
+	                        <a id="btnView" href="javascript: searchLogSystem();" name="btnView" type="button" class="btn waves-effect waves-light btn-outline-success m-t-10">Visualizar</a>
+	                        <a id="btnReport" href="javascript:onclick:showModalReportPdf();" name="btnReport" type="button" class="btn waves-effect waves-light btn-outline-warning m-t-10">Imprimir</a>
+	                    </div>
+	                </div>
+	                <!-- Nav tabs -->
+	                <ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+	                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" id="tabReport" href="#report" role="tab"><span class="hidden-sm-up"><i class="fas fa-list"></i></span> <span class="hidden-xs-down">Relat&oacute;rio</span></a> </li>
+	                </ul>
+	                <!-- Tab panes -->
+	                <div class="tab-content tabcontent-border">
+	                    <div class="tab-pane active" id="report" role="tabpanel">
+	                        <div class="row">
+	                            <div class="col-12">
+	                                <!-- Filter -->
+	                                <div class="collapse" id="collapseFilter">
+	                                <!-- Filter Form -->
+	                                    <form id="formLogSystemFilter" name="formLogSystemFilter" th:action="@{/logsystem/filterLogSystem}" method="post" autocomplete="off">
+	                                        <input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>													
+	                                        <!-- Card -->
+	                                        <div class="card">
+	                                            <!-- Card Body -->
+	                                            <div class="card-body">
+	                                                <!-- Row Title Filter -->
+	                                                <div class="row">
+	                                                    <div class="col-12">
+	                                                        <h4 class="card-title text-center font-weight-bold" style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+	                                                    </div>
+	                                                </div>
+	                                                <!--/ Row Title Filter -->
+	                                                <!-- Row Fields Filter -->					
+	                                               <div class="row">
+	                                                    <div class="col-md-4 mb-4">
+	                                                        <label for="filterData">Data</label>
+	                                                        <div class="input-group">
+	                                                            <input type="text" class="form-control timeseconds text-center" id="date" name="date" />
+	                                                            <div class="input-group-append">
+	                                                                <span class="input-group-text">
+	                                                                    <span class="ti-calendar"></span>
+	                                                                </span>
+	                                                            </div>
+	                                                        </div>
+	                                                    </div>
+	                                                    <div class="col-md-4 mb-4">
+	                                                   		<div class="form-group" style="width: 300px; height: 13px;">
+																<div
+																	class="form-check custom-control custom-checkbox mr-sm-2">
+																	<input type="checkbox"
+																		class="custom-control-input form-check-input"
+																		id="selectAllCompanys" name="selectAllCompanys" /> <label
+																		class="custom-control-label form-check-label"
+																		for="selectAllCompanys">Vincular todos os Usu&aacute;rios</label>
+																</div>
+															</div>
+															<select class="m-b-20 m-r-10 custom-select" id="userChildrensParentCombobox"
+																name="userChildrensParentCombobox" multiple="multiple">
+																<option th:each="item : ${userChildrensParent}" th:value="${item.key}"
+																	th:text="${item.value}"></option>
+																<option th:value="${session.user?.id}" selected th:text="${session.user?.name}"></option>
+																<!--<option value="">TODOS</option>-->
+															</select>
+														</div>
+	                                                    <div class="col-md-4" id="divPersonId">
+														<h5 class="m-t-30 m-b-10">C&oacute;digo</h5>
+														<div class="input-group">
+															<input type="text"
+																class="form-control force-numeric-only"
+																style="text-align: center;" id="personIdFrom"
+																name="personIdFrom" maxlength="14" /> <span
+																class="input-group-addon bg-info p-t-10 p-l-10 p-r-10 text-white"
+																style="padding-top: 7px;">&nbsp;&nbsp;at&eacute;&nbsp;&nbsp;</span>
+															<input type="text"
+																class="form-control force-numeric-only"
+																style="text-align: center;" id="personIdTo"
+																name="personIdTo" maxlength="14" />
+														</div>
+													</div>
+	                                                </div>													
+	                                                <!--/ Row Fields Filtro -->
+	                                            </div>
+	                                            <!--/ Card Body -->
+	                                        </div>
+	                                        <!--/ Card -->
+	                                    </form>
+	                                    <!--/ Form Filter -->
+	                                </div>
+	                                <!--/ Filter -->    
+	                            </div>
+	                        </div>
+	                        
+	                        <!-- Table Log -->
+								<div class="col-12" id="divTableLog">
+									<div class="table-responsive" id="report_table-logs">
+										<table id="table-log" class="table table-striped table-bordered display">
+								        	<thead>
+								            	<tr>
+								            	<th class="text-center">Usuario</th>
+								             	<th class="text-center">Data</th>	
+								             	<th class="text-center">Campo Alterado</th>
+								             	<th class="text-center">Verificar<br/>Mudan&ccedil;as</th>					                                        </tr>
+								        	</thead>
+								            <tbody>
+								            	<tr id="6" class="gradeA">
+									            	<td class="text-center"></td>
+									             	<td class="text-center"></td>
+									             	<td class="text-center"></td>
+									             	<td class="text-center"></td>
+								                </tr>
+								            </tbody>
+								        </table>
+									</div>
+								</div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</th:block>
+</html>

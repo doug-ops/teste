@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.manager.systems</groupId>
+		<artifactId>manager.systems</artifactId>
+		<version>0.0.1</version>
+	</parent>
+	<artifactId>manager-systems-common</artifactId>
+	<packaging>pom</packaging>
+	<name>manager-systems-common</name>
+	<description>Manager Systems Common</description>
+	<modules>
+		<module>manager-systems-common-utils</module>
+		<module>manager-systems-common-model</module>
+		<module>manager-systems-common-dao</module>
+		<module>manager-systems-common-service</module>
+		<module>manager-systems-common-vo</module>
+		<module>manager-systems-common-dto</module>
+	</modules>
+</project>

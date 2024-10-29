@@ -1,0 +1,270 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+		<div class="col-12">
+			<div class="card">
+	            <div class="card-body" style="padding: 5px;">
+	                   <h4 class="p-20 text-center">Relat&oacute;rio DRE</h4>    
+	                <div class="col-md-12">
+	                    <div style="float: right;">
+	                        <a id="btnFilter" name="btnFilter" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="ti-filter" style="font-size: 14px;"></i></a>       
+	                        <a id="btnView" href="javascript: searchDocumentMovement();" name="btnView" type="button" class="btn waves-effect waves-light btn-outline-success m-t-10">Visualizar</a>
+	                        <a id="btnReport" href="javascript:onclick:showModalReportPdf();" name="btnReport" type="button" class="btn waves-effect waves-light btn-outline-warning m-t-10">Imprimir</a>
+	                    </div>
+	                </div>
+	                <!-- Nav tabs -->
+	                <ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+	                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" id="tabReport" href="#report" role="tab"><span class="hidden-sm-up"><i class="fas fa-list"></i></span> <span class="hidden-xs-down">Relat&oacute;rio</span></a> </li>
+	                </ul>
+	                <!-- Tab panes -->
+	                <div class="tab-content tabcontent-border">
+	                    <div class="tab-pane active" id="report" role="tabpanel">
+	                        <div class="row">
+	                            <div class="col-12">
+	                                <!-- Filter -->
+	                                <div class="collapse" id="collapseFilter">
+	                                <!-- Filter Form -->
+	                                    <form id="formFilter" name="formFilter" th:action="@{/dre/filter}" method="post" autocomplete="off">
+	                                        <input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>													
+	                                        <!-- Card -->
+	                                        <div class="card">
+	                                            <!-- Card Body -->
+	                                            <div class="card-body">
+	                                                <!-- Row Title Filter -->
+	                                                <div class="row">
+	                                                    <div class="col-12">
+	                                                        <h4 class="card-title text-center font-weight-bold" style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+	                                                    </div>
+	                                                </div>
+	                                                <!--/ Row Title Filter -->
+	                                                <!-- Row Fields Filter -->					
+	                                                <div class="row">
+	                                                	<div class="col-md-3 mb-3">
+	                                                        <label for="filterData">Data</label>
+	                                                        <div class="input-group">
+	                                                            <input type="text" class="form-control timeseconds text-center" id="date" name="date" />
+	                                                            <div class="input-group-append">
+	                                                                <span class="input-group-text">
+	                                                                    <span class="ti-calendar"></span>
+	                                                                </span>
+	                                                            </div>
+	                                                        </div>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                   		<div class="form-group" style="width: 300px; height: 13px;">
+																<div
+																	class="form-check custom-control custom-checkbox mr-sm-2">
+																	<input type="checkbox"
+																		class="custom-control-input form-check-input"
+																		id="selectAllCompanys" name="selectAllCompanys" /> <label
+																		class="custom-control-label form-check-label"
+																		for="selectAllCompanys">Vincular todos os Usu&aacute;rios</label>
+																</div>
+															</div>
+															<select class="m-b-20 m-r-10 custom-select" id="userChildrensParentCombobox"
+																name="userChildrensParentCombobox" multiple="multiple">
+																<option th:each="item : ${userChidrensParent}" th:value="${item.key}"
+																	th:text="${item.value}"></option>
+																<option th:value="${session.user?.id}" selected th:text="${session.user?.name}"></option>
+																<!--<option value="">TODOS</option>-->
+	                                                        </select>
+	                                                    </div>
+	                                                     <div class="col-md-3 mb-3">
+	                                                        <label for="financialGroup">Grupo Financeiro</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="financialGroupId" name="financialGroupId">
+	                                                        	<option value="" selected="selected">TODOS...</option>
+																<option th:each="item : ${financialGroups}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="financialSubGroup">Sub-Grupo Financeiro</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="financialSubGroupId" name="financialSubGroupId">
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="company">Empresa</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="companyId" name="companyId">																
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="bankAccount">Conta Banc&aacute;ria</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="bankAccountId" name="bankAccountId">
+	                                                            <option value="" selected="selected">TODOS...</option>
+						                                        <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="documentType">Total por</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="documentType" name="documentType">
+	                                                            <option value="" selected="selected">TODOS...</option>
+	                                                            <option value="1" selected>Compet&ecirc;ncia</option>
+	                                                            <option value="2">Fluxo de Caixa</option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="filterData">Filtrar Data por</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="filterDate" name="filterDate">
+	                                                        	<option value="" selected="selected">TODOS...</option>
+	                                                            <option value="1">Inclus&atilde;o</option>
+	                                                            <option value="2" selected>Pagamento</option>
+	                                                            <option value="3">Vencimento</option>
+	                                                        </select>
+	                                                    </div>
+	                                                </div>													
+	                                                <!--/ Row Fields Filtro -->
+	                                            </div>
+	                                            <!--/ Card Body -->
+	                                        </div>
+	                                        <!--/ Card -->
+	                                    </form>
+	                                    <!--/ Form Filter -->
+	                                </div>
+	                                <!--/ Filter -->    
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <!-- Column -->
+	                            <div class="col-lg-4 col-md-4">
+	                                <div class="card">
+	                                    <div class="card-body">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-primary"><i class="mdi mdi-plus"></i></div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalCredit"></h3>
+	                                                <h5 class="text-muted m-b-0">Cr&eacute;dito</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-4 col-md-4">
+	                                <div class="card">
+	                                    <div class="card-body">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-warning"><i class="mdi mdi-minus"></i></div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalDebit"></h3>
+	                                                <h5 class="text-muted m-b-0">D&eacute;bito</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-4 col-md-4">
+	                                <div class="card">
+	                                    <div class="card-body">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-success"><i class="mdi mdi-bank"></i></div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalSaldo"></h3>
+	                                                <h5 class="text-muted m-b-0">Saldo</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                        </div>
+	                        <div class="col-12">
+	                            <div id="report-table" class="table-responsive">
+	                                <!--<table id="table-relatorio" class="table table-striped table-bordered display">
+	                                    <thead>
+	                                        <tr>
+	                                            <th data-class="expand" style="text-align: center;">
+	                                                <div class="checkbox checkbox-success" style="text-align: center;">
+	                                                    <input id="checkAllMoviments" class="styled" type="checkbox" style="text-align: center;">
+	                                                    <label for="checkAllMoviments"></label>
+	                                                </div>
+	                                            </th>
+	                                            <th class="text-center">A&ccedil;&atilde;es</th>	
+	                                            <th class="text-center">Valor<br/>Documento</th>
+	                                            <th class="text-center">Tipo<br/>Documento</th>	
+	                                            <th class="text-center">Documento</th>
+	                                            <th class="text-center">Status<br/>Documento</th>
+	                                            <th class="text-center">Emissao</th>
+	                                            <th class="text-center">Vencimento</th>
+	                                            <th class="text-center">Conta</th>
+	                                            <th class="text-center">Loja</th>
+	                                            <th class="text-center">Fornecedor</th>
+	                                            <th class="text-center">Grupo<br/>Financeiro</th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                        <tr>
+	                                            <td data-class="expand" style="text-align: center;">
+	                                                <div class="checkbox checkbox-success" style="text-align: center;">
+	                                                    <input id="checkMov1" class="styled" type="checkbox" style="text-align: center;">
+	                                                    <label for="checkMov1"></label>
+	                                                </div>
+	                                            </td>
+	                                            <td>
+	                                                <div class="btn-group">
+	                                                    <button type="button" class="btn waves-effect waves-light btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-settings"></i></button>
+	                                                    <div class="dropdown-menu">
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-info" style="width: 100%;"><i class="mdi mdi-lead-pencil"></i>&nbsp;Detalhar</button>
+	                                                        <a href="javascript:inactiveDocument('662294','13520', '1', true);" type="button" class="btn waves-effect waves-light btn-outline-warning" style="width: 100%;"><i class="mdi mdi-delete"></i>&nbsp;Excluir</a>
+	                                                        <a href="javascript:ungroupDocument('662294','13520', '1');" type="button" class="btn waves-effect waves-light btn-outline-danger" style="width: 100%;"><i class="mdi mdi-ungroup"></i>&nbsp;Desagrupar</a>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-primary" style="width: 100%;"><i class="mdi mdi-currency-usd"></i>&nbsp;Grupo Financeiro</button>
+	                                                        <a href="javascript:changeStatusDocument('662294','0', '1','2');" type="button" class="btn waves-effect waves-light btn-outline-success" style="width: 100%;" ><i class="mdi mdi-download"></i>&nbsp;Baixar</a>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-secondary" style="width: 100%;"><i class="mdi mdi-printer"></i>&nbsp;Imprimir</button>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-dark" style="width: 100%;"><i class="mdi mdi-currency-usd"></i>&nbsp;Parcelas</button>
+	                                                    </div>
+	                                                    <button type="button" class="btn waves-effect waves-light btn-outline-success"><i class="mdi mdi-currency-usd"></i></button>
+	                                                </div>
+	                                            </td>
+	                                            <td style="text-align: right"><span class="badge badge-danger text-white font-14 font-weight: 300; float-right">-56.00</span></td>
+	                                            <td>Credito</td>
+	                                            <td class="text-center">34509384530</td>
+	                                            <td class="text-center">Baixado</td>
+	                                            <td>17/09/19 14:40</td>
+	                                            <td>17/09/19 14:40</td>
+	                                            <td>Conta (1)</td>
+	                                            <td>Loja (1)</td>
+	                                            <td>Fornecedor (1)</td>
+	                                            <td>Grupo (1)/SubGrupo(1)</td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td data-class="expand" style="text-align: center;">
+	                                                <div class="checkbox checkbox-success" style="text-align: center;">
+	                                                    <input id="checkMov2" class="styled" type="checkbox" style="text-align: center;">
+	                                                    <label for="checkMov2"></label>
+	                                                </div>
+	                                            </td>
+	                                            <td>
+	                                                <div class="btn-group">
+	                                                    <button type="button" class="btn waves-effect waves-light btn-outline-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-settings"></i></button>
+	                                                    <div class="dropdown-menu">
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-info" style="width: 100%;"><i class="mdi mdi-lead-pencil"></i>&nbsp;Detalhar</button>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-warning" style="width: 100%;"><i class="mdi mdi-delete"></i>&nbsp;Excluir</button>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-danger" style="width: 100%;"><i class="mdi mdi-ungroup"></i>&nbsp;Desagrupar</button>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-primary" style="width: 100%;"><i class="mdi mdi-currency-usd"></i>&nbsp;Grupo Financeiro</button>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-success" style="width: 100%;"><i class="mdi mdi-download"></i>&nbsp;Baixar</button>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-secondary" style="width: 100%;"><i class="mdi mdi-printer"></i>&nbsp;Imprimir</button>
+	                                                        <button type="button" class="btn waves-effect waves-light btn-outline-dark" style="width: 100%;"><i class="mdi mdi-currency-usd"></i>&nbsp;Parcelas</button>
+	                                                    </div>
+	                                                    <button type="button" class="btn waves-effect waves-light btn-outline-success"><i class="mdi mdi-currency-usd"></i></button>
+	                                                </div>
+	                                               
+	                                            </td>
+	                                            <td style="text-align: right"><span class="badge badge-success text-white font-14 font-weight: 300; float-right">156.00</span></td>
+	                                            <td>Debito</td>
+	                                            <td class="text-center">342432432</td>
+	                                            <td class="text-center">Aberto</td>
+	                                            <td>15/09/19 17:44</td>
+	                                            <td>15/09/19 17:44</td>
+	                                            <td>Conta (2)</td>
+	                                            <td>Loja (2)</td>
+	                                            <td>Forncedor (2)</td>
+	                                            <td>Grupo (2)/SubGrupo(2)</td>
+	                                        </tr>
+	                                    </tbody>
+	                                </table> -->
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</th:block>
+</html>

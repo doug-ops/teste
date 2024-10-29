@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+	    <form id="formGetDataCompany" name="formGetDataCompany" th:action="@{/company-movement/getDataCompany}" method="post" autocomplete="off">		
+	        <input type="hidden" id="companyId" name="companyId"/>
+	    </form>
+	    <form id="formProcessMovement" name="formProcessMovement" th:action="@{/company-movement/processMovement}" method="post" autocomplete="off">		
+	        <input type="hidden" id="companyId" name="companyId"/>
+	        <input type="hidden" id="movementId" name="movementId"/>
+	        <input type="hidden" id="preview" name="preview" value="false"/>
+	    </form>
+	    <form id="formPrintPdfMovement" name="formPrintPdfMovement" th:action="@{/company-movement/reportCompanyMovementPdf}" method="get" autocomplete="off">		
+	    </form>
+	</th:block>
+</html>

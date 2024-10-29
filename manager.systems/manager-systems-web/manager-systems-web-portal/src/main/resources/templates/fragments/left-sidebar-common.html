@@ -1,0 +1,93 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="left-sidebar">			
+	    <!-- Sidebar scroll-->
+	    <div class="scroll-sidebar">
+			<!--
+			<input type="hidden" th:each="permission : ${session.permissions}" th:id="${permission.key}" th:value="${permission.value}"></input>
+			-->			
+	        <!-- Sidebar navigation-->
+	        <nav class="sidebar-nav">
+	            <ul id="sidebarnav">
+	                <!-- User Profile-->
+	                <li>
+	                    <!-- User Profile-->
+	                    <div class="user-profile d-flex no-block dropdown mt-3">
+	                        <div class="user-pic"><img th:src="@{/assets/images/logo-icon.png}" alt="users" class="rounded-circle" width="40" /></div>
+	                        <div class="user-content hide-menu ml-2">
+	                            <a href="javascript:void(0)" class="" id="Userdd" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                                <h5 class="mb-0 user-name font-medium" th:text="${session.user?.name}"> <i class="fa fa-angle-down"></i></h5>
+	                                <span class="op-5 user-email" th:text="${session.user?.contactData?.email}"></span>
+	                            </a>
+	                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="Userdd">
+	                                <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user mr-1 ml-1"></i> Meus Dados</a>
+	                                <div class="dropdown-divider"></div>
+	                                <a class="dropdown-item" th:href="@{/logout}" id="logoutLink"><i class="fa fa-power-off mr-1 ml-1"></i> Sair</a>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <!-- End User Profile-->
+	                </li>
+	                <li class="nav-small-cap" th:if="${session.permissions['MENU_CADASTROS']}"><i class="mdi mdi-dots-horizontal"></i> <span class="hide-menu">Cadastros</span></li>
+                    <li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS']}"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-collage"></i><span class="hide-menu">Geral </span></a>
+                        <ul aria-expanded="false" class="collapse  first-level">
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS_EMPRESA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/person/open/1}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Empresa</span></a></li>
+	                		<li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS_FORNECEDOR']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/person/open/2}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Fornecedor</span></a></li>
+	                		<li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS_GRUPO_PRODUTO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/product-group/open/}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Grupo de Produto</span></a></li>
+	                		<li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS_SUBGRUPO_PRODUTO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/product-sub-group/open/}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">SubGrupo de Produto</span></a></li>
+	                		<li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS_PRODUTO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/product/open/}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Produto</span></a></li>
+	                		<li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS_USUARIO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/person/open/3}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Usu&aacute;rio</span></a></li>
+	                		<li class="sidebar-item" th:if="${session.permissions['MENU_CADASTROS_PERFIL_ACESSO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/access-profile/open/}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Perfil Acesso</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-item" th:if="${session.permissions['MENU_FINANCEIRO']}"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-currency-usd"></i><span class="hide-menu">Financeiro </span></a>
+                        <ul aria-expanded="false" class="collapse  first-level">
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_FINANCEIRO_CENTRO_CUSTO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/financial-cost-center-group/open/}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Grupo Centro de Custo</span></a></li>                      
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_FINANCEIRO_CONTA_BANCARIA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/bank-account/open}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Conta Banc&aacute;ria</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_FINANCEIRO_GRUPO_FINANCEIRO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/financial-group/open}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Grupo Financeiro</span></a></li>
+                        	<!--
+                        	<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/financial-sub-group/open}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">SubGrupo Financeiro</span></a></li>
+                        	-->
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_FINANCEIRO_CONFIGURACAO_TRANSFERENCIA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/adm/financial-transfer/open}" aria-expanded="false"><i class="mdi mdi-adjust"></i><span class="hide-menu">Conf. Transfer&ecirc;ncia</span></a></li>
+                        </ul>
+                	</li>
+                	<li class="nav-small-cap" th:if="${session.permissions['MENU_MOVIMENTOS']}"><i class="mdi mdi-dots-horizontal"></i> <span class="hide-menu">Movimentos</span></li>
+                    <li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS']}"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-format-list-numbers"></i><span class="hide-menu">Documentos </span></a>
+                        <ul aria-expanded="false" class="collapse  first-level">
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_CONSULTA_DOCUMENTOS']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/document-movement/open}" aria-expanded="false"><i class="mdi mdi-playlist-check"></i><span class="hide-menu">Consulta Documentos</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_DOCUMENTOS_AGRUPADOS']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/document-movement/openGroup}" aria-expanded="false"><i class="mdi mdi-playlist-check"></i><span class="hide-menu">Documentos Agrupados</span></a></li>
+                        	<!--
+                        	<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/document-movement/open?openmodal=1}" aria-expanded="false"><i class="mdi mdi-open-in-new"></i><span class="hide-menu">Novo Documento</span></a></li>
+                        	<li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/document-movement/open?openmodal=2}" aria-expanded="false"><i class="mdi mdi-bank"></i><span class="hide-menu">Tranf. Saldo</span></a></li>
+                        	-->
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_NOVO_DOCUMENTO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/new-document/open}" aria-expanded="false"><i class="mdi mdi-open-in-new"></i><span class="hide-menu">Novo Documento</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_TRANSF_SALDO']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/transfer-value/open}" aria-expanded="false"><i class="mdi mdi-bank"></i><span class="hide-menu">Tranf. Saldo</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_TRANSF_SALDO_MENSAL']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/transfer-value/openMonth}" aria-expanded="false"><i class="mdi mdi-bank"></i><span class="hide-menu">Tranf. Saldo Mensal</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_EXTRATO_CONTAS']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/bankAccountStatement/open}" aria-expanded="false"><i class="mdi mdi-wallet"></i><span class="hide-menu">Extrato de Contas</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_EXTRATO_FORNECEDOR']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/providerStatement/open}" aria-expanded="false"><i class="mdi mdi-wallet"></i><span class="hide-menu">Extrato de Fornecedor</span></a></li>  
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_EXTRATO_CAIXA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/movement/cashStatement/open}" aria-expanded="false"><i class="mdi mdi-wallet"></i><span class="hide-menu">Extrato de Caixa</span></a></li>                         	         	
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_DRE']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/dre/open}" aria-expanded="false"><i class="mdi mdi-wallet"></i><span class="hide-menu">DRE</span></a></li>                        
+                        	<!--	                  	
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_FECHAMENTO_CAIXA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/cashierClosing/cashier-closing/open}" aria-expanded="false"><i class="mdi mdi-coin"></i><span class="hide-menu">Fechamanto de Caixa</span></a></li>]
+                        	-->
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_FECHAMENTO_CAIXA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/cashierClosingPreview/cashier-closing/open}" aria-expanded="false"><i class="mdi mdi-coin"></i><span class="hide-menu">Fechamanto de Caixa Preview</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_MOVIMENTOS_FECHAMENTO_CAIXA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/cashierClosingPreviewFinish/cashier-closing-finish/open}" aria-expanded="false"><i class="mdi mdi-coin"></i><span class="hide-menu">Fechamanto de Caixa Usuario</span></a></li>
+                        </ul>
+                	</li> 
+                	<li class="nav-small-cap" th:if="${session.permissions['MENU_RELATORIOS']}"><i class="mdi mdi-dots-horizontal"></i> <span class="hide-menu">Relat&oacute;rios</span></li>
+                    <li class="sidebar-item" th:if="${session.permissions['MENU_RELATORIOS']}"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-bank"></i><span class="hide-menu">Financeiros </span></a>
+                        <ul aria-expanded="false" class="collapse  first-level">
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_RELATORIOS_RECEITAS_DESPESAS']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/financial/incomeExpenses/open}" aria-expanded="false"><i class="mdi mdi-coin"></i><span class="hide-menu">Receitas e Despesas</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_RELATORIOS_FLUXO_CAIXA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/financial/cashFlow/open}" aria-expanded="false"><i class="mdi mdi-coin"></i><span class="hide-menu">Fluxo de Caixa</span></a></li>
+                        	<li class="sidebar-item" th:if="${session.permissions['MENU_RELATORIOS_FLUXO_CAIXA']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/financial/cashFlow/grouping/open}" aria-expanded="false"><i class="mdi mdi-coin"></i><span class="hide-menu">Fluxo por Grupo Financeiro</span></a></li>
+                        </ul>
+                	</li>                			 	   	                
+	            </ul>
+	             <ul aria-expanded="false" class="collapse  first-level">
+	            	<li class="sidebar-item" th:if="${session.permissions['MENU_LOGS_SISTEMA_LISTAR']}"> <a class="sidebar-link waves-effect waves-dark sidebar-link" th:href="@{/logsystem/open}" aria-expanded="false"><i class="mdi mdi-login"></i><span class="hide-menu">Logs do Sistema</span></a></li> 
+	        	</ul>
+	        </nav>
+	        <!-- End Sidebar navigation -->
+	    </div>
+	    <!-- End Sidebar scroll-->
+	</th:block>
+</html>

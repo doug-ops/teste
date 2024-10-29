@@ -1,0 +1,1 @@
+insert into api_user_roles(user_id, role_id) select 1, 1;

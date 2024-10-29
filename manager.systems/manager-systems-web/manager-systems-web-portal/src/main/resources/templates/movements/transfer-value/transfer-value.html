@@ -1,0 +1,175 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="content">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body" style="padding: 5px;">
+				<h4 class="p-20 text-center" id="titleModalDocumentTransf">Transf&#234;rencia de Saldo</h4>
+				<div class="row">
+					<div class="col-md-12">
+						<div style="float: right;">
+							<a type="button" class="btn btn-success waves-effect waves-light"
+								id="btnSaveNewDocumentTransf" href="javascript:saveNewDocumentTransf();">Gravar</a>
+							<a type="button" class="btn btn-primary waves-effect" href="javascript:document.getElementById('formDocuments').submit();"><i class="mdi mdi-playlist-check"></i><span class="hide-menu">Consulta Documentos</span></a>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<!-- Filter -->
+						<div class="collapse" id="collapseFilter">
+							<form id="formNewDocumentTransf" name="formNewDocumentTransf"
+								th:action="@{/financial/document/saveTransfer}" method="post" autocomplete="off">
+								<input type="hidden" id="documentIdTransf" name="documentIdTransf" />
+								<input type="hidden" id="documentParentIdTransf" name="documentParentIdTransf" /> <input
+									type="hidden" id="documentTypeTransf" name="documentTypeTransf" /> <input
+									type="hidden" id="documentNoteEncodedTransf" name="documentNoteEncodedTransf" />
+								<input type="hidden" id="documentNoteEncodedTransfDest"
+									name="documentNoteEncodedTransfDest" />
+								<input type="hidden" id="countExpense" name="countExpense" value="0" />
+								<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}" />
+								<input type="hidden" id="mainCompanyId" name="mainCompanyId"
+									th:value="${session.user?.mainCompanyId}" />
+								<input type="hidden" id="mainCompanyDescription" name="mainCompanyDescription"
+									th:value="${session.user?.mainCompanyDescription}" />
+								<input type="hidden" id=mainCompanyBankAccountId name="mainCompanyBankAccountId"
+									th:value="${session.user?.mainCompanyBankAccountId}" />
+								<input type="hidden" id=mainCompanyBankAccountDescription
+									name="mainCompanyBankAccountDescription"
+									th:value="${session.user?.mainCompanyBankAccountDescription}" />
+								<input type="hidden" id="companyIdTransfer" name="companyIdTransfer"
+									th:value="${companyIdTransf}" />
+								<input type="hidden" id="companyTransfer" name="companyTransfer"
+									th:value="${companyTransf}" />
+								<input type="hidden" id="paymentValueTransfer" name="paymentValueTransfer"
+									th:value="${paymentValueTransf}" />
+								<input type="hidden" id="paymentExpiryDateTransfer" name="paymentExpiryDateTransfer"
+									th:value="${paymentExpiryDateTransf}" />
+								<input type="hidden" id="documentTypeTransfer" name="documentTypeTransfer"
+									th:value="${documentTypeTransf}" />
+								<input type="hidden" id="isDocumentMovement" name="isDocumentMovement" th:value="${isDocumentMovement}" />	
+								<input type="hidden" id="documentValueTransf" name="documentValueTransf" th:value="${paymentValueTransf}" />
+								<input type="hidden" id="documentId" name="documentId"  th:value="${documentId}" />
+								<input type="hidden" id="documentParentId" name="documentParentId"  th:value="${documentParentId}" />
+								<input type="hidden" id="movementTypeTransf" name="movementTypeTransf" value="0" />
+								<input type="hidden" id="jsonDataRequest" name="jsonDataRequest"/>
+
+								<div class="row">
+									<div class="col-md-2 mb-3">
+										<label for="paymentExpiryDateTransf">Data Vencimento</label>
+										<div class="input-group date">
+											<input type="text" class="form-control text-center"
+												id="paymentExpiryDateTransf" name="paymentExpiryDateTransf"
+												maxlength="20" required
+												data-bv-notempty-message="Campo obrigat&oacute;rio." /> <span
+												class="input-group-addon input-group-text"><i
+													class="icon-calender"></i></span>
+										</div>
+									</div>	
+									<div class="col-md-1 mb-2" id="divPaymentValueTransf">
+										<label for="expenseValueTransf">Despesas</label>
+										<input type="text" data-accept-dot="0" data-accept-comma="1" class="only-number form-control text-center" id="expenseValueTransf" name="expenseValueTransf" maxlength="15" value="0,00" disabled />
+									</div>
+									<div class="col-md-2">
+										<div class="form-group">
+											<label for="companyTransf">Empresa Origem </label> <select
+												class="m-b-20 m-r-10 custom-select" id="companyTransf"
+												name="companyTransf" required
+												data-bv-notempty-message="Campo obrigat&oacute;rio.">
+											</select>
+										</div>
+									</div>
+									<div class="col-md-2">
+										<input type="text" tabindex="-1" class="form-control money text-center" id="bankAccountValueTransf" name="bankAccountValueTransf" style="width: 100px; border-width: 0px; display: inline; float: right;" />
+										<label for="bankAccountTransf">Conta Origem</label> 										
+										<select class="m-b-20 m-r-10 custom-select" id="bankAccountTransf"
+											name="bankAccountTransf" required
+											data-bv-notempty-message="Campo obrigat&oacute;rio.">
+										</select>
+									</div>
+									<div class="col-md-5 mb-3">
+										<label for="documentNoteTransf" class="control-label">Observa&#231;&#227;o
+											Origem:</label>
+										<textarea class="form-control" id="documentNoteTransf" rows="1"
+											name="documentNoteTransf"></textarea>
+									</div>																							
+								</div>
+								<div class="row">
+									<div class="col-md-2 mb-2" id="divPaymentValueTransf">
+										<label for="paymentValueTransf">Valor de Pagamento</label>
+										<input type="text" data-accept-dot="0" data-accept-comma="1"
+											class="only-number form-control text-center" id="paymentValueTransf"
+											name="paymentValueTransf" maxlength="15" required
+											data-bv-notempty-message="Campo obrigat&oacute;rio." />
+									</div>
+									 <div class="col-md-1 mb-2" id="divPaymentValueTransf">
+										<label for="expenseValueTransfDest">Despesas</label>
+										<input type="text" data-accept-dot="0" data-accept-comma="1" class="only-number form-control text-center" id="expenseValueTransfDest" name="expenseValueTransfDest" maxlength="15" value="0,00" disabled />
+									</div>
+									<div class="col-md-2">
+										<div class="form-group">
+											<label for="companyTransfDest">Empresa Destino</label> <select
+												class="m-b-20 m-r-10 custom-select" id="companyTransfDest"
+												name="companyTransfDest" required
+												data-bv-notempty-message="Campo obrigat&oacute;rio.">
+											</select>
+										</div>
+									</div>
+									<div class="col-md-2">
+										<input type="text" tabindex="-1" class="form-control money text-center" id="bankAccountValueTransfDest" name="bankAccountValueTransfDest" style="width: 100px; border-width: 0px; display: inline; float: right;" />
+										<label for="bankAccountTransfDest">Conta Destino: </label>
+										<select class="m-b-20 m-r-10 custom-select" id="bankAccountTransfDest"
+											name="bankAccountTransfDest" required
+											data-bv-notempty-message="Campo obrigat&oacute;rio.">
+										</select>
+									</div>
+									<div class="col-md-2 mb-2" id="divDocumentNumberTranf">
+										<label for="documentNumberTransf">Numero Documento Origem</label> <input
+											type="text" class="form-control text-center" id="documentNumberTransf"
+											name="documentNumberTransf" maxlength="20" required
+											data-bv-notempty-message="Campo obrigat&oacute;rio." />
+									</div>
+									<div class="col-md-2 mb-2" id="divDocumentNumberTranfDest">
+										<label for="documentNumberTransfDest">Nummero Documento Destino
+										</label> <input type="text" class="form-control text-center"
+											id="documentNumberTransfDest" name="documentNumberTransfDest" maxlength="20"
+											required data-bv-notempty-message="Campo obrigat&oacute;rio." />
+									</div>
+									<div class="col-md-3 mb-3">
+										<label for="documentNoteTransfDest" class="control-label">Observa&#231;&#227;o
+											Destino:</label>
+										<textarea class="form-control" id="documentNoteTransfDest" rows="1"
+											name="documentNoteTransfDest"></textarea>
+									</div>
+									<div class="col-md-2 mb-1" style="text-align: center; max-width: 150px;" id="divButtonExpenseTransf">
+		                            	<label for="buttonExpenseTransf">Incluir Despesa(s)</label>
+		                            	<button type="button" id="buttonExpenseTransf" name="buttonExpenseTransf" class="btn btn-info btn-circle" ><i class="fa fa-plus"></i> </button>
+		                            </div> 
+									<hr class="hr-admin"/>                            
+									<div id="divExpenseDuplicates">
+										
+		                        	</div>
+		                        	<div id="grid">
+										
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<div class="row">
+								<div class="col-md-12">
+									<div style="float: right;">
+										<a type="button" class="btn btn-success waves-effect waves-light"
+											id="btnSaveNewDocumentTransf"
+											href="javascript:saveNewDocumentTransf();">Gravar</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</th:block>
+
+</html>

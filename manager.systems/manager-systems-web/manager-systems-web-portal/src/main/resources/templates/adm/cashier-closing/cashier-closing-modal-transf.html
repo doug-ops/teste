@@ -1,0 +1,229 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="modal">
+	<!-- ============================================================== -->
+    <!--Modal-->
+    <!-- ============================================================== -->
+	<div id="new-document-modal-transf" class="modal long-modal"
+		tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static"
+		data-keyboard="false" style="display: none;">
+		<div class="modal-dialog modal-xl modal-dialog-scrollable full-screen"
+			style="max-width: 1140px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-12">
+						<h4 class="modal-title" id="titleModalDocumentTransf">Transf&#234;rencia
+							de Saldo</h4>
+                        <div style="float: right;">
+							<a type="button" class="btn btn-success waves-effect waves-light"
+								id="btnSaveNewDocumentTransf"
+								href="javascript:saveNewDocumentTransf();">Gravar</a> <a
+								type="button" class="btn btn-success waves-effect waves-light"
+								id="btnChangeDocumentTransf"
+								href="javascript:saveChangeDocumentTransf();">Gravar</a>
+							<button type="button" class="btn btn-danger waves-effect"
+								data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+					<form id="formNewDocumentTransf" name="formNewDocumentTransf"
+						th:action="@{/financial/document/saveTransfer}" method="post"
+						autocomplete="off">
+                    	<input type="hidden" id="documentIdTransf" name="documentIdTransf"/>
+						<input type="hidden" id="documentParentIdTransf"
+							name="documentParentIdTransf" /> <input type="hidden"
+							id="documentTypeTransf" name="documentTypeTransf" /> <input
+							type="hidden" id="documentNoteEncodedTransf"
+							name="documentNoteEncodedTransf" /> <input type="hidden"
+							id="documentNoteEncodedTransfDest"
+							name="documentNoteEncodedTransfDest" />
+							<input type="hidden" id="countExpense" name="countExpense" value="0"/>
+	                    <div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label for="companyTransf">Empresa Origem </label> <select
+										class="m-b-20 m-r-10 custom-select" id="companyTransf"
+										name="companyTransf" required
+										data-bv-notempty-message="Campo obrigat&oacute;rio.">
+									</select>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<label for="bankAccountTransf">Conta Banc&aacute;ria
+									Origem</label> <input type="text"
+									class="form-control money text-center"
+									id="bankAccountValueTransf" name="bankAccountValueTransf"
+									style="width: 100px; border-width: 0px; display: inline; float: right;" />
+								<select class="m-b-20 m-r-10 custom-select"
+									id="bankAccountTransf" name="bankAccountTransf"
+									required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+									<!-- 
+							       	<option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+		                         -->
+								</select>
+							</div>
+							<div class="col-md-2 mb-2">
+								<label for="movimentTypeTransf">Tipo</label> <select
+									class="m-b-20 m-r-10 custom-select" id="movementTypeTransf"
+									name="movementTypeTransf" required
+									data-bv-notempty-message="Campo obrigat&oacute;rio.">
+									<option value="0" selected>D&eacute;bito</option>
+                              		<option value="1" selected>Cr&eacute;dito</option>
+                            	</select>
+                            </div>
+	                        <div class="col-md-5 mb-2">
+								<label for="documentNumberTransf">Numero Documento Origem</label> <input
+									type="text" class="form-control text-center"
+									id="documentNumberTransf" name="documentNumberTransf"
+									maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio." />
+                            </div>
+							<div class="col-md-2 mb-2">
+								<label for="documentValueTransf">Valor</label> <input
+									type="text" class="form-control money text-center"
+									id="documentValueTransf" name="documentValueTransf"
+									maxlength="15" required data-bv-notempty-message="Campo obrigat&oacute;rio." />
+                            </div>
+							<div class="col-md-3 mb-4">
+                                <label for="paymentDateTransf">Data Vencimento</label>
+                                <div class="input-group date">
+									<input type="text" class="form-control text-center"
+										id="paymentExpiryDateTransf" name="paymentExpiryDateTransf"
+										maxlength="20" required
+										data-bv-notempty-message="Campo obrigat&oacute;rio." /> <span
+										class="input-group-addon input-group-text"><i
+										class="icon-calender"></i></span>
+                                </div>
+                            </div>
+                            <!-- 
+							<div class="col-md-3">
+	                                <div class="form-group">
+									<label for="providerTransf">Fornecedor Origem</label> <select
+										class="m-b-20 m-r-10 custom-select"
+										placeholder="Digite para pesquisar..." id="providerTransf"
+										name="providerTransf" required
+										data-bv-notempty-message="Campo obrigat&oacute;rio.">
+	                                    </select>
+	                                </div>                
+	                            </div>
+							<div class="col-md-3">
+	                                <div class="form-group">
+									<label for="financialGroupTransf">Grupo Financeiro
+										Origem</label> <select class="m-b-20 m-r-10 custom-select"
+										id="financialGroupTransf" name="financialGroupTransf" required
+										data-bv-notempty-message="Campo obrigat&oacute;rio.">
+							         	
+		                                        //<option value="" selected="selected">Selecione...</option>
+		                                        
+										<option th:each="item : ${financialGroups}"
+											th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+		                                    </select>
+		                                </div>            
+		                            </div>
+							<div class="col-md-3">
+	                                <div class="form-group">
+									<label for="financialSubGroupTransf">Sub-Grupo
+										Financeiro Origem</label> <select class="m-b-20 m-r-10 custom-select"
+										id="financialSubGroupTransf" name="financialSubGroupTransf"
+										required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+	                                    </select>
+	                                </div>            
+	                            </div>
+	                             -->
+							<div class="col-md-12 mb-3">
+								<label for="documentNoteTransf" class="control-label">Observa&#231;&#227;o
+									Origem:</label>
+								<textarea class="form-control" id="documentNoteTransf" rows="1"
+									name="documentNoteTransf"></textarea>
+                                </div>                
+							<div class="col-md-6">
+                                <div class="form-group">
+									<label for="companyTransfDest">Empresa Destino</label> <select
+										class="m-b-20 m-r-10 custom-select" id="companyTransfDest"
+										name="companyTransfDest" required
+										data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    </select>
+                                </div>                
+                            </div>
+							<div class="col-md-6">
+								<label for="bankAccountTransfDest">Conta Banc&aacute;ria
+									Destino: </label> <input type="text"
+									class="form-control money text-center"
+									id="bankAccountValueTransfDest" name="bankAccountValueTransfDest"
+									style="width: 100px; border-width: 0px; display: inline; float: right;" />
+									<select class="m-b-20 m-r-10 custom-select"
+									id="bankAccountTransfDest" name="bankAccountTransfDest"
+									required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+						         	<!-- 
+						         	<option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                           		 -->
+	                            </select>
+	                          </div>
+							<div class="col-md-6 mb-2">
+								<label for="documentNumberTransfDest">Nummero Documento Destino
+									</label> <input type="text" class="form-control text-center"
+									id="documentNumberTransfDest" name="documentNumberTransfDest"
+									maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio." />
+							</div>
+							<div class="col-md-6 mb-3">
+								<label for="documentNoteTransfDest" class="control-label">Observa&#231;&#227;o
+									Destino:</label>
+								<textarea class="form-control" id="documentNoteTransfDest"
+									rows="1" name="documentNoteTransfDest"></textarea>
+							</div>
+							 <!--  
+							<div class="col-md-3">
+								<div class="form-group">
+									<label for="providerTransfDest">Fornecedor Destino</label> <select
+										class="m-b-20 m-r-10 custom-select"
+										placeholder="Digite para pesquisar..." id="providerTransfDest"
+										name="providerTransfDest" required
+										data-bv-notempty-message="Campo obrigat&oacute;rio.">
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3">
+	                                <div class="form-group">
+									<label for="financialGroupTransfDest">Grupo Financeiro
+										Destino</label> <select class="m-b-20 m-r-10 custom-select"
+										id="financialGroupTransfDest" name="financialGroupTransfDest"
+										required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+	                                          
+	                                        <option value="" selected="selected">Selecione...</option>
+	                                       
+										<option th:each="item : ${financialGroups}"
+											th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                                    </select>
+	                                </div>            
+	                            </div>
+							<div class="col-md-3">
+                                <div class="form-group">
+									<label for="financialSubGroupTransfDest">Sub-Grupo
+										Financeiro Destino</label> <select class="m-b-20 m-r-10 custom-select"
+										id="financialSubGroupTransfDest"
+										name="financialSubGroupTransfDest" required
+										data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    </select>
+                                </div>            
+                            </div>
+                            -->
+                        </div>
+                    </form>
+				</div>
+                <div class="modal-footer">
+					<a type="button" class="btn btn-success waves-effect waves-light"
+						id="btnSaveNewDocumentTransf"
+						href="javascript:saveNewDocumentTransf();">Gravar</a> <a
+						type="button" class="btn btn-success waves-effect waves-light"
+						id="btnChangeDocumentTransf"
+						href="javascript:saveChangeDocumentTransf();">Gravar</a>
+					<button type="button" class="btn btn-danger waves-effect"
+						data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!--End Modal Transfer-->
+    <!-- ============================================================== -->
+	</th:block>
+</html>

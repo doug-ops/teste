@@ -1,0 +1,3321 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	    
+	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	    
+	    <!-- This Page CSS -->
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/daterangepicker/daterangepicker.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-document-movement.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-currency.css}"/>
+
+	    <script th:src="@{/assets/libs/moment/moment.js}"></script>
+	    <script th:src="@{/assets/libs/daterangepicker/daterangepicker.js}"></script>
+	    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+	    
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js}"></script>
+	    
+	    <!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>	
+    	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+		<script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+    	
+    	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.2.6/jquery.inputmask.bundle.min.js"></script>
+		
+		<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.common.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.rtl.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.silver.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.mobile.all.min.css"/>
+	    <script src="https://kendo.cdn.telerik.com/2018.1.221/js/kendo.all.min.js"></script>
+    	
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+			
+			.modal-body{
+			    height: 250px;
+			    overflow-y: auto;
+			}
+			
+			@media (min-height: 500px) {
+			    .modal-body { height: 500px; }
+			}
+			
+			@media (min-height: 800px) {
+			    .modal-body { height: 700px; }
+			}
+		</style>
+		
+	    <script>
+	    
+	    let treelist = null;
+	    var isOpenFormNewDocument = true;
+	    var isSetFinancialGroup = false;
+	    
+  		function formatRepoSelection(repo)
+  		{
+  		  return repo.text;
+  		}
+  		
+  		function selectedMovementType()
+		{		
+			const company = $('form#formFilter select#companyId option:selected').val();
+			if(company == null || '' == company){
+				return;
+			}
+			
+			$('form#formFilter select#movementTypeId').val([0,1,2,4,5]);
+			$('form#formFilter select#movementTypeId').trigger('change'); 
+		}
+  		
+		function searchBankAccountByCompanyFilter()
+		{		
+			const company = $('form#formFilter select#companyId option:selected').val();
+			
+			let optionKey = '';
+			let optionValue = 'TODOS...';
+			newOption = new Option(optionValue, optionKey, true, false);		
+			
+			$('form#formFilter select#bankAccountId').append(newOption).trigger('change');	
+			
+			if(company == null || '' == company){
+				return;
+			}
+			
+			$('form#formGetBankAccounts input#personsId').val(company);
+			const form = $('form#formGetBankAccounts'); 			
+			const dataForm = form.serializeArray();
+			
+			showLoading("Carregando Contas... Por favor aguarde...");  	
+
+			let message = 'Ocorreu um erro ao carregar contas.';
+			
+			$.ajax({
+				url : form.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			})
+			.done(function(data, textStatus, jqXHR) 
+			{	    		
+				if(true==data.status)
+				{
+					$('form#formFilter select#bankAccountId').empty().trigger('change');
+
+					const count = data.itens.length; 
+					let newOption = '';
+					
+					if(count > 1){
+						let optionKey = '';
+						let optionValue = 'SELECIONE...';
+						newOption = new Option(optionValue, optionKey, true, false);		
+						
+						$('form#formFilter select#bankAccountId').append(newOption).trigger('change');	
+					}
+
+					$.each(data.itens, function(key, value)
+					{
+						let optionKey = value.key;
+						let optionValue = value.value + ' (' + value.key + ')';
+
+						if(1 == count){
+							newOption = new Option(optionValue, optionKey, true, true);
+						}else{
+							newOption = new Option(optionValue, optionKey, false, false);
+						}
+						
+						newOption.setAttribute('data-bankBalanceAvailable', value.key1);
+						
+						$('form#formFilter select#bankAccountId').append(newOption).trigger('change');	
+
+					});
+				}
+				else
+				{
+					hideLoading();
+					showSweetalertWarning('Alerta!', data.message,'5000');
+				}
+			})
+			.fail(function(data, textStatus, jqXHR) 
+			{
+				if(''!=data.message)
+				{
+					message = data.message;
+				}
+				showSweetalertWarning('Alerta!', message,'5000');
+			}).always(function() 
+			{
+				$('#block1').hide();
+				$('#block2').hide();
+			});
+		}	
+  		
+  		function saveNewCostCenter(formId){
+  			let descriptionFinancialCostCenter = '';
+  			
+  			if(formId == 'formNewDocumentTransf'){
+  				descriptionFinancialCostCenter = $('form#formNewDocumentTransf select#financialCostCenterId').data("select2").dropdown.$search.val();
+  			}else if(formId == 'formNewDocument'){
+  				descriptionFinancialCostCenter = $('form#formNewDocument select#financialCostCenterId').data("select2").dropdown.$search.val();
+  			}
+  			
+  			
+  			$('form#formSaveFinancialCostCenter input#description').val(encodeURIComponent(descriptionFinancialCostCenter));
+
+  			const form = $('form#formSaveFinancialCostCenter');			
+	  		let dataForm = form.serializeArray();
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(res, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==res.status)
+             	{
+            		const optionKey = res.data.id;
+            		const optionValue = res.data.description + ' (' + optionKey + ')';
+
+            		const newOption = new Option(optionValue, optionKey, true, true);
+						if(FormId == 'formNewDocumentTransf'){
+	                		$('form#formNewDocumentTransf select#financialCostCenterId').append(newOption).trigger('change');
+	    					$('form#formNewDocumentTransf select#financialCostCenterId').select2("close");
+						}else if (formId == 'formNewDocument'){
+	                		$('form#formNewDocument select#financialCostCenterId').append(newOption).trigger('change');
+	    					$('form#formNewDocument select#financialCostCenterId').select2("close");
+						}
+               	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', res.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    { 
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+  		}
+  		
+	    function searchSubGroupAutocomplete()
+	    {	   
+	  		var form = $('form#formAutocompleteSubGroup');        
+	  		var dataForm = form.serializeArray();
+	  		
+	  		$('form#formFilter select#productSubGroup').empty().trigger('change');
+	  		
+	  		showLoading("Carregando dados... Por favor aguarde...");	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					hideLoading();
+					$('form#formFilter select#productSubGroup').append('<option value="">Selecione...</option>');
+					$.each(data.productSubGroups, function(key, value)
+		    	   	{
+						$('form#formFilter select#productSubGroup').append('<option value="'+value.key+'" data-salesprice="'+value.key1+'" data-conversionfactor="'+value.key2+'">'+value.key + ' - ' + value.value+'</option>');
+		    	   	});
+					$('form#formFilter select#productSubGroup').trigger('change');					
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados de Subgrupo de Produto.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+  		
+  		function showModalReportPdf()
+        {
+  			$('a#btnCancReportPdf').hide();
+        	$('a#btnReportPdf').show();
+        	$('div#divSincSema').show();
+			
+			$('div#divSincSema').removeClass('col-md-12').addClass('col-md-12');
+        	        	
+        	$('form#formReportPdf select#sinteticoSemana').val(); 
+        	$('#titleModal').text('Escolha os filtros para impress\u00e3o');    
+            $('div#new-report-modal').modal('show'); 
+        }  			  	
+  		
+  		function saveNewFinancialSubGroup(formId){
+  			let groupId = '';
+  			let descriptionGroup = '';
+  			let descriptionSubGroup = '';
+  			
+  			let indexInitial = '';
+  			let indexFinal = '';
+  			var resultDescriptionGroup = '';
+  			if(formId == 'formNewDocument'){
+  				groupId = $('form#formNewDocument select#financialGroup option:selected').val();
+  	  			descriptionGroup = $('form#formNewDocument select#financialGroup option:selected').text();
+  	  			descriptionSubGroup = $('form#formNewDocument select#financialSubGroup').data("select2").dropdown.$search.val();
+  	  			
+  			}
+  			else if(formId == 'formNewDocumentTransfDest'){
+ 	  			groupId = $('form#formNewDocumentTransf select#financialGroupTransfDest option:selected').val();
+	  			descriptionGroup = $('form#formNewDocumentTransf select#financialGroupTransfDest option:selected').text();
+	  			descriptionSubGroup = $('form#formNewDocumentTransf select#financialSubGroupTransfDest').data("select2").dropdown.$search.val();
+  			
+  			}else{
+  				groupId = $('form#formNewDocumentTransf select#financialGroupTransf option:selected').val();
+  	  			descriptionGroup = $('form#formNewDocumentTransf select#financialGroupTransf option:selected').text();
+  	  			descriptionSubGroup = $('form#formNewDocumentTransf select#financialSubGroupTransf').data("select2").dropdown.$search.val();
+  	  			
+  			}
+  			indexInitial = descriptionGroup.indexOf('(');
+  			indexFinal = descriptionGroup.indexOf(')');
+  			
+  			if(indexInitial >-1 && indexFinal >-1)
+  			{
+  				resultDescriptionGroup = descriptionGroup.substring(0, indexInitial-1);
+  			}
+  			
+  			$('form#formSaveFinancialGroup input#id').val(groupId);
+  			$('form#formSaveFinancialGroup input#description').val(resultDescriptionGroup);
+
+  			$('form#formSaveFinancialGroup input#descriptionSubGroup_1').val(descriptionSubGroup);
+  			$('form#formSaveFinancialGroup input#revenueSource_1').val('4');
+  			$('form#formSaveFinancialGroup input#revenueType_1').val('1');
+  			$('form#formSaveFinancialGroup input#isSaveDynamic').val('1');
+
+  			const form = $('form#formSaveFinancialGroup');			
+	  		let dataForm = form.serializeArray();
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		const optionKey = data.dataSubGroup.id;
+            		const optionValue = data.dataSubGroup.description + ' (' + optionKey + ')';
+
+            		const newOption = new Option(optionValue, optionKey, true, true);
+            		if(formId == 'formNewDocument'){
+					$('form#formNewDocument select#financialSubGroup').append(newOption).trigger('change');	
+					$('form#formNewDocument select#financialSubGroup').select2("close");
+					$('form#formNewDocument select#bankAccount').select2("open");             	
+            		}else if(formId == 'formNewDocumentTransfDest'){
+            			$('form#formNewDocumentTransf select#financialSubGroupTransfDest').append(newOption).trigger('change');	
+    					$('form#formNewDocumentTransf select#financialSubGroupTransfDest').select2("close");
+    					$('form#formNewDocumentTransf select#bankAccountTransfDest').select2("open");
+             		}else{
+            			$('form#formNewDocumentTransf select#financialSubGroupTransf').append(newOption).trigger('change');	
+    					$('form#formNewDocumentTransf select#financialSubGroupTransf').select2("close");
+    					$('form#formNewDocumentTransf select#bankAccountTransf').select2("open");
+					}    					
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    {
+		    	clearDataFormSaveFinancialGroup();  
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+  		}
+  		
+  		function saveNewFinancialGroup(formId){
+  			let description = '';
+  			if(formId == 'formNewDocument'){
+  				description = $('form#formNewDocument select#financialGroup').data("select2").dropdown.$search.val();
+  			}else if(formId == 'formNewDocumentTransfDest'){
+  				description = $('form#formNewDocumentTransf select#financialGroupTransfDest').data("select2").dropdown.$search.val();
+  			}else{
+  				description = $('form#formNewDocumentTransf select#financialGroupTransf').data("select2").dropdown.$search.val();
+  			}
+  			$('form#formSaveFinancialGroup input#description').val(description);
+  			
+  			const form = $('form#formSaveFinancialGroup'); 			
+	  		const dataForm = form.serializeArray();
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		const optionKey = data.data.id;
+            		const optionValue = data.data.description + ' (' + optionKey + ')';
+
+            		const newOption = new Option(optionValue, optionKey, true, true);
+            		
+            		if(formId == 'formNewDocument'){
+					$('form#formNewDocument select#financialGroup').append(newOption).trigger('change');	 
+					$('form#formNewDocument select#financialGroup').select2("close");
+					$('form#formNewDocument select#financialSubGroup').select2("open");
+            		}else if(formId == 'formNewDocumentTransfDest'){
+            			$('form#formNewDocumentTransf select#financialGroupTransfDest').append(newOption).trigger('change');	 
+    					$('form#formNewDocumentTransf select#financialGroupTransfDest').select2("close");
+    					$('form#formNewDocumentTransf select#financialSubGroupTransfDest').select2("open");
+             		}else{
+            			$('form#formNewDocumentTransf select#financialGroupTransf').append(newOption).trigger('change');	 
+    					$('form#formNewDocumentTransf select#financialGroupTransf').select2("close");
+    					$('form#formNewDocumentTransf select#financialSubGroupTransf').select2("open");
+					}         		
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    {
+        		clearDataFormSaveFinancialGroup();   
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+		
+		function clearDataFormSaveFinancialGroup(){
+			$('form#formSaveFinancialGroup input#id').val('');
+			$('form#formSaveFinancialGroup input#description').val('');
+			$('form#formSaveFinancialGroup input#active').val('on');
+			
+			$('form#formSaveFinancialGroup input#idSubgroup_1').val('');
+			$('form#formSaveFinancialGroup input#descriptionSubGroup_1').val('');
+			$('form#formSaveFinancialGroup input#revenueSource_1').val('1');
+			$('form#formSaveFinancialGroup input#revenueType_1').val('1');
+			$('form#formSaveFinancialGroup input#isSaveDynamic').val('0');
+		}
+		
+		function searchBankAccountByCompany(formId)
+		{		
+			let company = '';
+			if(formId == 'form#formNewDocument'){
+				company = $('form#formNewDocument select#company option:selected').val();
+			}
+			else if(formId == 'formNewDocumentTransfDest'){
+				company = $('form#formNewDocumentTransf select#companyTransfDest option:selected').val();
+			}else{
+				company = $('form#formNewDocumentTransf select#companyTransf option:selected').val();
+			}
+			
+			if(company == null || ''== company){
+				return;
+			}
+
+			$('form#formGetBankAccounts input#personsId').val(company);
+			const form = $('form#formGetBankAccounts'); 			
+			const dataForm = form.serializeArray();
+
+			if(formId == 'form#formNewDocument'){
+				$('form#formNewDocument select#bankAccount').empty().trigger('change');
+			}else if(formId == 'formNewDocumentTransfDest'){
+				$('form#formNewDocumentTransf select#bankAccountTransfDest').empty().trigger('change');
+			}else{
+				$('form#formNewDocumentTransf select#bankAccountTransf').empty().trigger('change');
+			}
+			
+			showLoading("Carregando Contas... Por favor aguarde...");  	
+
+			let message = 'Ocorreu um erro ao carregar contas.';
+			
+			$.ajax({
+				url : form.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			})
+			.done(function(data, textStatus, jqXHR) 
+			{	    		
+				if(true==data.status)
+				{
+					const count = data.itens.length; 
+					let newOption = '';
+					
+					if(count > 1){
+						let optionKey = '';
+						let optionValue = 'SELECIONE...';
+						newOption = new Option(optionValue, optionKey, true, false);					
+						if(formId == 'form#formNewDocument'){
+							$('form#formNewDocument select#bankAccount').append(newOption).trigger('change');	
+						}else if(formId == 'formNewDocumentTransfDest'){
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').append(newOption).trigger('change');	
+						}else{
+							$('form#formNewDocumentTransf select#bankAccountTransf').append(newOption).trigger('change');	
+						}	
+					}
+
+					let moreTwoAccounts = 0;
+					let mainAccountKey = 0;
+					let mainAccountValue = 0;
+					let mainAccount = '';
+					$.each(data.itens, function(key, value)
+					{
+						moreTwoAccounts = moreTwoAccounts +1;
+						
+						let optionKey = value.key;
+						let optionValue = value.value + ' (' + value.key + ')';
+						if(1 >= moreTwoAccounts){
+							mainAccountKey = optionKey;
+							mainAccount = optionValue;
+							mainAccountValue = value.key1;
+						}
+						if(1 == count){
+							newOption = new Option(optionValue, optionKey, true, true);
+						}else{
+							newOption = new Option(optionValue, optionKey, false, false);
+						}
+						
+						newOption.setAttribute('data-bankBalanceAvailable', value.key1);
+						
+						if(formId == 'form#formNewDocument'){
+						$('form#formNewDocument select#bankAccount').append(newOption).trigger('change');	
+						}else if(formId == 'formNewDocumentTransfDest'){
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').append(newOption).trigger('change');	
+						}else{
+							$('form#formNewDocumentTransf select#bankAccountTransf').append(newOption).trigger('change');	
+						}	
+
+					});
+					if(2 <= moreTwoAccounts){
+						newOption = new Option(mainAccount, mainAccountKey, true, true);
+						newOption.setAttribute('data-bankBalanceAvailable', mainAccountValue);
+						if(formId == 'form#formNewDocument'){
+							$('form#formNewDocument select#bankAccount').val(mainAccountKey).change();	
+							}else if(formId == 'formNewDocumentTransfDest'){
+								$('form#formNewDocumentTransf select#bankAccountTransfDest').val(mainAccountKey).change();	
+							}else{
+								$('form#formNewDocumentTransf select#bankAccountTransf').val(mainAccountKey).change();	
+							}	
+					}
+				}
+				else
+				{
+					hideLoading();
+					showSweetalertWarning('Alerta!', data.message,'5000');
+				}
+			})
+			.fail(function(data, textStatus, jqXHR) 
+			{
+				if(''!=data.message)
+				{
+					message = data.message;
+				}
+				showSweetalertWarning('Alerta!', message,'5000');
+			}).always(function() 
+			{
+				$('#block1').hide();
+				$('#block2').hide();
+			});
+		}				
+  		
+  		function deleteInstallment(trId, documentId)
+  		{
+  			Swal.fire({
+				  title: 'Alerta',
+				  text: 'Confirma a exclus\u00e3o da duplicata '+documentId+'?',
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Confirma',
+				  cancelButtonText: 'Cancelar'
+				}).then((result) => 
+				{
+				  if (result.value) 
+				  {
+					  $('table#duplicateTable tr#'+trId).remove();
+				  }
+				});
+  		}
+  		
+  		function installmentDocument()
+  		{
+  			var installment = $('form#formNewDocument select#installment').val();
+  			var documentNumber = $('form#formNewDocument input#documentNumber').val();
+  			var documentValue = $('form#formNewDocument input#documentValue').val();
+  			var paymentExpiryDate = $('form#formNewDocument input#paymentExpiryDate').val();
+  			var installmentType = $('form#formNewDocument select#installmentType').val();
+  			var bankAccount = $('form#formNewDocument select#bankAccount').val();
+  			var paymentValue = $('form#formNewDocument input#paymentValue').val();
+  			
+  			if(1==installment)
+  			{
+  				showSweetalertWarning('Alerta!', 'Parcelamento somente para pagamento a prazo em mais de 1 parcela.','30000');
+  				return;
+  			}
+  			if(''==documentNumber)
+  			{
+  				showSweetalertWarning('Alerta!', 'Informe um numero de documento antes de parcelar.','30000');
+  				return;
+  			}
+  			if(''==documentValue || '0'==documentValue)
+  			{
+  				showSweetalertWarning('Alerta!', 'Digite o valor total a ser parcelado.','30000');
+  				return;
+  			}
+  			
+  			if(''==paymentExpiryDate)
+  			{
+  				showSweetalertWarning('Alerta!', 'Informe a data do primeiro Vencimento antes de parcelar.','30000');
+  				return;
+  			}
+  			if(''==paymentValue || '0'==paymentValue)
+  			{
+  				showSweetalertWarning('Alerta!', 'Digite o valor pago do documento.','30000');
+  				return;
+  			}
+  			
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace('.', '');
+  			documentValue = documentValue.replace(',', '.');
+  			
+  			var paymentExpiryDateArray = paymentExpiryDate.split('/');
+  			var startdate = paymentExpiryDateArray[0]+'.'+paymentExpiryDateArray[1]+'.'+paymentExpiryDateArray[2];
+  			var newDate = moment(startdate, "DD.MM.YYYY");
+  			
+  			var installmentValue = (new Number(documentValue)/new Number(installment));  
+  			
+  			var trHTML='<table class="table" style="width: 100%; margin: 10px;" id="duplicateTable">';
+  			trHTML+='<thead class="thead-light">';
+  			trHTML+='<tr>';
+  			trHTML+='<th scope="col"></th>';
+  			trHTML+='<th scope="col" class="text-center">Documento</th>';
+  			trHTML+='<th scope="col" class="text-center">Vencimento</th>';
+  			trHTML+='<th scope="col" class="text-center">Conta Banc&aacute;ria</th>';
+  			trHTML+='<th scope="col" class="text-center">Valor</th>';
+  			trHTML+='</tr>';
+  			trHTML+='</thead>';
+  			trHTML+='<tbody>';        
+  			for (var i = 1; i <= installment; i++) 
+  			{
+  				trHTML+='<tr id="duplicate_'+i+'">';
+  				trHTML+='<td class="text-center">';
+  				trHTML+='<a onclick="deleteInstallment(&quot;duplicate_'+i+'&quot;,&quot;'+documentNumber+'_'+i+'&quot;);" style="cursor: pointer;">';
+  				trHTML+='<i class="mdi mdi-delete mdi-24px" style="color: red;"></i>';
+  				trHTML+='</a>';
+  				trHTML+='</td>';
+  				trHTML+='<td><input type="text" class="form-control text-center" id="documentNumber_'+i+'" name="documentNumber_'+i+'" maxlength="20" value="'+documentNumber+'_'+i+'"/></td>';
+  				trHTML+='<td>';
+  				trHTML+='<div class="input-group date">';
+  				trHTML+='<input type="text" class="form-control dateDuplicate text-center" id="paymentExpiryDate_'+i+'" name="paymentExpiryDate_'+i+'" maxlength="10" value="'+newDate.format('DD/MM/YYYY')+'"/>';
+  				trHTML+='<span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>';
+  				trHTML+='</div>';
+  				trHTML+='</td>';
+  				trHTML+='<td>';
+  				trHTML+='<select class="m-b-20 m-r-10 duplicateSelect" id="bankAccount_'+i+'" name="bankAccount_'+i+'">';
+  				$('form#formNewDocument select#bankAccount').each(function() 
+  				{
+  					trHTML+='<option val="'+$(this).val()+'">'+$(this).html()+'</option>';
+  					selected = '';
+  				});
+  				trHTML+='</select>';
+  				trHTML+='</td>';
+  				trHTML+='<td>';
+  				trHTML+='<input type="text" class="form-control  moneyDuplicate text-center" id="documentValue_'+i+'" name="documentValue_'+i+'" maxlength="15" value="'+Number(installmentValue).format(2, 3, '.', ',')+'"/>';
+  				trHTML+='</td>';
+  				trHTML+='</tr>';
+  				if(4==installmentType)
+  				{
+  					newDate.add(30, 'days');
+  				}
+  				else if(3==installmentType)
+  				{
+  					newDate.add(15, 'days');
+  				}
+  				else if(2==installmentType)
+  				{
+  					newDate.add(7, 'days');
+  				}
+  				else if(1==installmentType)
+  				{
+  					newDate.add(1, 'days');
+  				}
+			}
+  			trHTML+='</tbody>';
+  			trHTML+='</table>';
+			$('div#divDuplicates').html(trHTML);
+			
+			$('.moneyDuplicate').mask("#.##0,00", {reverse: true});
+			
+			$('.dateDuplicate').datepicker({
+	            autoclose: true,
+	            todayHighlight: true,
+	            toggleActive: true,
+	            format: 'dd/mm/yyyy',
+	            language: 'pt-BR'
+	        });
+		
+	        $('.duplicateSelect')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        });
+	        $('.duplicateSelect').val(bankAccount).trigger('change');
+  		}
+	    
+	    function checkboxAllItem(id)
+	    {
+	    	var parentChecked = false; 
+        	if($("#"+id).is(':checked')) 
+            {
+        		parentChecked = true;
+            }
+        	changeAllItemCheckboxTable(parentChecked, id);
+	    }
+	    
+	    function changeAllSubItemCheckboxTable(id)
+        {
+        	var totalSaldo = parseFloat(0);        	
+        	$('.'+id+':input:checkbox').each(function() 
+        	{  
+        		if(this.checked)
+        		{
+            		var documentValue = parseFloat($(this).data('documentvalue'));
+        			totalSaldo= (totalSaldo + documentValue);		
+        		}
+        	});
+    		if(totalSaldo>=0)
+    		{
+        		$('th#th'+id).html('<span class="positive-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+    		else
+    		{
+    			$('th#th'+id).html('<span class="negative-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+        }
+	    
+	    function changeAllItemCheckboxTable(parentChecked, id)
+        {
+        	var totalSaldo = parseFloat(0);        	
+        	$('.'+id+':input:checkbox').each(function() 
+        	{ 
+        		this.checked = parentChecked; 
+        		if(parentChecked)
+        		{
+            		var documentValue = parseFloat($(this).data('documentvalue'));
+        			totalSaldo= (totalSaldo + documentValue);		
+        		}
+        	});
+    		if(totalSaldo>=0)
+    		{
+        		$('th#th'+id).html('<span class="positive-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+    		else
+    		{
+    			$('th#th'+id).html('<span class="negative-value">'+parseFloat(totalSaldo).toFixed(2)+'</span>');
+    		}
+        }
+	    	    
+	    function groupAllSelectedGrouping()
+		{
+			var allVals = [];
+			$('.checkboxItem').each(function() 
+			{
+		        if($(this).is(":checked")) 
+		        {
+		        	 allVals.push($(this).data('documentparent'));
+		        }
+		    });
+			if(allVals.length==0 || allVals.length==1)
+			{
+				showSweetalertWarning('Alerta!', 'Selecione mais de um agrupamento para reagrupar','5000');
+			}
+			else
+			{
+				Swal.fire({
+					  title: 'Alerta',
+					  text: 'Confirma o reagrupamento dos agrupamentos ('+allVals.toString()+')',
+					  icon: 'question',
+					  showCancelButton: true,
+					  confirmButtonColor: '#3085d6',
+					  cancelButtonColor: '#d33',
+					  confirmButtonText: 'Confirma',
+					  cancelButtonText: 'Cancelar'
+					}).then((result) => 
+					{
+					  if (result.value) 
+					  {
+						  processGroupAllSelectedGrouping(allVals.toString());
+					  }
+					});				
+			}
+		}
+	    
+	    function processGroupAllSelectedGrouping(ids)
+		{
+			$('form#formGroupParent input#ids').val(ids);
+				
+	  		var form = $('form#formGroupParent'); 			  				  			  		
+	  		var dataForm = form.serializeArray();
+		  				  				  				  			  		
+	  		showLoading("Reagrupando documentos... Por favor aguarde...");  	
+		  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		showSweetalertSuccess('Documentos reagrupados com sucesso.');
+            		searchDocumentMovement();
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao reagrupar documentos.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function changeStatusDocumentParentSelected(ids, documentStatus)
+		{	    	
+			if(''==ids && ''==documentStatus)
+			{
+				showSweetalertWarning('Alerta!', 'Selecione pelo menos um documento','5000');				
+			}				
+			else
+			{
+				$('form#formChangeStatus input#ids').val(ids);
+				$('form#formChangeStatus input#documentStatus').val(documentStatus);
+				$('form#formChangeStatus input#operation').val(2);
+				
+		  		var form = $('form#formChangeStatus'); 			  				  			  		
+		  		var dataForm = form.serializeArray();
+		  		
+		  		//$.post($form.attr('action'), {id:id, parentId:parentId, documentType:documentType, documentStatus:documentStatus, ajax: 'true'}, function(responseJson)
+		  				  				  			  		
+		  		showLoading("Alterando documentos... Por favor aguarde...");  	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+	            		showSweetalertSuccess('Documentos gravados com sucesso.');
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao alterar documentos.','5000');
+			    }).always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+			}			
+		}
+	    
+	    function changeStatusDocumentsSelected(ids, documentStatus)
+		{	    	
+			if(''==ids && ''==documentStatus)
+			{
+				showSweetalertWarning('Alerta!', 'Selecione pelo menos um documento','5000');				
+			}				
+			else
+			{
+				$('form#formChangeStatus input#ids').val(ids);
+				$('form#formChangeStatus input#documentStatus').val(documentStatus);
+				
+		  		var form = $('form#formChangeStatus'); 			  				  			  		
+		  		var dataForm = form.serializeArray();
+		  		
+		  		//$.post($form.attr('action'), {id:id, parentId:parentId, documentType:documentType, documentStatus:documentStatus, ajax: 'true'}, function(responseJson)
+		  				  				  			  		
+		  		showLoading("Alterando documentos... Por favor aguarde...");  	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+	            		showSweetalertSuccess('Documentos gravados com sucesso.');
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao alterar documentos.','5000');
+			    }).always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+			}			
+		}
+	    
+	    function ungroupDocumentsSelected(ids)
+		{	    	
+			if(''==ids)
+			{
+				showSweetalertWarning('Alerta!', 'Selecione pelo menos um documento','5000');				
+			}				
+			else
+			{
+				$('form#formUngroup input#ids').val(ids);
+				
+		  		var form = $('form#formUngroup'); 			  				  			  		
+		  		var dataForm = form.serializeArray();
+		  				  				  				  			  		
+		  		showLoading("Desagrupando documentos... Por favor aguarde...");  	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+	            		showSweetalertSuccess('Documentos desagrupados com sucesso.');
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao desagrupar documentos.','5000');
+			    }).always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+			}			
+		}
+	    
+	    function inactiveDocumentsSelected(ids, inactive)
+		{	    	
+			if(''==ids && ''==inactive)
+			{
+				showSweetalertWarning('Alerta!', 'Selecione pelo menos um documento para excluir','30000');				
+				return;
+			}	
+			
+			var idsArray = ids.split('_');
+			if(idsArray.length!=4)
+			{
+				showSweetalertWarning('Alerta!', 'Par\u00e2metros inv\u00e1lidos para exclus\u00e3o da duplicata','30000');				
+				return;		
+			}
+						
+			var textMessage = '';
+			if('true'==inactive.toString())
+			{
+				textMessage = ('Confirma a exclus\u00e3o da Duplicata: ' + idsArray[0] + '\nAgrupamento: ' + idsArray[1] +'\nValor Duplicata: ' + Number(idsArray[3]).format(2, 3, '.', ','));	
+			}
+			else
+			{
+				textMessage = ('Confirma o extorno da Duplicata: ' + idsArray[0] + '\nAgrupamento: ' + idsArray[1] +'\nValor Duplicata: ' + Number(idsArray[3]).format(2, 3, '.', ','));
+			}
+			Swal.fire({
+				  title: 'Alerta',
+				  text: textMessage,
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Confirma',
+				  cancelButtonText: 'Cancelar'
+				}).then((result) => 
+				{
+				  if (result.value) 
+				  {
+					  processInactiveDocumentsSelected(idsArray[0], idsArray[1], idsArray[2], idsArray[3], inactive);
+				  }
+				});
+		}
+	    
+	    function processInactiveDocumentsSelected(documentId, documentParentId, documentType, documentValue, inactive)
+	    {
+			$('form#formInactive input#documentId').val(documentId);
+			$('form#formInactive input#documentParentId').val(documentParentId);
+			$('form#formInactive input#documentType').val(documentType);
+			$('form#formInactive input#inactive').val(inactive);
+			
+	  		var form = $('form#formInactive'); 			  				  			  		
+	  		var dataForm = form.serializeArray();
+	  				  				
+	  		if('true'==inactive.toString())
+			{
+		  		showLoading("Excluindo documento... Por favor aguarde...");
+			}
+	  		else
+	  		{
+	  			showLoading("Extornando documento... Por favor aguarde...");	
+	  		}
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		if('true'==inactive.toString())
+        			{
+            			
+            			showSweetalertSuccess('Documento excluido com sucesso.\nDuplicata: ' + documentId + '\nAgrupamento: ' + documentParentId +'\nValor Duplicata: ' + Number(documentValue).format(2, 3, '.', ','));
+        			}
+            		else
+            		{
+            			showSweetalertSuccess('Documento extornado com sucesso.\nDuplicata: ' + documentId + '\nAgrupamento: ' + documentParentId +'\nValor Duplicata: ' + Number(documentValue).format(2, 3, '.', ','));            			
+            		}
+            		searchDocumentMovement();
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		if('true'==inactive.toString())
+    			{
+	    			showSweetalertWarning('Alerta!', 'Ocorreu um erro ao excluir documento.\nDuplicata: ' + documentId + '\nAgrupamento: ' + documentParentId +'\nValor Duplicata: ' + documentValue,'30000');
+    			}
+	    		else
+	    		{
+	    			showSweetalertWarning('Alerta!', 'Ocorreu um erro ao extornar documento.\nDuplicata: ' + documentId + '\nAgrupamento: ' + documentParentId +'\nValor Duplicata: ' + documentValue,'30000');	    			
+	    		}
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	    
+	    function detailDocumentItem(documentId, documentParentId, documentType, updateType, trans)
+	    {
+			$('form#formDetailDocumentItem input#documentId').val(documentId);
+			$('form#formDetailDocumentItem input#documentParentId').val(documentParentId);
+			$('form#formDetailDocumentItem input#documentType').val(documentType);
+			$('form#formDetailDocumentItem input#trans').val(trans);
+			
+	  		var form = $('form#formDetailDocumentItem'); 			  				  			  		
+	  		var dataForm = form.serializeArray();
+	  				  				
+  			showLoading("Buscando dados do documento... Por favor aguarde...");	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		showModalChangeDocument(data);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+    			showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados do documento.\nDuplicata: ' + documentId + '\nAgrupamento: ' + documentParentId,'30000');	    			
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	    
+	    function clearFormChangeDocument()
+	    {
+			$('form#formNewDocument input#documentId').val('');
+			$('form#formNewDocument input#documentParentId').val('');
+			$('form#formNewDocument input#documentType').val('');
+			$('form#formNewDocument select#company').empty().trigger('change');
+			$('form#formNewDocument select#provider').empty().trigger('change');
+			$('form#formNewDocument select#financialGroup').val('').trigger('change');
+			$('form#formNewDocument select#financialSubGroup').empty().trigger('change');
+			$('form#formNewDocument select#movementType').val('1').trigger('change');	
+			$('form#formNewDocument select#documentStatus').val('2').trigger('change');	
+			$('form#formNewDocument input#documentNumber').val('');
+			$('form#formNewDocument input#documentValue').val('');
+			$('form#formNewDocument input#paymentDate').val('');
+			$('form#formNewDocument select#paymentStatus').val('2').trigger('change');
+			$('form#formNewDocument input#paymentExpiryDate').val('');
+			$('form#formNewDocument select#bankAccount').val('').trigger('change');
+			$('form#formNewDocument textarea#documentNote').val('');	
+			$('form#formNewDocument input#paymentValue').val('');
+			$('form#formNewDocument select#financialCostCenter').val('').trigger('change');
+	    }
+	    
+	    function populateFormChangeDocument(data)
+	    {	    		
+			if(data.item.companyId>0)
+			{
+				var optionKey = data.item.companyId;
+				var optionValue = data.item.company + ' ('+data.item.companyId+')';
+				var newOption = new Option(optionValue, optionKey, true, true);
+				
+				if(1==data.item.transferSaldo){
+					$('form#formNewDocumentTransf select#companyTransf').append(newOption).trigger('change');	
+				}else{
+					$('form#formNewDocument select#company').append(newOption).trigger('change');					
+				}
+
+			}
+					
+	    	if(1==data.item.transferSaldo){
+	    		
+				$('form#formNewDocumentTransf select#movementTypeTransf').val(data.item.credit ? 1 : 0).trigger('change');	
+				$('form#formNewDocument select#bankAccount').val('');	
+				$('form#formNewDocumentTransf input#documentValueTransf').val(Number(data.item.documentValue).format(2, 3, '.', ','));	
+				$('form#formNewDocumentTransf input#paymentExpiryDateTransf').datepicker('update', data.item.paymentExpiryData);
+				$('form#formNewDocumentTransf input#paymentValueTransf').val(Number(data.item.paymentValue).format(2, 3, '.', ','));
+				document.getElementById("documentValueTransf").readOnly = true;
+				$('form#formNewDocumentTransf input#documentNumberTransf').val(moment().format('YYYYMMDDHHmmss'));	
+				$('form#formNewDocumentTransf input#documentNumberTransfDest').val('0' + moment().format('YYYYMMDDHHmmss'));
+
+				const mainCompanyId = $('form#formFilter input#mainCompanyId').val();
+				const mainCompanyDescription = $('form#formFilter input#mainCompanyDescription').val();
+				
+				if(mainCompanyId > 0){
+					let optionKey = mainCompanyId;
+					let optionValue = mainCompanyDescription + ' (' +mainCompanyId + ')';
+					newOption = new Option(optionValue, optionKey, true, true);
+					$('form#formNewDocumentTransf select#companyTransfDest').append(newOption).trigger('change');
+				}
+
+			}else{
+				$('form#formNewDocument input#documentId').val(data.item.documentId);
+				$('form#formNewDocument input#documentParentId').val(data.item.documentParentId);
+				$('form#formNewDocument input#documentType').val(data.item.documentTypeId);
+				
+			if(data.item.providerId>0)
+			{
+				var optionKey = data.item.providerId;
+				var optionValue = data.item.provider + ' ('+data.item.providerId+')';
+				var newOption = new Option(optionValue, optionKey, true, true);
+				$('form#formNewDocument select#provider').append(newOption).trigger('change');					
+			}		
+			
+			isSetFinancialGroup = true;
+			$('form#formNewDocument select#financialGroup').val(data.item.financialGroupId).trigger('change');
+			$.each(data.financialSubGroups, function(key, value)
+    	   	{
+				var selected = '';
+				if(data.item.financialSubGroupId==value.key)
+				{
+					selected = 'selected';
+				}
+				$('form#formNewDocument select#financialSubGroup').append('<option value="'+value.key+'" '+selected+'>'+value.value+ ' ('+value.key+')</option>');
+    	   	});
+			$('form#formNewDocument select#financialSubGroup').trigger('change');
+			
+			$('form#formNewDocument select#movementType').val(data.item.credit ? 1 : 0).trigger('change');	
+			$('form#formNewDocument select#documentStatus').val(data.item.documentStatusId).trigger('change');	
+			$('form#formNewDocument input#documentNumber').val(data.item.documentNumber);	
+			$('form#formNewDocument input#documentValue').val(Number(data.item.documentValue).format(2, 3, '.', ','));	
+			
+			var paymentDataArray = data.item.paymentData.split(' ');			
+			$('form#formNewDocument input#paymentDate').datepicker('update', paymentDataArray[0]);
+
+			$('form#formNewDocument select#paymentStatus').val(data.item.paymentStatus).trigger('change');	
+			var paymentExpiryDataArray = data.item.paymentExpiryData.split(' ');			
+			$('form#formNewDocument input#paymentExpiryDate').datepicker('update', paymentExpiryDataArray[0]);
+			
+			$('form#formNewDocument select#bankAccount').val(data.item.bankAccountId).trigger('change');	
+			$('form#formNewDocument textarea#documentNote').val(data.item.documentNote);
+				}
+		
+			$('form#formNewDocument input#documentValue').prop('readonly', false);
+			$('form#formNewDocument input#paymentValue').prop('readonly', false);
+			$('div#divDuplicates').hide();
+        	$('div#divPaymentDate').show();
+        	$('div#divPaymentExpiryDate').show();
+        	$('div#divInstallment').hide();
+        	$('div#divButtonInstallment').hide();
+        	$('div#divInstallmentType').hide();
+        	
+        	$('div#divNote').removeClass('col-md-5').addClass('col-md-8');
+        	$('div#divDocumentValue').removeClass('col-md-4').addClass('col-md-2');        	
+        	$('div#divPaymentExpiryDate').removeClass('col-md-2').addClass('col-md-4');
+			
+			$('a#btnSaveNewDocument').hide();
+        	$('a#btnChangeDocument').show();	
+        	$('#titleModalDocument').text('Alterar Documento');
+	    }
+	    
+	    function openTransfSaldo(documentParentId, documentId, companyId, company, documentType, documentValue, paymentValue, transferSaldo, paymentExpiryData){
+	    	
+	    	const date = new Date();
+	    	const dataAtual = date.toLocaleDateString();
+	    	
+	    	const data = {
+		    		item : {
+						documentParentId: documentParentId,
+						documentId: documentId,
+		    			companyId: companyId, 
+		    			company: company,
+		    			paymentExpiryData:paymentExpiryData,
+		    			documentType: documentType,
+		    			documentValue:documentValue,
+		    			paymentValue:documentValue,
+		    			transferSaldo:transferSaldo
+		    		}
+		    }
+ 			
+	    	//showModalChangeDocument(data);
+	    	if(1==data.item.transferSaldo){
+		    	clearFormNewDocumentTransf();
+		    	populateFormTransferValue(data);
+        	}
+	    }
+	    
+	    function populateFormTransferValue(data)
+ 	    {	 
+  			$('form#formTransferValue input#companyIdTransf').val(data.item.companyId);
+  			$('form#formTransferValue input#companyTransf').val(data.item.company);
+  			$('form#formTransferValue input#paymentValueTransf').val(Number(data.item.paymentValue).format(2, 3, '.', ','));
+			$('form#formTransferValue input#documentValueTransf').val(Number(data.item.documentValue).format(2, 3, '.', ','));	
+			$('form#formTransferValue input#paymentExpiryDateTransf').datepicker('update', data.item.paymentExpiryData);
+			$('form#formTransferValue input#documentTypeTransf').val(data.item.documentType);
+			$('form#formTransferValue input#documentId').val(data.item.documentId);
+			$('form#formTransferValue input#documentParentId').val(data.item.documentParentId);
+  			$('form#formTransferValue').submit();
+ 	    }
+	    
+        function showModalChangeDocument(data)
+        {   
+        	if(1==data.item.transferSaldo){
+		    	clearFormNewDocumentTransf();
+	        	populateFormChangeDocument(data);
+	            $('div#new-document-modal-transf').modal('show'); 
+        	}else{
+            	clearFormChangeDocument();
+            	populateFormChangeDocument(data);
+                $('div#new-document-modal').modal('show'); 
+        	}
+
+        }
+        
+        function clearFormNewDocument()
+        {
+        	$('form#formNewDocument input#documentId').val('');
+			$('form#formNewDocument input#documentParentId').val('');
+			$('form#formNewDocument input#documentType').val('');
+			$('form#formNewDocument select#company').empty().trigger('change');
+			$('form#formNewDocument select#provider').empty().trigger('change');
+			$('form#formNewDocument select#financialGroup').val('Selecione').trigger('change');
+			$('form#formNewDocument select#financialSubGroup').empty().trigger('change');
+			$('form#formNewDocument select#movementType').val('0').trigger('change');
+			$('form#formNewDocument select#installment').val('1').trigger('change');
+			$('form#formNewDocument select#documentStatus').val('2').trigger('change');	
+			$('form#formNewDocument input#documentNumber').val('');
+			$('form#formNewDocument input#documentValue').val('');
+			$('form#formNewDocument input#paymentDate').val('');
+			$('form#formNewDocument select#paymentStatus').val('2').trigger('change');
+			$('form#formNewDocument input#paymentExpiryDate').val('');
+			$('form#formNewDocument select#bankAccount').val('').trigger('change');
+			$('form#formNewDocument textarea#documentNote').val('');	    	
+	    	$('form#formNewDocument input#paymentValue').val('');
+			$('form#formNewDocument select#financialCostCenter').val('').trigger('change');
+        }
+        
+        function showModalNewDocument()
+        {
+        	$('a#btnChangeDocument').hide();
+        	$('a#btnSaveNewDocument').show();
+        	$('div#divInstallment').show();
+        	$('div#divPaymentDate').hide();
+			$('div#divDuplicates').hide();
+			$('div#divButtonInstallment').hide();
+			$('div#divInstallmentType').hide();
+			$('div#divDocumentNumberTranf').hide();
+			
+			$('div#divNote').removeClass('col-md-5').addClass('col-md-12');
+			$('div#divDocumentValue').removeClass('col-md-4').addClass('col-md-2');
+        	$('div#divPaymentExpiryDate').removeClass('col-md-4').addClass('col-md-2');
+        	
+        	clearFormNewDocument();        	
+        	
+        	$('form#formNewDocument input#paymentDate').datepicker("setDate", new Date());
+			$('form#formNewDocument input#paymentExpiryDate').datepicker("setDate", new Date());
+			$('form#formNewDocument input#documentNumber').val(moment().format('YYYYMMDDHHmmss'));
+        	$('#titleModalDocument').text('Lan\u00e7amento de Novo Documento');        	
+            $('div#new-document-modal').modal('show'); 
+        }
+        
+	    function saveChangeDocument()
+		{	    				
+			var bootstrapValidator = $('form#formNewDocument').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			
+			if (bootstrapValidator.isValid() === false) 
+			{
+				return;
+	        }
+			
+			$('form#formNewDocument input#documentNoteEncoded').val(encodeURIComponent($('form#formNewDocument textarea#documentNote').val()));
+			
+			var form = $('form#formNewDocument'); 						
+			var textMessage = ('Confirma a alera\u00e7\u00e3o da Duplicata: ' + form[0].documentId.value + '\nAgrupamento: ' + form[0].documentParentId.value +'\nValor Duplicata: ' + form[0].documentValue.value);	
+
+			Swal.fire({
+				  title: 'Alerta',
+				  text: textMessage,
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Confirma',
+				  cancelButtonText: 'Cancelar'
+				}).then((result) => 
+				{
+				  if (result.value) 
+				  {
+					  processChangeDocument(form.serializeArray());
+				  }
+				});
+		}
+	    
+	    function processChangeDocument(dataForm)
+		{
+	  		$('div#new-document-modal').modal('hide');
+	  		showLoading("Gravando dados do documento... Por favor aguarde...");  	
+
+	  		var form = $('form#formChangeDocument'); 
+	  		$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+        			showSweetalertSuccess(data.message);            			
+            		searchDocumentMovement();
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados do documento.','30000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function printDocumentParentSelected(documentParentId, companyId)
+		{	    	
+			if(''==documentParentId && ''==companyId)
+			{
+				showSweetalertWarning('Alerta!', 'Selecione um documento','5000');				
+			}				
+			else
+			{
+				$('form#formFilterReport input#documentParentId').val(documentParentId);
+				$('form#formFilterReport input#companyId').val(companyId);
+				document.getElementById('formFilterReport').submit();						  		
+			}		
+		}
+	    
+	    function printReportPdf(){
+	    	let allVals = "";
+	    	
+	    	let count = 0;
+			$('.checkboxItem').each(function() 
+			{
+		        if($(this).is(":checked")) 
+		        {
+		        	if(count>0){
+		        		
+		        		allVals  += ",";
+		        	}
+		        	allVals += $(this).data('documentparent');
+		        	count = count+1;
+		        }
+		    });
+	    
+			var value = $('form#formReportPdf select#sinteticoSemana option:selected').val();
+			$('form#formReportPdf input#analitic').val(value);
+	    	$('form#formReportPdf input#date').val($('form#formFilter input#date').val());
+	    	$('form#formReportPdf input#documentsParentId').val(allVals);
+	    	$('form#formReportPdf').submit();
+	    }
+	    
+	    function searchDocumentMovement()
+	    {
+	    	if($('#new-document-modal').is(':visible')){
+	    		return;
+	    	}
+	    	
+	    	if($('#new-document-modal-transf').is(':visible')){
+	    		return;
+	    	}
+	    	
+	    	var form = $('form#formFilter'); 			
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Carregando documentos... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		populateTable(data);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao carregar documentos.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	    
+	    function populateTable(data)
+	    {
+			if(treelist && treelist !=null){
+				treelist.data("kendoTreeList").destroy();	
+				treelist.remove();		
+			}
+			
+			document.getElementById('treelistParent').innerHTML = '<div id="treelist"></div>';
+    
+		    treelist = $("#treelist").kendoTreeList({
+	        dataSource: {
+	          data: data.report.items,
+	          schema: {
+	            model: {
+	              id: "id",
+	              parentId: "parentId",
+	              expanded: true,
+	              fields: {
+	                parentId: { field: "parentId",  nullable: true},
+	                companyDescription: { type: "string",  nullable: true },
+	                documentValue: { type: "number" },
+	                documentNote: { type: "string",  nullable: true },
+	                initialDate: { type: "string" },
+	                finalDate: { type: "string" },
+	                input: { type: "number" },
+	                output: { type: "number" },
+	                inputOutputBalance: { type: "number" },
+	                expensive: { type: "number" },
+	                countProducts: { type: "number",  nullable: true },
+	              },
+	              expanded: false
+	            }
+	          }
+	        },
+	        //toolbar: ["create"],
+	        // Enable filtering.
+	        filterable: false,
+	        // Enable editing.
+	        //editable: "inline",
+	        height: 400,
+	        columns: [
+	          { field: "companyDescription", title: "Empresa", width: "15%", headerAttributes: {style: "text-align: center"} },
+	          { field: "documentValue", title: "Total", width: "8%", format: "{0:0.00}", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: right"} },
+	          { field: "documentNote", title: "Observacao", width: "28%", headerAttributes: {style: "text-align: center"} },
+	          { field: "initialDate", title: "Dta Inicial", width: "7%", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: center"}  },
+	          { field: "finalDate", title: "Dta Final", width: "7%", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: center"}  },
+	          { field: "input", title: "Entrada", width: "8%", format: "{0:0.00}", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: center"} },
+	          { field: "output", title: "Saida", width: "8%", format: "{0:0.00}", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: center"} },
+	          { field: "inputOutputBalance", title: "Sobra", width: "8%", format: "{0:0.00}", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: center"} },
+	          { field: "expensive", title: "Despesas", width: "8%", format: "{0:0.00}", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: center"} },
+	          { field: "countProducts", title: "Prod", width: "5%", format: "{0:0}", headerAttributes: {style: "text-align: center"}, attributes: {style: "text-align: center"} },
+	        ],
+	        columnMenu: true
+	      });
+	      
+	      populateDataSaldo(data.report.credit, data.report.debit, data.report.balance);
+	      populateDataOthers(data.report.countProducts, data.report.input, data.report.output, data.report.expensive);
+	    }
+	    	    	    
+	    function changeAllCheckboxTable(parentChecked)
+        {
+        	var totalCredit = 0;
+        	var totalDebit = 0;
+        	var countProducts = 0;
+        	var totalInputProducts = 0;
+        	var totalOutputProducts = 0;
+        	var totalExpense = 0;
+        	
+        	$('.checkboxItem:input:checkbox').each(function() 
+        	{ 
+        		this.checked = parentChecked; 
+        		if(parentChecked)
+        		{
+            		var documentValue = parseFloat($(this).data('documentvalue'));
+            		if(documentValue<0)
+            		{
+            			totalDebit+=documentValue;		
+            		}
+            		else
+            		{
+            			totalCredit+=documentValue;
+            		}            		
+            		const documentCountProducts = parseInt($(this).data('documentcountproducts'));
+            		const documentInputProducts = parseFloat($(this).data('documentinputproducts'));
+            		const documentOutputProducts = parseFloat($(this).data('documentoutputproducts'));
+            		const documentTotalExpense = parseFloat($(this).data('documenttotalexpense'));
+            		
+            		countProducts+=documentCountProducts;
+            		totalInputProducts+=documentInputProducts;
+            		totalOutputProducts+=documentOutputProducts;
+            		totalExpense+=documentTotalExpense;
+        		}
+        	});
+        	var totalSaldo = (totalCredit+totalDebit);
+        	populateDataSaldo(totalCredit, totalDebit, totalSaldo);
+        	populateDataOthers(countProducts, totalInputProducts, totalOutputProducts, totalExpense);
+        }
+        
+        function changeCheckboxTable()
+        {
+        	var totalCredit = 0;
+        	var totalDebit = 0;
+        	var countProducts = 0;
+        	var totalInputProducts = 0;
+        	var totalOutputProducts = 0;
+        	var totalExpense = 0;
+        	
+        	$('.checkboxItem:input:checkbox').each(function() 
+        	{ 
+        		if(this.checked)
+        		{
+            		var documentValue = parseFloat($(this).data('documentvalue'));
+            		if(documentValue<0)
+            		{
+            			totalDebit+=documentValue;		
+            		}
+            		else
+            		{
+            			totalCredit+=documentValue;
+            		}
+            		
+            		const documentCountProducts = parseInt($(this).data('documentcountproducts'));
+            		const documentInputProducts = parseFloat($(this).data('documentinputproducts'));
+            		const documentOutputProducts = parseFloat($(this).data('documentoutputproducts'));
+            		const documentTotalExpense = parseFloat($(this).data('documenttotalexpense'));
+            		
+            		countProducts+=documentCountProducts;
+            		totalInputProducts+=documentInputProducts;
+            		totalOutputProducts+=documentOutputProducts;
+            		totalExpense+=documentTotalExpense;
+        		}
+        	});
+        	var totalSaldo = (totalCredit+totalDebit);
+        	populateDataSaldo(totalCredit, totalDebit, totalSaldo);
+        	populateDataOthers(countProducts, totalInputProducts, totalOutputProducts, totalExpense);
+        }
+        
+        function populateDataSaldo(totalCredit, totalDebit, totalSaldo)
+        {
+        	$('h3#totalCredit').text('R$ ' + parseFloat(totalCredit).toFixed(2));
+	    	$('h3#totalDebit').text('R$ ' + parseFloat(totalDebit).toFixed(2));
+	    	$('h3#totalSaldo').text('R$ ' + parseFloat(totalSaldo).toFixed(2));        	
+        }
+        
+        function populateDataOthers(countProducts, totalInputProducts, totalOutputProducts, totalExpense)
+        {
+        	const sobraInOut = (totalInputProducts-totalOutputProducts);
+        	$('h3#countProducts').text(parseInt(countProducts));
+        	$('h3#totalInput').text('R$ ' + parseFloat(totalInputProducts).toFixed(2));
+        	$('h3#totalOutput').text('R$ ' + parseFloat(totalOutputProducts).toFixed(2));
+        	$('h3#sobraInOutput').text('R$ ' + parseFloat(sobraInOut).toFixed(2));
+        	$('h3#totalExpense').text('R$ ' + parseFloat(totalExpense).toFixed(2));
+        }
+	    
+	    function format(d)
+	    {
+	         // `d` is the original data object for the row
+	         return d.detail;  
+	    }
+	    
+	    function exportTableToCSV($table, filename) {
+	    	 
+	        //rescato los titulos y las filas
+	        var $Tabla_Nueva = $table.find('tr:has(td,th)');
+	        // elimino la tabla interior.
+	        var Tabla_Nueva2= $Tabla_Nueva.filter(function() {
+	             return (this.childElementCount != 1 );
+	        });
+	    
+	        var $rows = Tabla_Nueva2,
+	            // Temporary delimiter characters unlikely to be typed by keyboard
+	            // This is to avoid accidentally splitting the actual contents
+	            tmpColDelim = String.fromCharCode(11), // vertical tab character
+	            tmpRowDelim = String.fromCharCode(0), // null character
+	    
+	            // Solo Dios Sabe por que puse esta linea
+	            colDelim = (filename.indexOf("xls") !=-1)? '"\t"': '","',
+	            rowDelim = '"\r\n"',
+	    
+	    
+	            // Grab text from table into CSV formatted string
+	            csv = '"' + $rows.map(function (i, row) {
+	                var $row = $(row);
+	                var   $cols = $row.find('td:not(.hidden),th:not(.hidden)');
+	    
+	                return $cols.map(function (j, col) {
+	                    var $col = $(col);
+	                    var text = $col.text().replace(/\./g, '');
+	                    return text.replace('"', '""'); // escape double quotes
+	    
+	                }).get().join(tmpColDelim);
+	                csv =csv +'"\r\n"' +'fin '+'"\r\n"';
+	            }).get().join(tmpRowDelim)
+	                .split(tmpRowDelim).join(rowDelim)
+	                .split(tmpColDelim).join(colDelim) + '"';
+	    
+	    
+	         download_csv(csv, filename);
+	    
+	    
+	    }
+	    
+	   function download_csv(csv, filename) {
+	        var csvFile;
+	        var downloadLink;
+	    
+	        // CSV FILE
+	        csvFile = new Blob([csv], {type: "text/csv"});
+	    
+	        // Download link
+	        downloadLink = document.createElement("a");
+	    
+	        // File name
+	        downloadLink.download = filename;
+	    
+	        // We have to create a link to the file
+	        downloadLink.href = window.URL.createObjectURL(csvFile);
+	    
+	        // Make sure that the link is not displayed
+	        downloadLink.style.display = "none";
+	    
+	        // Add the link to your DOM
+	        document.body.appendChild(downloadLink);
+	    
+	        // Lanzamos
+	        downloadLink.click();
+	    }
+	    
+	    function createTable(hasProduct)
+	    { 
+	    	var tableReport = $('#table-relatorio').DataTable({
+                destroy: true,
+		        select:'single',
+		        'paging': false,
+			   	'displayLength': 500,
+	   		 	'responsive': true,
+			   	'order': [ [ 14, 'asc' ] ],
+			   	'autoWidth': false,
+				'scrollCollapse': true,
+				'language': {
+			           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+			           'zeroRecords': 'Nenhum registro encontrado',
+			           'info': 'Mostrando _TOTAL_ registro(s)',
+			           'infoEmpty': 'Nenhum registro encontrado',
+			           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+			           'search': 'Filtrar:',
+			           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+			           "decimal": ",",
+			           "thousands": ".",
+			           'paginate': {
+			               'next': 'Proximo',
+			               'previous': 'Anterior'
+			             }
+			    },
+			    'footerCallback': function ( row, data, start, end, display ) {
+					var totalCredit = 0;
+                	var totalDebit = 0;
+                	var totalSaldo = 0;
+                	
+					$.each(display, function(key, value)
+	   		  		{
+	                	var valor = parseFloat(data[value].documentValueHidden);
+	                	if(valor<0)
+	                	{
+	                		totalDebit += valor;
+	                	}
+	                	else
+	                	{
+	                		totalCredit += valor;	
+	                	}	                	
+	   		  		});
+                	totalSaldo = (totalCredit+totalDebit);
+                	populateDataSaldo(totalCredit, totalDebit, totalSaldo);
+					//changeCheckboxTable();
+		        },
+			    "columns": [
+    	            {
+    	             "orderable": false,
+    	             "data": "checkboxAll"
+	    	        },
+    	            { 
+    	           	 "className": 'text-center',
+    	           	 "data": "actions" 
+    	            },
+    	            { 
+       	           	 "className": 'text-center',
+       	           	 "data": "documentValue" 
+       	            },
+       	         	{ 
+          	         "className": 'text-center',
+          	         "data": "documentValueHidden" 
+       	            },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "type" 
+       	            },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "document" 
+       	            },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "documentStatus" 
+       	            },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "emission" 
+       	            },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "expiration" 
+       	            },
+       	         	{ 
+               	     "className": 'text-center',
+               	     "data": "totalInput" 
+               	    },
+          	        { 
+                  	 "className": 'text-center',
+                  	 "data": "totalOutput" 
+                  	}, 
+        	        { 
+                   	 "className": 'text-center',
+                   	 "data": "totalExpense" 
+                   	 },
+           	         { 
+                      "className": 'text-center',
+                      "data": "countProducts" 
+                    },
+       	         	 { 
+       	           	  "className": 'text-center',
+       	              "data": "company" 
+       	             },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "privder" 
+       	            },
+       	         	//{ 
+       	           	// "className": 'text-center',
+       	           	// "data": "financialGroup" 
+       	            //},
+       	         	{ 
+        	           	 "className": 'dt-control',
+        	           	 "data": "detail" 
+        	       	 }
+    	        ],
+                'columnDefs': [
+                	{
+                   	 "targets": [3],
+                        "visible": false,
+                        "searchable": false
+                   	},
+                	{
+                   	 "targets": [4],
+                        "visible": false,
+                        "searchable": false
+                   	},
+                   	{
+                  	  "targets": [7], 
+                  	  "type":"date"
+                    },
+                    {
+                      "targets": [5], 
+                      "visible": true,
+                      },
+                	{
+
+                	 "targets": [15],
+                     "visible": false,
+                     "searchable": false,
+                     "createdCell": function (td, cellData, rowData, row, col) {
+                    	 $(td).css('padding', '0px')
+                       }
+                	}
+                ],
+				dom: 'Bfrtip',
+				buttons: [
+				{
+					extend: 'copyHtml5',
+					text: 'Copiar',
+					exportOptions: {
+						columns: ':visible'
+					}
+				}, 
+				{
+					extend: 'excelHtml5',
+					text: 'Excel',
+					exportOptions: {
+						columns: ':visible'
+					}
+				}, 
+				{
+					text: 'JSON',
+					action: function(e, dt, button, config) 
+					{
+						var data = dt.buttons.exportData();
+						$.fn.dataTable.fileSave(new Blob([JSON.stringify(data)]), 'Export.json');
+					}
+				},
+				'colvis',
+                ]
+        	});
+	        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .dt-button').addClass('btn btn-primary mr-1');
+
+        	// Handle click on "Select all" control
+	        $('input#checkAllMoviments').on('click', function()
+	        {
+	        	var parentChecked = false;
+	        	if(this.checked) 
+	            {
+	        		parentChecked = true;
+	            }
+	        	changeAllCheckboxTable(parentChecked);
+	        });
+        
+	        $(".checkboxItem").change(function() 
+	        {        	
+	        	changeCheckboxTable();
+	        });
+        
+	     // Add event listener for opening and closing details
+	        $('table#table-relatorio tbody').on('click', 'button.details-control', function () {
+	            var tr = $(this).closest('tr');
+	            var tdi = tr.find("i.expandButtonIcon");
+	            var row = tableReport.row(tr);
+	
+	            if (row.child.isShown()) {
+	                // This row is already open - close it
+	                row.child.hide();
+	                tr.removeClass('shown');
+	                tdi.first().removeClass('ti-minus');
+	                tdi.first().addClass('ti-plus');
+	            }
+	            else {
+	            	//console.log(row.data());
+	                // Open this row
+	                row.child(format(row.data())).show();
+	                row.child()[0].lastChild.style.padding = "0px";
+	                tr.addClass('shown');
+	                tdi.first().removeClass('ti-plus');
+	                tdi.first().addClass('ti-minus');
+	            }
+	        });
+        	
+	        tableReport.on("user-select", function (e, dt, type, cell, originalEvent) {
+	            if ($(cell.node()).hasClass("details-control")) {
+	                e.preventDefault();
+	            }
+	        });
+	        
+	        showHideColunsDatatable(tableReport, hasProduct);
+		  }
+	    
+	    function showHideColunsDatatable(tableReport, hasProduct){
+	    	const companyId = $('form#formFilter select#companyId').val();
+			if(companyId != null && companyId != ''){				
+				tableReport.columns([6]).visible(false);
+			} else {
+				tableReport.columns([6]).visible(true);
+			}
+			
+			if(!hasProduct){
+				tableReport.columns([10]).visible(false);
+				tableReport.columns([11]).visible(false);
+				tableReport.columns([12]).visible(false);
+				tableReport.columns([13]).visible(false);
+			} else {
+				tableReport.columns([10]).visible(true);
+				tableReport.columns([11]).visible(true);
+				tableReport.columns([12]).visible(true);
+				tableReport.columns([13]).visible(true);
+			}			
+		  }
+	    
+	    function createTableDuplicate()
+	    { 
+	    	var tableReport = $('#table-duplicate').DataTable({
+                destroy: true,
+		        select:'single',
+		        'paging': false,
+			   	'displayLength': 500,
+	   		 	'responsive': true,
+			   	'order': [ [ 3, 'asc' ] ],
+			   	'autoWidth': false,
+				'scrollCollapse': true,
+				'language': {
+			           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+			           'zeroRecords': 'Nenhum registro encontrado',
+			           'info': 'Mostrando _TOTAL_ registro(s)',
+			           'infoEmpty': 'Nenhum registro encontrado',
+			           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+			           'search': 'Filtrar:',
+			           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+			           "decimal": ",",
+			           "thousands": ".",
+			           'paginate': {
+			               'next': 'Proximo',
+			               'previous': 'Anterior'
+			             }
+			    },
+			    "columns": [
+    	            {
+    	                "orderable": false,
+    	                "data": "checkboxAll"
+	    	        },
+    	            { 
+    	           	 "className": 'text-center',
+    	           	 "data": "actions" 
+    	            },
+    	            { 
+       	           	 "className": 'text-center',
+       	           	 "data": "documentValue" 
+       	            },
+       	         	{ 
+          	           	 "className": 'text-center',
+          	           	 "data": "documentValueHidden" 
+       	            },
+       	         	{ 
+       	           	 "className": 'text-center',
+       	           	 "data": "type" 
+       	            }
+    	        ],
+                'columnDefs': [
+                	{
+                   	 "targets": [2],
+                        "searchable": false
+                   	},
+                	{
+                   	 "targets": [3],
+                        "searchable": false
+                   	},
+                	{
+                	 "targets": [4],
+                     "searchable": false
+                	}
+                ]
+        	});       
+	    }
+	    
+	    function inactiveDocument(id, parentId, documentType, inactive)
+		{
+			var $form = $('form#formInactive');
+					
+			if('true'==inactive.toString())
+			{
+				showLoading('Por favor aguarde. Inativando Documento');
+			}
+			else
+			{
+				showLoading('Por favor aguarde. Ativando Documento');
+			}
+			
+			$.post($form.attr('action'), {id:id, parentId:parentId, documentType:documentType, inactive:inactive, ajax: 'true'}, function(responseJson)
+			{
+				var obj = jQuery.parseJSON(responseJson);
+				
+				var status = obj.status;
+				var message = obj.message;
+				
+				$('#block1').hide();
+				$('#block2').hide();
+				
+		 		if('false'==status.toString())
+				{
+					showSweetalertWarning(message);
+				}
+				else
+				{   					
+					showSweetalertSuccess(message);
+				}
+				}).fail(function() {
+					$('#block1').hide();
+					$('#block2').hide();
+					showSweetalertWarning('Alerta!','Erro ao Excluir Documento.','5000');
+				});
+		}
+	    
+	    function ungroupDocument(id, parentId, documentType)
+		{
+			var $form = $('form#formUngroup');
+			
+			$.post($form.attr('action'), {id:id, parentId:parentId, documentType:documentType, ajax: 'true'}, function(responseJson)
+			{
+				var obj = jQuery.parseJSON(responseJson);
+				
+				var status = obj.status;
+				var message = obj.message;
+				
+				$('#block1').hide();
+				$('#block2').hide();
+				
+		 		if('false'==status.toString())
+				{
+					showSweetalertWarning(message);
+				}
+				else
+				{   					
+					showSweetalertSuccess(message);
+				}
+				}).fail(function() {
+					$('#block1').hide();
+					$('#block2').hide();
+					showSweetalertWarning('Alerta!','Erro ao Desagrupar Documento.','5000');
+				});
+		}
+	    
+	    function changeStatusDocument(documentId, documentParentId, documentType)
+	    {
+	    	var form = $('form#formInactive'); 			
+	  		var dataForm = form.serializeArray();
+	  		
+	  		$('div#new-document-modal').modal('hide');
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+        		hideLoading();
+            	if(true==data.status)
+             	{
+            		clearDataFormNewDocument();           		
+        			showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+        	  		$('div#new-document-modal').modal('show');
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+		  		$('div#new-document-modal').modal('show');
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	    
+	    function clearDataFormNewDocument()
+	    {
+	    	$('form#formNewDocument select#company').empty().trigger('change');
+	    	$('form#formNewDocument select#provider').empty().trigger('change');
+	    	$('form#formNewDocument select#financialGroup').val('').trigger('change');
+	    	$('form#formNewDocument select#financialSubGroup').empty().trigger('change');
+	    	$('form#formNewDocument select#movementType').val('0').trigger('change');
+	    	$('form#formNewDocument input#documentNumber').val('');
+	    	$('form#formNewDocument input#documentValue').val('');
+	    	$('form#formNewDocument input#documentDate').val('');
+	    	$('form#formNewDocument select#paymentType').val('1').trigger('change')
+	    	$('form#formNewDocument input#paymentDate').val('');
+	    	$('form#formNewDocument select#bankAccount').val('').trigger('change');
+	    	$('form#formNewDocument input#documentNote').text('');
+	    	$('form#formNewDocument input#countDuplicates').val('0');
+	    	$('form#formNewDocument input#orderValue').val('');
+	    	$('form#formNewDocument div#duplicate-table').html('');
+	    	$('form#formNewDocument input#paymentValue').val('');
+			$('form#formNewDocument select#financialCostCenter').val('').trigger('change');
+	    }
+	    
+	    function saveNewDocument()
+		{
+			var bootstrapValidator = $('form#formNewDocument').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			
+			if (bootstrapValidator.isValid() === false) 
+			{
+				return;
+	        }
+			
+			$('form#formNewDocument input#documentNoteEncoded').val(encodeURIComponent($('form#formNewDocument textarea#documentNote').val()));
+			
+			var form = $('form#formNewDocument');
+			Swal.fire({
+				  title: 'Alerta',
+				  text: 'Confirma a grava\u00e7\u00e3o do(s) Documento(s).',
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Confirma',
+				  cancelButtonText: 'Cancelar'
+				}).then((result) => 
+				{
+				  if (result.value) 
+				  {
+					  processSaveDocument(form);
+				  }
+				});
+		}
+	    
+	    function processSaveDocument(form)
+	    {
+	  		var dataForm = form.serializeArray();
+	  		
+	  		$('div#new-document-modal').modal('hide');
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		clearDataFormNewDocument();           		
+        			showSweetalertSuccess(data.message);
+        	    	searchDocumentMovement();
+             	}
+             	else
+             	{
+            		hideLoading();
+        	  		$('div#new-document-modal').modal('show');
+        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+		  		$('div#new-document-modal').modal('show');
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','30000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	            
+        function searchFinancialSubGroup(formId)
+	    {	   
+	  		var form = $('form#formAutocompleteFinancialSubGroup');        
+	  		var dataForm = form.serializeArray();
+	  		
+	  		if(formId=='formFilter')
+	  		{
+		  		$('form#formFilter select#financialSubGroupId').empty().trigger('change');
+		  		showLoading("Carregando dados... Por favor aguarde...");
+	  		}
+	  		else if(formId == 'formNewDocument'){
+	  			$('form#formNewDocument select#financialSubGroup').empty().trigger('change');
+	  		}
+	  		else if(formId == 'formNewDocumentTransfDest'){
+	  			$('form#formNewDocumentTransf select#financialSubGroupTransfDest').empty().trigger('change');
+	    	}else 
+	  		{
+	  			$('form#formNewDocumentTransf select#financialSubGroupTransf').empty().trigger('change');	
+	  		}
+	  			  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					hideLoading();
+					if(formId=='formFilter')
+			  		{
+						$('form#formFilter select#financialSubGroupId').append('<option value="">Selecione...</option>');
+						$.each(data.financialSubGroups, function(key, value)
+			    	   	{
+							$('form#formFilter select#financialSubGroupId').append('<option value="'+value.key+'">'+value.value+' ('+value.key+')'+'</option>');
+			    	   	});
+						$('form#formFilter select#financialSubGroupId').trigger('change');						
+			  		}
+					else if(formId == 'formNewDocument'){
+						$('form#formNewDocument select#financialSubGroup').append('<option value="">Selecione...</option>');
+						$.each(data.financialSubGroups, function(key, value)
+			    	   	{
+							$('form#formNewDocument select#financialSubGroup').append('<option value="'+value.key+'">'+value.value+' ('+value.key+')'+'</option>');
+			    	   		
+							const dataArray =  $('form#formNewDocument select#provider').select2('data');
+				  			if(dataArray != null && dataArray.length > 0){
+				  			    const providerSelected = dataArray[0];
+								
+				  			    if(providerSelected != null){
+				  			    	if(providerSelected.financialSubGroupId==value.key){
+				  			    		
+				  			    		$('form#formNewDocument select#financialSubGroup').val(providerSelected.financialSubGroupId).trigger('change');
+				  			    	}
+				  			    		
+				  			    }
+				  			}
+			    	   	
+			    	   	});
+						$('form#formNewDocument select#financialSubGroup').trigger('change');						
+					}else if(formId == 'formNewDocumentTransfDest'){
+						$('form#formNewDocumentTransf select#financialSubGroupTransfDest').append('<option value="">Selecione...</option>');
+						$.each(data.financialSubGroups, function(key, value)
+			    	   	{
+							$('form#formNewDocumentTransf select#financialSubGroupTransfDest').append('<option value="'+value.key+'">'+value.value+' ('+value.key+')'+'</option>');
+			    	   	});
+						$('form#formNewDocumentTransf select#financialSubGroupTransfDest').trigger('change');			
+					}else
+					{
+						$('form#formNewDocumentTransf select#financialSubGroupTransf').append('<option value="">Selecione...</option>');
+						$.each(data.financialSubGroups, function(key, value)
+			    	   	{
+							$('form#formNewDocumentTransf select#financialSubGroupTransf').append('<option value="'+value.key+'">'+value.value+' ('+value.key+')'+'</option>');
+			    	   	});
+						$('form#formNewDocumentTransf select#financialSubGroupTransf').trigger('change');						
+					}
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados de Subgrupo de Financeiro.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+        
+	    (function() {
+	    'use strict';
+	    	
+	    $('.collapse').collapse('show');
+	    
+		$(".moneyMask").inputmask({'alias': 'numeric', allowMinus: true, digits: 2, rightAlign: true});
+
+        $('form#formFilter select#filterFinancialCostCenter')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "TODOS...", 
+  			allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+	    
+	    $('form#formNewDocument select#financialCostCenter')
+        .select2({ 
+        	//tags : true,
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewCostCenter('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        }).on('change', function (e)
+        {
+        
+        });
+	    	
+	    
+        $('form#formFilter select#filterFinancialCostCenter')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "TODOS...", 
+  			allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+	    
+	    $('form#formNewDocument select#financialCostCenter')
+        .select2({ 
+        	//tags : true,
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewCostCenter('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        }).on('change', function (e)
+        {
+        
+        });
+	    	
+	    
+        $('form#formFilter select#filterFinancialCostCenter')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "TODOS...", 
+  			allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+	    
+	    $('form#formNewDocument select#financialCostCenter')
+        .select2({ 
+        	//tags : true,
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewCostCenter('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        }).on('change', function (e)
+        {
+        
+        });
+	    	
+	    $.fn.dataTable.moment('DD/MM/YYYY hh:mm');
+
+		/** Force input numeric only */
+		$('.force-numeric-only').ForceNumericOnly();
+
+        $('form#formReportPdf select#sinteticoSemana')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-report-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formFilter select#bankAccountId')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "TODOS...", 
+  			allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        }).on('change', function (e)
+        {
+			$('span#bankBalanceAvailableSpan').text('');
+        	const optionSelected = $('form#formFilter select#bankAccountId option:selected');
+        	if(optionSelected)
+			{
+        		const bankBalanceAvailable = optionSelected.attr('data-bankBalanceAvailable');
+        		if(bankBalanceAvailable){
+        			$('span#bankBalanceAvailableSpan').text(bankBalanceAvailable);
+        		}
+			}
+        });
+
+        $('form#formFilter select#documentType')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "TODOS...", 
+  			allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+
+        $('form#formFilter select#documentStatus')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+
+        $('form#formFilter select#filterDate')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+
+        $('form#formFilter select#movementTypeId')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        const timezone = "America/Sao_Paulo";
+        let fromDate = moment().startOf('week').format('dddd') === 'Sunday' ? moment().startOf('week').add('d',1) : moment().startOf('week');                       
+        		
+        let fromDateTimeZone = moment.tz(fromDate, timezone);
+        fromDateTimeZone.set('hour',  0); 
+        fromDateTimeZone.set('minute', 0);
+        fromDateTimeZone.set('second',  0);
+        
+        if(moment().startOf('week').format('dddd') === 'Sunday'){
+            let fromDateNowTimeZone = moment.tz(moment(), timezone);
+         	if(new Number(fromDateTimeZone.format('YYYYMMDD')) > new Number(fromDateNowTimeZone.format('YYYYMMDD'))){
+         		fromDateTimeZone = fromDateTimeZone.clone().day(-6);
+         	}               
+        }        
+        
+        let toDate = fromDateTimeZone.clone().day(7);
+        let toDateTimeZone = moment.tz(toDate, timezone);
+        toDateTimeZone.set('hour', 23); 
+        toDateTimeZone.set('minute', 59);
+        toDateTimeZone.set('second', 59);
+
+        $('.timeseconds').daterangepicker({
+            ranges: {
+            'Hoje': [moment().set({'hour': 0, 'minute': 0, 'second': 0}), moment()],
+            'Ontem': [moment().subtract(1, 'days').set({'hour': 0, 'minute': 0, 'second': 0}), moment().subtract(1, 'days')],
+            'Ult. 7 Dias': [moment().subtract(6, 'days').set({'hour': 0, 'minute': 0, 'second': 0}), moment()],
+            'Ult. 30 Dias': [moment().subtract(29, 'days').set({'hour': 0, 'minute': 0, 'second': 0}), moment()],
+            'Este M&ecirc;s': [moment().startOf('month').set({'hour': 0, 'minute': 0, 'second': 0}), moment().endOf('month')],
+            'Ult. M&ecirc;s': [moment().subtract(1, 'month').startOf('month').set({'hour': 0, 'minute': 0, 'second': 0}), moment().subtract(1, 'month').endOf('month')]
+            },
+            startDate: fromDateTimeZone,
+            endDate: toDateTimeZone,
+            timePicker: true,
+            timePickerIncrement: 1,
+            timePicker24Hour: true,
+            autoApply: true,
+            autoUpdateInput: true,
+            locale: {
+                format: 'DD/MM/YYYY HH:mm',
+                "separator": " - ",
+                "applyLabel": "Aplicar",
+                "cancelLabel": "Cancelar",
+                "fromLabel": "De",
+                "toLabel": "At&eacute;	",
+                "customRangeLabel": "Custom",
+                "daysOfWeek": [
+                    "Dom",
+                    "Seg",
+                    "Ter",
+                    "Qua",
+                    "Qui",
+                    "Sex",
+                    "S&aacute;b"
+                ],
+                "monthNames": [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Mar&ccedil;o",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ],
+                "firstDay": 0
+            },
+            
+            showDropdowns: true
+        });
+        
+        $('form#formNewDocument select#movementType')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocument select#company')
+        .select2({
+  			theme: "bootstrap",
+  			dropdownParent: $('#new-document-modal'),
+  			placeholder: "SELECIONE...",
+		    allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'COM'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  			//$(this).valid();
+  		  	//console.log(this.value);
+  	    	searchBankAccountByCompany('form#formNewDocument');
+  		}).on('select2:close', function (e) 
+  		{
+  			//console.log(this.value);
+  		})
+
+        $('form#formNewDocument select#provider')
+        .select2({
+  			theme: "bootstrap",
+  			dropdownParent: $('#new-document-modal'),
+  			placeholder: "SELECIONE...",
+		    allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'FOR',
+  	                	personType: 'F'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')',
+  	                      	financialGroupId: value.key1, 
+  	                      	financialSubGroupId: value.key2
+  	                    };
+  	                });
+  	               //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  	    	
+  	    	//searchProvider('form#formNewDocument');
+  			//$(this).valid();
+  		  	//console.log(this.value);
+  		}).on('select2:close', function (e) 
+  		{
+  			const dataArray = $(this).select2('data');
+  			if(dataArray != null && dataArray.length > 0){
+  			    const providerSelected = dataArray[0];
+				
+  			    if(providerSelected != null){
+        			$('form#formNewDocument select#financialGroup').val(providerSelected.financialGroupId).trigger('change');	
+  			    }
+  			}
+  			
+  		})
+  		
+
+        $('form#formNewDocument select#financialGroup')
+        .select2({ 
+        	//tags : true,
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewFinancialGroup('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        }).on('change', function (e)
+        {
+        	if(isSetFinancialGroup)
+        	{
+        		 isSetFinancialGroup = false;
+        		 return;
+        	}
+        	if(''!=this.value && !isNaN(this.value))
+			{
+	        	$('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+	        	searchFinancialSubGroup('formNewDocument');
+			}
+        });
+
+        $('form#formNewDocument select#financialSubGroup')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewFinancialSubGroup('formNewDocument')">+ Adicionar Sub-Grupo Financeiro</button>
+
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        });
+        
+        $('form#formNewDocument select#bankAccount')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            dropdownParent: $('#new-document-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+
+        $('form#formNewDocument select#paymentType').change(function() 
+        {
+        	var optionSelected = $('form#formNewDocument select#paymentType').val();
+        	
+        	if("2" == optionSelected)
+        	{
+        		$(function() {
+        		    $('form#formNewDocument input#paymentDate').datepicker({ maxDate: 0});
+        		});
+        	}
+        });
+               
+        $('form#formNewDocument select#movementType')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+
+        $('form#formNewDocument select#documentStatus')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocument select#paymentStatus')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocument select#installment')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        }).on('change', function (e)
+        {
+        	if('1'!=this.value)
+        	{
+        		$('form#formNewDocument select#paymentStatus').val('3').trigger('change');
+        		$('div#divDuplicates').html('');
+    			$('div#divDuplicates').show();
+    			$('div#divButtonInstallment').show();
+    			$('div#divInstallmentType').show();  
+    			//$('div#divPaymentExpiryDate').hide();
+    			$('div#divNote').removeClass('col-md-12').addClass('col-md-9');
+        	}
+        	else
+        	{
+    			$('div#divDuplicates').hide();
+    			$('div#divButtonInstallment').hide();
+    			$('div#divInstallmentType').hide();
+    			$('div#divPaymentExpiryDate').show();
+    			//$('div#divNote').removeClass('col-md-4').addClass('col-md-5');
+        	}
+        });
+        
+        $('form#formNewDocument select#installmentType')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            dropdownParent: $('#new-document-modal'),
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocument input#paymentExpiryDate').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            toggleActive: true,
+            format: 'dd/mm/yyyy',
+            language: 'pt-BR'
+        });
+        
+        $('form#formNewDocument input#paymentDate').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            toggleActive: true,
+            format: 'dd/mm/yyyy',
+            language: 'pt-BR'
+        });
+        
+	    $('form#formNewDocument input#documentNumber').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13')
+            {
+            	if(''==$.trim($('form#formNewDocument input#documentNumber').val()))
+            	{
+                	$('form#formNewDocument input#documentNumber').val(moment().format('YYYYMMDDHHmmss'));  
+                	$('form#formNewDocument').bootstrapValidator('revalidateField', 'documentNumber');
+                	$('form#formNewDocument input#documentValue').focus();          		
+            	}
+            }
+            event.stopPropagation();
+        });
+	    
+	    $('form#formNewDocument').bootstrapValidator({
+            excluded: ':disabled',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            }
+        });
+	    
+	    $('form#formNewDocument input#paymentExpiryDate')
+		    .on('changeDate show', function(e) {
+		        // Revalidate the date when user change it
+		         $('form#formNewDocument').bootstrapValidator('revalidateField', 'paymentExpiryDate');
+		});
+	    
+	    $('form#formNewDocument input#paymentDate')
+	    .on('changeDate show', function(e) {
+	        // Revalidate the date when user change it
+	         $('form#formNewDocument').bootstrapValidator('revalidateField', 'paymentDate');
+		});
+	    
+        $('form#formFilter select#companyId')
+        .select2({
+  			theme: "bootstrap",
+  			placeholder: "TODOS...", 
+  			allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'COM'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  		  	selectedMovementType();
+  	    	searchBankAccountByCompanyFilter();
+  		});
+  		
+  		$('form#formFilter select#providerId')
+        .select2({
+  			theme: "bootstrap",
+  			placeholder: "TODOS...", 
+  			allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'FOR'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  			//$(this).valid();
+  		  	//console.log(this.value);
+  		}).on('select2:close', function (e) 
+  		{
+  			//console.log(this.value);
+  		});
+  		
+        $('form#formFilter select#financialGroupId')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "TODOS...", 
+  			allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        }).on('change', function (e)
+        {
+        	if(''!=this.value && !isNaN(this.value))
+			{
+	        	$('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+	        	searchFinancialSubGroup('formFilter');
+			}
+        });
+
+        $('form#formFilter select#financialSubGroupId')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "TODOS...", 
+  			allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formFilter select#productGroup')
+  		.select2({ 
+	    	width: '100%',
+	    	theme: "bootstrap",
+	    	placeholder: "TODOS...", 
+	    	allowClear: true,
+	    	language: 
+	    	{
+	        	noResults: function (params) 
+	        	{
+	            	return "Nenhum registro encontrado.";
+	          	}
+	        }
+		}).on('change', function (e)
+  		{
+			if(''!=this.value && !isNaN(this.value))
+			{
+				if(!isDetail)
+				{
+					$('form#formAutocompleteSubGroup input#productGroup').val(this.value);
+					searchSubGroupAutocomplete();					
+				}
+				else
+				{
+					isDetail = false;
+				}					
+			}
+  		});
+        
+        $('form#formFilter select#productSubGroup')
+  		.select2({ 
+	    	width: '100%',
+	    	theme: "bootstrap",
+	    	placeholder: "TODOS...", 
+	    	allowClear: true,
+	    	language: 
+	    	{
+	        	noResults: function (params) 
+	        	{
+	            	return "Nenhum registro encontrado.";
+	          	}
+	        }
+		}).on('change', function (e)
+  		{
+			var salePrice = $(this).find(':selected').data('salesprice');
+			var conversionFactor = $(this).find(':selected').data('conversionfactor');
+			
+			if(!isNaN(salePrice) && !isNaN(conversionFactor))
+			{
+				$('form#formSave input#salePrice').val(Number(salePrice).format(2, 3, '.', ','));
+				$('form#formSave input#conversionFactor').val(Number(conversionFactor).format(2, 3, '.', ','));					
+			}
+  		});
+        
+        
+        $('form#formFilter select#userChildrensParentCombobox')
+  		.select2({ 
+	    	width: '100%',
+	    	theme: "bootstrap",
+	    	language: 
+	    	{
+	        	noResults: function (params) 
+	        	{
+	            	return "Nenhum registro encontrado.";
+	          	}
+	        }
+		});
+		
+
+		$('input#selectAllCompanys').click(function()
+		{
+		    if($('input#selectAllCompanys').is(':checked') )
+		    {
+		        $('form#formFilter select#userChildrensParentCombobox > option').prop('selected','selected');
+		    }
+		    else
+		    {
+		        $('form#formFilter select#userChildrensParentCombobox > option').prop('selected',false);
+		    }
+		    $('form#formFilter select#userChildrensParentCombobox').trigger('change');
+		 });
+		
+
+        $('.collapse').collapse('hide');
+        
+        searchDocumentMovement();
+	    })();
+	    </script>
+	</th:block>
+</html>

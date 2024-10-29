@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts-common">   
+	    <script th:src="@{/assets/libs/jquery/dist/jquery.min.js}"></script>
+	    <!-- Bootstrap tether Core JavaScript -->
+	    <script th:src="@{/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
+	    <script th:src="@{/assets/libs/bootstrap/dist/js/bootstrap.min.js}"></script>
+	    <!-- apps -->
+	    <script th:src="@{/dist/js/app.min.js}"></script>
+	    <script th:src="@{/dist/js/app.init.overlay.js}"></script>
+	    <script th:src="@{/dist/js/app-style-switcher.js}"></script>
+	    <!-- slimscrollbar scrollbar JavaScript -->
+	    <script th:src="@{/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
+	    <script th:src="@{/assets/extra-libs/sparkline/sparkline.js}"></script>
+	    <!--Wave Effects -->
+	    <script th:src="@{/dist/js/waves.js}"></script>
+	    <!--Menu sidebar -->
+	    <script th:src="@{/dist/js/sidebarmenu.js}"></script>
+	     <!-- SweetAlert -->   	
+    	<link th:href="@{/assets/libs/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet"/>
+    	<script th:src="@{/assets/libs/sweetalert2/dist/sweetalert2.all.min.js}"></script>
+	    <!--Custom JavaScript -->
+	    <script th:src="@{/dist/js/custom.min.js}"></script>
+	    <script th:src="@{/dist/js/application.js}"></script>
+	</th:block>
+</html>

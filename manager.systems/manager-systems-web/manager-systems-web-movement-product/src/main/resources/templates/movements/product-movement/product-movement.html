@@ -1,0 +1,70 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+        <div class="col-12">
+		    <div class="card">
+		        <div class="card-body">
+		            <form class="needs-validation was-validated" novalidate="" id="formSave" name="formSave" th:action="@{/product-movement/saveDataProduct}" autocomplete="off">
+		                <input type="hidden" id="movementId" name="movementId" value="0"/>
+		                <input type="hidden" id="enableClock" name="enableClock" value="0"/>
+		                <input type="hidden" id="selectedCompany" name="selectedCompany" th:value="${selectedCompany}"/>
+		                <div class="action-form m-b-10">
+		                    <div class="form-group m-b-0 text-right">
+		                        <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+		                        <a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+		                        <a id="btnSincBravo" href="javascript: sincProductsBravo();" name="btnSincBravo" type="button" class="btn waves-effect waves-light btn-secondary m-t-10">Sincronizar</a>                                         
+		                        <a id="btnProcessCompany" href="javascript: processCompany();" name="btnProcessCompany" type="button" class="btn waves-effect waves-light btn-primary m-t-10">Processar</a>
+		                    </div>
+		                </div>     
+		                <div class="form-row">
+		                    <div class="col-md-4 mb-3">
+		                        <label for="companyId" id="labelCompany">Empresa</label>
+		                        <select class="m-b-20 m-r-10 custom-select" id="companyId" name="companyId" required="required">																
+		                            <option value="">Selecione...</option>
+		                            <option th:each="item : ${companys}" th:value="${item.id}" th:text="${item.descriptionIdConcact}"></option>
+		                        </select>
+		                    </div>
+		                    <div class="col-md-4 mb-3">
+		                        <label for="productId">Produto</label>
+		                        <select class="m-b-20 m-r-10 custom-select" id="productId" name="productId" required="required">																
+		                            <option value="">Todos...</option>
+		                        </select>
+		                    </div>
+		                    <div class="col-md-6 mb-3">
+		                    <label for="inititalInput">Entrada Inicial</label>
+		                    <input type="text" class="form-control force-numeric-only" style="font-size: 30px;" id="initialInput" name="initialInput" placeholder="Entrada Inicial" readonly="readonly" required="required"/>
+		                    </div>
+		                    <div class="col-md-6 mb-3">
+		                        <label for="finalInput">Entrada Final</label>
+		                        <input type="text" class="form-control force-numeric-only" style="font-size: 30px;" id="finalInput" name="finalInput" placeholder="Entrada Final" oninput="checkFinalInput(this)" required="required"/>
+		                    </div>
+		                    <div class="col-md-6 mb-3">
+		                        <label for="initialOutput">Sa&iacute;da Inicial</label>
+		                        <input type="text" class="form-control force-numeric-only" style="font-size: 30px;" id="initialOutput" name="initialOutput" placeholder="Sa&iacute;da Inicial" readonly="readonly" required="required"/>
+		                    </div>
+		                    <div class="col-md-6 mb-3">
+		                        <label for="finalOutput">Sa&iacute;da Final</label>
+		                        <input type="text" class="form-control force-numeric-only" style="font-size: 30px;" id="finalOutput" name="finalOutput" placeholder="Sa&iacute;da Final" oninput="checkFinalOutput(this)" required="required"/>
+		                    </div>
+		                    <div class="col-md-6 mb-3" id="divInitialClock">
+		                        <label for="initialClock">Rel&oacute;gio Inicial</label>
+		                        <input type="text" class="form-control force-numeric-only" style="font-size: 30px;" id="initialClock" name="initialClock" placeholder="Sa&iacute;da Inicial" readonly="readonly" required="required"/>
+		                    </div>
+		                    <div class="col-md-6 mb-3"  id="divFinalClock">
+		                        <label for="finalClock">Rel&oacute;gio Final</label>
+		                        <input type="text" class="form-control force-numeric-only" style="font-size: 30px;" id="finalClock" name="finalClock" placeholder="Sa&iacute;da Final" oninput="checkFinalClock(this)" required="required"/>
+		                    </div>
+		                </div>
+		                <div class="action-form m-b-10">
+		                    <div class="form-group m-b-0 text-right">
+		                        <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+		                        <a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+   		                        <a id="btnSincBravo" href="javascript: sincProductsBravo();" name="btnSincBravo" type="button" class="btn waves-effect waves-light btn-secondary m-t-10">Sincronizar</a>                                         
+		                        <a id="btnProcessCompany" href="javascript: processCompany();" name="btnProcessCompany" type="button" class="btn waves-effect waves-light btn-primary m-t-10">Processar</a>                                         
+		                    </div>
+		                </div>  
+		            </form>
+		        </div>
+		    </div>
+		</div>
+	</th:block>
+</html>

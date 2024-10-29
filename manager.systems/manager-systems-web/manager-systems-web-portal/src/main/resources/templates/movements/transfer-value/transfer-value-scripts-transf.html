@@ -1,0 +1,2226 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	    
+	    <!-- This Page CSS -->
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/daterangepicker/daterangepicker.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-document-movement.css}"/>
+	    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/application-currency.css}"/>
+
+	    <script th:src="@{/assets/libs/moment/moment.js}"></script>
+	    <script th:src="@{/assets/libs/daterangepicker/daterangepicker.js}"></script>
+	    <script src="https://cdn.datatables.net/plug-ins/1.10.20/sorting/datetime-moment.js"></script>
+	    
+	    <link rel="stylesheet" type="text/css" th:href="@{/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+    	<script th:src="@{/assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.pt-BR.min.js}"></script>
+	    
+	    <!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+		<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>	
+    	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+		<script type="text/javascript" src="http://momentjs.com/downloads/moment-timezone-with-data.js"></script>
+    	
+    	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.2.6/jquery.inputmask.bundle.min.js"></script>
+		
+		<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.common.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.rtl.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.silver.min.css"/>
+	    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.221/styles/kendo.mobile.all.min.css"/>
+	    <script src="https://kendo.cdn.telerik.com/2018.1.221/js/kendo.all.min.js"></script>
+    	
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+			
+			.modal-body{
+			    height: 250px;
+			    overflow-y: auto;
+			}
+			
+			@media (min-height: 500px) {
+			    .modal-body { height: 500px; }
+			}
+			
+			@media (min-height: 800px) {
+			    .modal-body { height: 700px; }
+			}
+		</style>
+			
+	    <script>   
+	    var isOpenFormNewDocument = true;
+	    var isSetFinancialGroup = false;
+	    let countExpense = 0;
+	    var financialGroupsAll = [];
+	    var bankAccountAll = [];
+	    
+	    const expenses = [];
+	    
+	    const dataSource = new kendo.data.DataSource({
+			pageSize: 20,
+			data: expenses,
+			autoSync: true,
+			schema: {
+				model: {
+					id: "id",
+					fields: {
+						bankAccountDescription: { validation: { required: true } },
+						paymentExpiryDate: { validation: { required: true } },
+						documentValue: { validation: { required: true } },
+						documentStatus: { validation: { required: true } },
+						providerDescription: { validation: { required: true } },
+						financialGroupDescription: { validation: { required: true } },
+						financialSubGroupDescription: { validation: { required: true } },
+					}
+				}
+			}
+		});
+		
+		function removeDoteValue(value){
+			value = value.replaceAll('.','');
+			value = value.replaceAll(',','.');
+			return value;
+		}
+		
+		function isNumber(value) {
+		    const conv = +value;
+		    if (conv) {
+		        return true;
+		    } else {
+		        return false;
+		    }
+		}
+		
+		function checkCelValue() {
+			var selectedItem = dataSource.getByUid(this.select().data().uid);
+			//$("#log").text("Selected Type.Name: " + selectedItem.Type.Name);
+		}
+	    
+  		function formatRepoSelection(repo)
+  		{
+  		  return repo.text;
+ 		  
+  		}
+  		
+  		function populateFormTransferValue(data)
+ 	    {	 
+  			$('form#formTransferValue input#companyIdTransf').val(data.item.companyId);
+  			$('form#formTransferValue input#companyTransf').val(data.item.company);
+  			$('form#formTransferValue input#paymentValueTransf').val(Number(data.item.paymentValue).format(2, 3, '.', ','));
+			$('form#formTransferValue input#documentValueTransf').val(Number(data.item.documentValue).format(2, 3, '.', ','));	
+			$('form#formTransferValue input#paymentExpiryDateTransf').datepicker('update', data.item.paymentExpiryData);
+			$('form#formTransferValue input#documentTypeTransf').val(data.item.documentType);
+  			$('form#formTransferValue').submit();
+ 	    }
+ 	    
+  		 
+  		function configTransfer()
+  		{
+  			$('form#formDetail input#bankAccountOrigin').val($('form#formNewDocumentTransf select#bankAccountTransf').val());
+			$('form#formDetail input#bankAccountDestiny').val($('form#formNewDocumentTransf select#bankAccountTransfDest').val());
+
+			
+	  		var form = $('form#formDetail');        
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Carregando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+        			countExpense = 0;
+        			if(Object.keys(data.report).length > 0){
+        				saveExpenseveConfigTransfer(data);
+                		hideLoading();
+        			}        			
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+  		
+  		function bankAccountDestintyFinancialTransfer()
+ 		{
+  			
+  			$('form#formBankAccountFinancialConfingTransferDestiny input#bankAccountFinancialConfingTransferOrigin').val($('form#formNewDocumentTransf select#bankAccountTransf').val());
+  			
+	  		var form = $('form#formBankAccountFinancialConfingTransferDestiny');        
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Carregando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+	        	if(true==data.status)
+	         	{
+	        		$('form#formBankAccountFinancialConfingTransferDestiny input#bankAccountFinancialConfingTransferDestiny').val(data.report);		
+	         	}
+	         	else
+	         	{
+	        		hideLoading();
+	    	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	         	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		
+		}
+		
+	    function prepareFormDocumentTransf()
+		{
+		
+			//$('form#formNewDocumentTransf input#paymentExpiryDateTransf').datepicker("setDate", new Date());
+        	//$('form#formNewDocumentTransf input#paymentDateTransf').datepicker("setDate", new Date());
+
+			$('form#formNewDocumentTransf input#documentNumberTransf').val(moment().format('YYYYMMDDHHmmss'));	
+			$('form#formNewDocumentTransf input#documentNumberTransfDest').val('0' + moment().format('YYYYMMDDHHmmss'));
+			$('div#divDocumentNumberTranf').hide();
+			$('div#divDocumentNumberTranfDest').hide();
+			countExpense = 0;
+			
+			const companyOrigin = $('form#formNewDocumentTransf input#companyIdTransfer').val();
+			let optionKey = 0;
+			let optionValue = '';
+			let newOption = '';
+			const mainCompanyId = $('form#formNewDocumentTransf input#mainCompanyId').val();
+			const mainCompanyDescription = $('form#formNewDocumentTransf input#mainCompanyDescription').val();
+			
+			if(companyOrigin == null || companyOrigin == 0){
+				if(mainCompanyId > 0){
+					optionKey = mainCompanyId;
+					optionValue = mainCompanyDescription + ' (' +mainCompanyId + ')';
+					newOption = new Option(optionValue, optionKey, true, true);
+					
+					$('form#formNewDocumentTransf select#companyTransf').append(newOption).trigger('change');
+					
+					const optionKey1 = mainCompanyId;
+					const optionValue1 = mainCompanyDescription + ' (' +mainCompanyId + ')';
+					let newOption1 = new Option(optionValue1, optionKey1, true, true);
+					$('form#formNewDocumentTransf select#companyTransfDest').append(newOption1).trigger('change');
+				}
+				
+			}else{
+				const companyIdTransfer = $('form#formNewDocumentTransf input#companyIdTransfer').val();
+				const companyTransfer = $('form#formNewDocumentTransf input#companyTransfer').val();
+				optionKey = companyIdTransfer;
+				optionValue = companyTransfer + ' ('+companyIdTransfer+')';
+				newOption = new Option(optionValue, optionKey, true, true);
+				$('form#formNewDocumentTransf select#companyTransf').append(newOption).trigger('change');
+				$('form#formNewDocumentTransf input#documentValueTransf').val($('form#formNewDocumentTransf input#paymentValueTransfer').val());
+				document.getElementById("documentValueTransf").readOnly = true;
+				$('form#formNewDocumentTransf input#paymentValueTransf').val($('form#formNewDocumentTransf input#paymentValueTransfer').val());
+				$('form#formNewDocumentTransf input#paymentExpiryDateTransf').val($('form#formNewDocumentTransf input#paymentExpiryDateTransfer').val());
+				
+				if(mainCompanyId > 0){
+					optionKey = mainCompanyId;
+					optionValue = mainCompanyDescription + ' ('+mainCompanyId+')';
+					newOption = new Option(optionValue, optionKey, true, true);
+					
+					$('form#formNewDocumentTransf select#companyTransfDest').append(newOption).trigger('change');
+				}
+			}
+			
+			const isDocumentMovementTransfer = $('form#formNewDocumentTransf input#isDocumentMovement').val();
+			
+			if(isDocumentMovementTransfer == 1){
+				$('div#divDocumentValueTransf').hide();
+			}
+
+			var bootstrapValidator = $('form#formNewDocumentTransf').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			
+			if (bootstrapValidator.isValid() === false) 
+			{
+				return;
+	        }
+		}
+	    
+	    function searchBankAccountByCompany(formId)
+		{		
+			let company = '';
+			if(formId == 'formNewDocumentTransfDest'){
+				company = $('form#formNewDocumentTransf select#companyTransfDest option:selected').val();
+			}else{
+				company = $('form#formNewDocumentTransf select#companyTransf option:selected').val();
+			}
+			
+			if(company == null || ''== company){
+				return;
+			}
+
+			$('form#formGetBankAccounts input#personsId').val(company);
+			const form = $('form#formGetBankAccounts'); 			
+			const dataForm = form.serializeArray();
+
+			if(formId == 'formNewDocumentTransfDest'){
+				$('form#formNewDocumentTransf select#bankAccountTransfDest').empty().trigger('change');
+			}else{
+				$('form#formNewDocumentTransf select#bankAccountTransf').empty().trigger('change');
+			}
+			
+			showLoading("Carregando Contas... Por favor aguarde...");  	
+
+			let message = 'Ocorreu um erro ao carregar contas.';
+			
+			$.ajax({
+				url : form.attr('action'),
+				type : "POST",
+				data : dataForm,
+				dataType : "json"
+			})
+			.done(function(data, textStatus, jqXHR) 
+			{	    		
+				if(true==data.status)
+				{
+					const count = data.itens.length; 
+					let newOption = '';
+					
+					if(count > 1){
+						let optionKey = '';
+						let optionValue = 'SELECIONE...';
+						newOption = new Option(optionValue, optionKey, true, false);					
+						if(formId == 'formNewDocumentTransfDest'){
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').append(newOption).trigger('change');	
+						}else{
+							$('form#formNewDocumentTransf select#bankAccountTransf').append(newOption).trigger('change');	
+						}	
+					}
+
+					let moreTwoAccounts = 0;
+					let mainAccountKey = 0;
+					let mainAccountValue = 0;
+					let mainAccount = '';
+					$.each(data.itens, function(key, value)
+					{
+						moreTwoAccounts = moreTwoAccounts +1;
+						
+						let optionKey = value.key;
+						let optionValue = value.value + ' (' + value.key + ')';
+						if(1 >= moreTwoAccounts){
+							mainAccountKey = optionKey;
+							mainAccount = optionValue;
+							mainAccountValue = value.key1;
+							
+							
+							const bankAccountItem = {
+				        			value: optionKey,
+				        			description: optionValue
+				        	};
+							bankAccountAll.push(bankAccountItem);
+							
+						}
+						
+						if(1 == count){
+							newOption = new Option(optionValue, optionKey, true, true);
+						}else{
+							newOption = new Option(optionValue, optionKey, false, false);
+						}
+						
+						newOption.setAttribute('data-bankBalanceAvailable', value.key1);
+						
+						if(formId == 'formNewDocumentTransfDest'){
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').append(newOption).trigger('change');	
+						}else{
+							$('form#formNewDocumentTransf select#bankAccountTransf').append(newOption).trigger('change');	
+						}	
+
+					});
+					if(2 <= moreTwoAccounts){
+						newOption = new Option(mainAccount, mainAccountKey, true, true);
+						newOption.setAttribute('data-bankBalanceAvailable', mainAccountValue);
+						if(formId == 'formNewDocumentTransfDest'){
+							const companyOrigin = $('form#formNewDocumentTransf input#companyIdTransfer').val();
+								if(companyOrigin == null || companyOrigin != 0){
+									$('form#formNewDocumentTransf select#bankAccountTransfDest').val(mainAccountKey).change();
+								}
+							}else{
+								$('form#formNewDocumentTransf select#bankAccountTransf').val(mainAccountKey).change();	
+							}	
+						
+						let bankAccountDestinySelected = $('form#formNewDocumentTransf select#bankAccountTransfDest').val();
+					}
+				}
+				else
+				{
+					hideLoading();
+					showSweetalertWarning('Alerta!', data.message,'5000');
+				}
+			})
+			.fail(function(data, textStatus, jqXHR) 
+			{
+				if(''!=data.message)
+				{
+					message = data.message;
+				}
+				showSweetalertWarning('Alerta!', message,'5000');
+			}).always(function() 
+			{
+				$('#block1').hide();
+				$('#block2').hide();
+			});
+		}
+	    
+	    function deleteInstallment(trId, documentId)
+  		{
+  			Swal.fire({
+				  title: 'Alerta',
+				  text: 'Confirma a exclus\u00e3o da duplicata '+documentId+'?',
+				  icon: 'question',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Confirma',
+				  cancelButtonText: 'Cancelar'
+				}).then((result) => 
+				{
+				  if (result.value) 
+				  {
+					  $('div#divExpenseDuplicates div#'+trId).remove();
+					  countExpense = countExpense - 1;
+					  $('form#formNewDocumentTransf input#countExpense').val(countExpense);
+				  }
+				});
+  		}
+  		
+  		function bankersRound(n, d=2) {
+		    let x = n * Math.pow(10, d);
+		    let r = Math.round(x);
+		    let br = Math.abs(x) % 1 === 0.5 ? (r % 2 === 0 ? r : r-1) : r;
+		    return br / Math.pow(10, d);
+		}
+  		
+  		function saveExpenseveConfigTransfer(data){
+			  
+			clearDataChangeAccount();
+			
+			const companyIdVal = $('form#formNewDocumentTransf select#companyTransf option:selected').val();
+			const companyDescriptionVal = $('form#formNewDocumentTransf select#companyTransf option:selected').text();
+			
+			const companyIdDestVal = $('form#formNewDocumentTransf select#companyTransfDest option:selected').val();
+			const companyDescriptionDestVal = $('form#formNewDocumentTransf select#companyTransfDest option:selected').text();
+						
+			const bankAccountTransfVal = $('form#formNewDocumentTransf select#bankAccountTransf option:selected').val();
+			const bankAccountTransfText = $('form#formNewDocumentTransf select#bankAccountTransf option:selected').text();
+			
+			const bankAccountTransfDestVal = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected').val();
+			const bankAccountTransfDestText = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected').text();
+			
+			const totalTransferValue = removeDoteValue($('form#formNewDocumentTransf input#paymentValueTransf').val());			
+			
+			let balanceTotal = totalTransferValue;
+			
+			let countExpenseConfigTransfer = 0; 
+			$.each(data.report, function(keyGroup, valueGroup)
+			{
+				$.each(valueGroup.itens, function(keyItem, valueItem)
+			    {
+			    	$.each(valueItem, function(key, value)
+			        {
+						const selectExpense = value.bankAccountId;
+			
+						if(!selectExpense || selectExpense == null){
+							showSweetalertWarning('Alerta!', 'Informe a conta antes de gravar uma despesa.','5000');
+							return;	
+						}
+						
+						const selectExpenseDescription = value.bankAccountDescription;
+						
+						const paymentExpiryDateExpense = $('form#formNewDocumentTransf input#paymentExpiryDateTransf').val();
+						if(!paymentExpiryDateExpense || paymentExpiryDateExpense == null || paymentExpiryDateExpense == ''){
+							showSweetalertWarning('Alerta!', 'Informe o vencimento antes de gravar uma despesa.','5000');
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+							return;	
+						}
+						
+						let resultTransferValue = 0;
+						if(true==value.overTotal && false==value.useRemainingBalance)
+						{
+							resultTransferValue = bankersRound((totalTransferValue * value.valueTransfer), 2);
+						}
+						else if(false==value.overTotal && true==value.useRemainingBalance)
+						{
+							resultTransferValue = bankersRound((balanceTotal * (value.valueTransfer / 100)), 2);
+						    balanceTotal = bankersRound((balanceTotal - resultTransferValue), 2);		
+						}
+						else if(true==value.overTotal && true==value.useRemainingBalance)
+						{
+							resultTransferValue = bankersRound((totalTransferValue * (value.valueTransfer / 100)), 2);
+						}
+				
+						const documentValueValue = resultTransferValue;
+						if(!documentValueValue || documentValueValue == null || documentValueValue == ''){
+							showSweetalertWarning('Alerta!', 'Informe o valor antes de gravar uma despesa.','5000');
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+							return;	
+						}
+						
+						const expenseDocumentStatus = 2;
+						if(!expenseDocumentStatus || expenseDocumentStatus == null || expenseDocumentStatus == ''){
+							showSweetalertWarning('Alerta!', 'Informe o status do documento antes de gravar uma despesa.','5000');
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+							return;	
+						}
+						
+						const selectProvider = value.providerId;
+						if(!selectProvider || selectProvider == null || selectProvider == ''){
+							showSweetalertWarning('Alerta!', 'Informe o fornecedor antes de gravar uma despesa.','5000');
+							$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+							return;	
+						}
+						const selectProviderDescription = value.providerName;
+						const financialGroup = value.finantialGroupId;
+						const financialGroupDescription = value.finantialGroupName;
+			
+						const financialSubGroup = value.finantialSubGroupId;
+						const financialSubGroupDescription = value.finantialSubGroupName;
+						
+						let documentNote = 'DESPESA: ';
+						if(value.launchType == 2){
+							documentNote = 'TRANFERENCIA: ';
+						} else if(value.launchType == 3){
+							documentNote = 'LANCAMENTO: ';
+						}  
+						
+						documentNote += 'EMP: ' + companyDescriptionVal + ' >> CONTA: ' + bankAccountTransfText +' >> ';
+												
+						if(value.transferType == 1){
+							documentNote += ' % ' + value.valueTransfer.format(2, 3, '.', ',');
+						} else {
+							documentNote += ' R$ ' + value.valueTransfer.format(2, 3, '.', ',');
+						}
+						
+						if(value.launchType == 1){
+							documentNote += ' EMP: ' + companyDescriptionDestVal + ' >> CONTA: ' + bankAccountTransfDestText +' >> ';			
+							documentNote += ' FORN: ' + value.providerName;
+						}
+						if(value.launchType == 2){
+							documentNote += ' >> CONTA: ' + value.bankAccountDescription + ' >> ';	
+							documentNote += ' FORN: ' + value.providerName;
+						} else if(value.launchType == 3){
+							documentNote += ' >> CONTA: ' + value.bankAccountDescription + ' >> ';
+							documentNote += ' FORN: ' + value.providerName;	
+						}	
+										
+						countExpense = countExpense + 1;
+			
+						dataSource.add({
+							'id': countExpense,
+							"bankAccountExpense": selectExpense,
+							"bankAccountDescription": selectExpenseDescription,
+							'companyId': companyIdDestVal,
+							'paymentExpiryDateExpense': paymentExpiryDateExpense,
+							'documentValueExpense': documentValueValue.format(2, 3, '.', ','),
+							'documentStatusExpense': expenseDocumentStatus == 1 ? 'AB' : 'BA',
+							'providerExpense': selectProvider,
+							'providerDescription': selectProviderDescription,
+							'financialGroupExpense': financialGroup,
+							'financialGroupDescription': financialGroupDescription,
+							'financialSubGroupExpense': financialSubGroup,
+							'financialSubGroupDescription': financialSubGroupDescription,
+							'launchType': value.launchType,
+							'documentNoteExpense': documentNote
+						});
+						
+						if(countExpenseConfigTransfer == 0){
+							expenseTransfDocument();
+							countExpenseConfigTransfer = countExpenseConfigTransfer + 1;
+						}						
+							
+					});
+				 });
+			});
+			
+			populateExpense();
+			
+			$('form#formNewDocumentTransf input#documentValue').val('');
+			$('form#formNewDocumentTransf textarea#documentNote').val('');
+		}
+		
+		function deleteExpenseve(){
+          const grid = $("#grid").data("kendoGrid");
+          $("#grid").find("input:checked").each(function(){
+            grid.removeRow($(this).closest('tr'));
+          });
+          
+		  populateExpense();
+        }
+		
+		function populateExpense(){
+			const bankAccountTransfVal = $('form#formNewDocumentTransf select#bankAccountTransf option:selected').val();
+			const bankAccountTransfDestVal = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected').val();
+			const dataExpenses = dataSource.data();
+			
+			const totalExpensesDest = dataExpenses.filter(item => item.bankAccountExpense == bankAccountTransfDestVal).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+			const totalExpenses = dataExpenses.filter(item => item.bankAccountExpense == bankAccountTransfVal || item.bankAccountExpense != bankAccountTransfDestVal).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+
+			$('form#formNewDocumentTransf input#expenseValueTransf').val(parseFloat(totalExpenses).toFixed(2));
+			$('form#formNewDocumentTransf input#expenseValueTransfDest').val(parseFloat(totalExpensesDest).toFixed(2));
+		}
+  		
+  				
+  		function saveExpenseve(){
+			const totalTransferValue = $('form#formNewDocumentTransf input#paymentValueTransf').val().replace(',','.');
+			const selectExpense = $('form#formNewDocumentTransf select#expenseOrigin option:selected').val();
+			
+			if(!selectExpense || selectExpense == null){
+				showSweetalertWarning('Alerta!', 'Informe a conta antes de gravar uma despesa.','5000');
+				return;	
+			}
+			const selectExpenseArray = selectExpense.split('_');
+			const selectExpenseDescription = $('form#formNewDocumentTransf select#expenseOrigin option:selected').text();
+			
+			const paymentExpiryDateExpense = $('form#formNewDocumentTransf input#paymentExpiryDate').val();
+			if(!paymentExpiryDateExpense || paymentExpiryDateExpense == null || paymentExpiryDateExpense == ''){
+				showSweetalertWarning('Alerta!', 'Informe o vencimento antes de gravar uma despesa.','5000');
+				return;	
+			}
+	
+			const documentValueValue = $('form#formNewDocumentTransf input#documentValue').val();
+			if(!documentValueValue || documentValueValue == null || documentValueValue == ''){
+				showSweetalertWarning('Alerta!', 'Informe o valor antes de gravar uma despesa.','5000');
+				return;	
+			}
+			
+			const expenseDocumentStatus = $('form#formNewDocumentTransf select#expenseDocumentStatus option:selected').val();
+			if(!expenseDocumentStatus || expenseDocumentStatus == null || expenseDocumentStatus == ''){
+				showSweetalertWarning('Alerta!', 'Informe o status do documento antes de gravar uma despesa.','5000');
+				return;	
+			}
+			
+			const selectProvider = $('form#formNewDocumentTransf select#provider option:selected').val();
+			if(!selectProvider || selectProvider == null || selectProvider == ''){
+				showSweetalertWarning('Alerta!', 'Informe o fornecedor antes de gravar uma despesa.','5000');
+				return;	
+			}
+			const selectProviderDescription = $('form#formNewDocumentTransf select#provider option:selected').text();
+			const financialGroup = $('form#formNewDocumentTransf select#financialGroup option:selected').val();
+			if(!financialGroup || financialGroup == null || financialGroup == ''){
+				showSweetalertWarning('Alerta!', 'Informe o grupo financeiro antes de gravar uma despesa.','5000');
+				return;	
+			}
+			const financialGroupDescription = $('form#formNewDocumentTransf select#financialGroup option:selected').text();
+			const financialSubGroup = $('form#formNewDocumentTransf select#financialSubGroup option:selected').val();
+			if(!financialSubGroup || financialSubGroup == null || financialSubGroup == ''){
+				showSweetalertWarning('Alerta!', 'Informe o subgrupo financeiro antes de gravar uma despesa.','5000');
+				return;	
+			}
+			const financialSubGroupDescription = $('form#formNewDocumentTransf select#financialSubGroup option:selected').text();
+			const documentNote = $('form#formNewDocumentTransf textarea#documentNote').val();
+			
+			countExpense = countExpense + 1;
+
+			dataSource.add( {
+				'id': countExpense,
+				"bankAccountExpense": selectExpenseArray[0],
+				"bankAccountDescription": selectExpenseDescription,
+				'companyId': selectExpenseArray[1],
+				'paymentExpiryDateExpense': paymentExpiryDateExpense,
+				'documentValueExpense': documentValueValue,
+				'documentStatusExpense': expenseDocumentStatus == 1 ? 'AB' : 'BA',
+				'providerExpense': selectProvider,
+				'providerDescription': selectProviderDescription,
+				'financialGroupExpense': financialGroup,
+				'financialGroupDescription': financialGroupDescription,
+				'financialSubGroupExpense': financialSubGroup,
+				'financialSubGroupDescription': financialSubGroupDescription,
+				'launchType': 1,
+				'documentNoteExpense': documentNote
+			});
+			
+			const bankAccountTransfVal = $('form#formNewDocumentTransf select#bankAccountTransf option:selected').val();
+			const bankAccountTransfDestVal = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected').val();
+						
+			const dataExpenses = dataSource.data();
+			const totalExpenses = dataExpenses.filter(item => item.bankAccountExpense == bankAccountTransfVal || item.bankAccountExpense != bankAccountTransfDestVal).reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+
+			const total = (totalTransferValue - totalExpenses);
+			$('form#formNewDocumentTransf input#documentValueTransfDest').val(parseFloat(total).toFixed(2));
+			
+			populateExpense();
+			
+			$('form#formNewDocumentTransf input#documentValue').val('');
+			$('form#formNewDocumentTransf textarea#documentNote').val('');
+		}
+  		
+  		function expenseTransfDocument()
+  		{
+			if ( $('div#divButtonExpenseTransf').css('display') == 'none' || $('div#divButtonExpenseTransf').css('visibility') == 'hidden'){
+				return;
+			}
+			
+			const companyIdTransf = $('form#formNewDocumentTransf select#companyTransf option:selected').val();
+			const bankAccountTransfVal = $('form#formNewDocumentTransf select#bankAccountTransf option:selected').val();
+			const bankAccountTransfText = $('form#formNewDocumentTransf select#bankAccountTransf option:selected').text();
+			
+			const companyIdDestVal = $('form#formNewDocumentTransf select#companyTransfDest option:selected').val();
+			const bankAccountTransfDestVal = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected').val();
+			const bankAccountTransfDestText = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected').text();
+			
+			if(!companyIdTransf || Number.isNaN(companyIdTransf) || !bankAccountTransfVal || Number.isNaN(bankAccountTransfVal) || !companyIdDestVal || Number.isNaN(companyIdDestVal) || !bankAccountTransfDestVal || Number.isNaN(bankAccountTransfDestVal)){
+				showSweetalertWarning('Alerta!', 'Informe a empresa origem e destino e a conta origem e destino antes de incluir uma despesa.','5000');
+				return;
+			}
+			
+			let bankAccountsAll = [];
+			const bankAccountItem = {
+        		value: bankAccountTransfVal,
+        		description: bankAccountTransfText,
+        		companyId: companyIdTransf
+        	};
+        	
+        	bankAccountsAll.push(bankAccountItem);
+        	
+        	/**
+	        	const bankAccountItemDest = {
+	        		value: bankAccountTransfDestVal,
+	        		description: bankAccountTransfDestText,
+	        		companyId: companyIdDestVal
+	        	};        	
+	        	bankAccountsAll.push(bankAccountItemDest);
+        	*/
+			
+			$('div#divButtonExpenseTransf').hide();
+			
+  			var documentNumber = $('form#formNewDocumentTransf input#documentNumberTransf').val();
+  			var documentValue = $('form#formNewDocumentTransf input#expenseValueTransf').val();
+  			var paymentExpiryDate = $('form#formNewDocumentTransf input#paymentExpiryDateTransf').val();
+  			var installmentType = $('form#formNewDocumentTransf select#installmentType').val();
+  			var paymentValue = $('form#formNewDocumentTransf input#paymentValue').val();
+  	
+  			var paymentExpiryDateArray = paymentExpiryDate.split('/');
+  			var startdate = paymentExpiryDateArray[0]+'.'+paymentExpiryDateArray[1]+'.'+paymentExpiryDateArray[2];
+  			var newDate = moment(startdate, "DD.MM.YYYY");
+
+			let trHTML= '';
+			trHTML+='<div class="row m-t-30 m-b-20 col-md-12" id="duplicate">';
+			trHTML+='<div class="col-md-4 mb-2">';
+			trHTML+='<label for="expenseOrigin" style="margin-bottom: -0.5rem;">Conta Bancaria</label>';
+
+			trHTML+='<select class="expenseOriginSelect" id="expenseOrigin" name="expenseOrigin" required data-bv-notempty-message="Campo obrigat&oacute;rio.">';
+					
+			trHTML+= '<option value="'+bankAccountTransfDestVal+'_'+companyIdDestVal+'" selected>'+bankAccountTransfDestText+'</option>';
+			for(var i = 0; i < bankAccountsAll.length; i++){
+  				trHTML+= '<option value="'+bankAccountsAll[i].value+'_'+bankAccountsAll[i].companyId+'">'+bankAccountsAll[i].description+'</option>';
+  			}
+			trHTML+='</select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-3 mb-2">';
+			trHTML+='<label for="paymentExpiryDate" style="margin-bottom: -0.5rem;">Vencimento</label>';
+			trHTML+='<div class="input-group date">';
+			trHTML+='<input type="text" class="form-control dateDuplicate text-center" id="paymentExpiryDate" name="paymentExpiryDate" maxlength="10" value="'+newDate.format('DD/MM/YYYY')+'"/>';
+			trHTML+='<span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>';
+			trHTML+='</div>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-3 mb-2">';
+			trHTML+='<label for="documentValue" style="margin-bottom: -0.5rem;">Valor</label>';
+			trHTML+='<input type="text" data-accept-dot="0" data-accept-comma="1"  class="only-number form-control text-center" id="documentValue" name="documentValue" maxlength="15"/>';
+			
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-2 mb-2">';
+			trHTML+='<label for="expenseDocumentStatus" style="margin-bottom: -0.5rem;">Status</label>';
+			trHTML+='<select class="m-b-20 m-r-10 duplicateSelect" name="expenseDocumentStatus" id="expenseDocumentStatus">';
+			trHTML+='<option value="2" selected="selected">Baixado</option>';
+			trHTML+='</select>';			
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-4 mb-2">';
+			trHTML+='<label for="provider" style="margin-bottom: -0.5rem;">Fornecedor</label>';
+			trHTML+='<select class="m-b-20 m-r-10 providerSelect" name="provider" id="provider"></select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-4 mb-2">';
+			trHTML+='<label for="financialGroup" style="margin-bottom: -0.5rem;">Grupo Financeiro</label>';
+			trHTML+='<select class="m-b-20 m-r-10 financialGroupSelect" name="financialGroup" id="financialGroup">';
+			trHTML+='<option value="" selected="selected">SELECIONE...</option>';
+			for(var i = 0; i < financialGroupsAll.length; i++){
+				trHTML+= '<option value="'+financialGroupsAll[i].value+'">'+financialGroupsAll[i].description+' ('+financialGroupsAll[i].value+')</option>';
+  			}
+			trHTML+='</select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-4 mb-2">';
+			trHTML+='<label for="financialSubGroup" style="margin-bottom: -0.5rem;">Sub-Grupo Financeiro</label>';
+			trHTML+='<select class="m-b-20 m-r-10 financialSubGroupSelect" name="financialSubGroup" id="financialSubGroup"></select>';
+			trHTML+='</div>';
+			
+			trHTML+='<div class="col-md-10 mb-2">';
+			trHTML+='<label for="documentNote" class="control-label" style="margin-bottom: -0.5rem;">Nota:</label>';
+			trHTML+='<textarea class="form-control" id="documentNote" name="documentNote" rows="1" cols="30"></textarea>';
+			trHTML+='</div>';
+			trHTML+='<div class="col-md-1 mb-2" style="text-align: center; max-width: 150px;">';
+	        trHTML+='	<button type="button" id="buttonExpenseSave" name="buttonExpenseSave" class="btn btn-info btn-circle" onclick="saveExpenseve();"><i class="fa fa-save"></i> </button>';
+	        trHTML+='</div>';
+	        trHTML+='<div class="col-md-1 mb-2" style="text-align: center; max-width: 150px;">';
+	        trHTML+='	<button type="button" id="buttonExpenseDelete" name="buttonExpenseDelete" class="btn btn-danger btn-circle" onclick="deleteExpenseve();"><i class="mdi mdi-delete mdi-24px"></i></button>';
+	        trHTML+='</div>';                 
+			trHTML+='<hr class="hr-admin"/>';
+			trHTML+='</div>';
+			
+			$('div#divExpenseDuplicates').append(trHTML);
+			
+			$(document).on('keypress', 'input.only-number', function(e) {
+			    const $this = $(this);
+			    const key = (window.event)?event.keyCode:e.which;
+			    const dataAcceptDot = $this.data('accept-dot');
+			    const dataAcceptComma = $this.data('accept-comma');
+			    const acceptDot = (typeof dataAcceptDot !== 'undefined' && (dataAcceptDot == true || dataAcceptDot == 1)?true:false);
+			    const acceptComma = (typeof dataAcceptComma !== 'undefined' && (dataAcceptComma == true || dataAcceptComma == 1)?true:false);
+			    
+			    const str = $this.val();
+			    if(str){
+					 const contemsComma = str.includes(",");
+					 if(contemsComma && key == 44){
+						 return false;
+					 }
+				}
+		
+				if((key > 47 && key < 58)
+			      || (key == 46 && acceptDot)
+			      || (key == 44 && acceptComma)) {
+			    	return true;
+			  	} else {
+			 			return (key == 8 || key == 0)?true:false;
+			 	}
+		  	});
+		  	
+		  	$("input.only-number").on('blur', function() {
+				let paymentValue = this.value; 
+				paymentValue = paymentValue.replaceAll('.', '');
+				const commaIndex = paymentValue.indexOf(',');
+				const paymentValueLength = paymentValue.length;
+				
+				if(paymentValueLength > 0){
+					if(commaIndex > -1){
+						if((commaIndex + 1) == paymentValueLength){
+							paymentValue = paymentValue + '00';
+						} else if((commaIndex + 2) == paymentValueLength){
+							paymentValue = paymentValue + '0';
+						}					
+					} else {
+						paymentValue = paymentValue + ',00'
+					}
+					paymentValue = paymentValue.replace(',', '.');
+					
+					
+					$("input#"+$(this).attr('id')).val(Number(paymentValue).format(2, 3, '.', ','));
+				}		
+	        });
+			
+			$('.dateDuplicate').datepicker({
+	            autoclose: true,
+	            todayHighlight: true,
+	            toggleActive: true,
+	            format: 'dd/mm/yyyy',
+	            language: 'pt-BR'
+	        });
+	        
+	        $('.duplicateSelect')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        }); 
+	        
+	        $('.expenseOriginSelect')
+		        .select2({ 
+		            width: '100%',
+		            theme: "bootstrap",
+		            allowClear: true,
+		            language: 
+		            {
+		                noResults: function (params) 
+		                {
+		                    return "Nenhum registro encontrado.";
+		                }
+		            }
+		        }); 
+			
+			  
+			  $('.providerSelect')
+		        .select2({
+		        	width: '100%',
+		  			theme: "bootstrap",
+		  			placeholder: "SELECIONE...",
+				    allowClear: true,
+			    	language: {
+			        	noResults: function (params) {
+			            return "Nenhum registro encontrado.";
+			          },
+			          searching: function ()
+			          {
+			              return 'Buscando...';
+			          },
+			          loadingMore: function () {
+			              return 'Carregando mais resultados...';
+			          },
+			          errorLoading: function () {
+			              return 'Os resultados nao puderam ser carregados.';
+			          },
+			          inputTooLong: function (args) {
+			              var overChars = args.input.length - args.maximum;
+
+			              var message = 'Apague ' + overChars + ' caracter';
+
+			              if (overChars != 1) {
+			                message += 'es';
+			              }
+
+			              return message;
+			            },
+			            inputTooShort: function (args) {
+			              var remainingChars = args.minimum - args.input.length;
+
+			              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+			              return message;
+			            }
+			        },
+		  			ajax: {
+		  				url : $('form#formAutocomplete').attr('action'),
+		                type : "POST",
+		  	            dataType: 'json',
+		  	            delay: 250,
+		  	            data: function (params)
+		  	            {
+		  	                return {
+		  	                	description: params.term, // search term
+		  	                	inactive: '0',
+		  	                	objectType: 'FOR',
+		  	                	personType: 'F'
+		  	                };
+		  	            },
+		  	            processResults: function (data, params) {
+		  	                //console.log(data);
+		  	                var results = $.map(data.report, function (value, key)
+		  	                {
+		  	                    return {
+		  	                    	id: value.key,
+		  	                        text: value.value + ' (' + value.key + ')',
+		  	                      	financialGroupId: value.key1, 
+		  	                      	financialSubGroupId: value.key2,
+		  	                      	financialGroupDescription: value.key3, 
+		  	                      	financialSubGroupDescription: value.key4
+		  	                    };
+		  	                });
+		  	                return {
+		  	                    results: results
+		  	                };
+		  	            },
+		  	            cache: true
+		  	        },
+		  	        minimumInputLength: 3,
+		  	        templateSelection: formatRepoSelection
+		  	    }).on('change', function (data)
+		  		{
+				  const idProviderSelect = $(this).attr('id');
+				  if(idProviderSelect){
+					  $('select#financialGroup').empty().trigger('change');
+					  $('select#financialSubGroup').empty().trigger('change');
+					  
+					  const dataArray = $(this).select2('data');
+			  		  if(dataArray != null && dataArray.length > 0){
+			  		  	const providerSelected = dataArray[0];						
+			  			    if(providerSelected != null){
+			  			      let optionKeyGroup = providerSelected.financialGroupId;
+							  let optionValueGroup = providerSelected.financialGroupDescription + ' (' + providerSelected.financialGroupId + ')';
+							  const newOptionGroup = new Option(optionValueGroup, optionKeyGroup, true, true);									  
+							  $('select#financialGroup').append(newOptionGroup).trigger('change');
+							  
+							  let optionKeySubGroup = providerSelected.financialSubGroupId;
+							  let optionValueSubGroup = providerSelected.financialSubGroupDescription + ' (' + providerSelected.financialSubGroupId + ')';
+							  const newOptionSubGroup = new Option(optionValueSubGroup, optionKeySubGroup, true, true);									  
+							  $('select#financialSubGroup').append(newOptionSubGroup).trigger('change');
+			  			    }
+			  			}						  
+				  }
+		  		}).on('select2:close', function (e) 
+		  		{
+		  			
+		  			
+		  		});
+			  
+			  $('.financialGroupSelect')
+		        .select2({ 
+		        	//tags : true,
+		            width: '100%',
+		            theme: "bootstrap",
+		            placeholder: "SELECIONE...",
+				    allowClear: true,
+		            language: {
+		                noResults: function() {
+		               return `<button style="width: 100%" type="button"
+		               class="btn btn-primary btn-sm" 
+		               onClick="saveNewFinancialGroup('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+		               </li>`;
+		               }
+		            },
+		          
+		           escapeMarkup: function (markup) {
+		               return markup;
+		           }
+		        }).on('change', function (e)
+		        {
+		        	if(isSetFinancialGroup)
+		        	{
+		        		 isSetFinancialGroup = false;
+		        		 return;
+		        	}
+		        	if(''!=this.value && !isNaN(this.value))
+					{
+			        	//$('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+			        	//searchFinancialSubGroup('formNewDocumentTransfDest');
+					}
+		        });
+
+		        $('.financialSubGroupSelect')
+		        .select2({ 
+		            width: '100%',
+		            theme: "bootstrap",
+		            placeholder: "SELECIONE...",
+				    allowClear: true,
+		            language: {
+		                noResults: function() {
+		               return `<button style="width: 100%" type="button"
+		               class="btn btn-primary btn-sm" 
+		               onClick="saveNewFinancialSubGroup('formNewDocument')">+ Adicionar Sub-Grupo Financeiro</button>
+
+		               </li>`;
+		               }
+		            },
+		          
+		           escapeMarkup: function (markup) {
+		               return markup;
+		           }
+		        });
+			 
+			  $('form#formNewDocumentTransf input#countExpense').val(countExpense);
+			}
+  		
+  		/**
+  		
+  		function expenseTransfDocument(data)
+  		{
+  			countExpense = countExpense +1;
+  			var documentNumber = $('form#formNewDocumentTransf input#documentNumberTransfDest').val();
+  			var documentValue = $('form#formNewDocumentTransf input#expenseValueTransf').val();
+  			var paymentExpiryDate = $('form#formNewDocumentTransf input#paymentExpiryDateTransf').val();
+  			var installmentType = $('form#formNewDocumentTransf select#installmentType').val();
+  			var bankAccount = $('form#formNewDocumentTransf select#bankAccount').val();
+  			var paymentValue = $('form#formNewDocumentTransf input#paymentValue').val();
+  			
+  			var paymentExpiryDateArray = paymentExpiryDate.split('/');
+  			var startdate = paymentExpiryDateArray[0]+'.'+paymentExpiryDateArray[1]+'.'+paymentExpiryDateArray[2];
+  			var newDate = moment(startdate, "DD.MM.YYYY");
+  			let totalTransferValue = $('form#formNewDocumentTransf input#paymentValueTransf').val();
+  			totalTransferValue = totalTransferValue.replaceAll('.', '');
+  			totalTransferValue = totalTransferValue.replaceAll(',', '.');
+  			let resultTransferValue = 0;
+  			let saveResult = 0;
+			let trHTML= '';
+			
+			
+			SOBRE TOTAL overTotal
+			is_over_total=1 selecionado
+			is_over_total=0 nao selecionado
+			
+			
+			INCIDE SALDO useRemainingBalance
+			is_use_remaining_balance=1 selecionado
+			is_use_remaining_balance=0 nao selecionado
+
+			
+			if(data){
+				countExpense = 0;
+				$.each(data.report, function(keyGroup, valueGroup)
+				{
+					$.each(valueGroup.itens, function(keyItem, valueItem)
+			        {
+			         	$.each(valueItem, function(key, value)
+			            {
+			         		countExpense = countExpense +1;
+			         		
+			         		if(true==value.overTotal && false==value.useRemainingBalance){
+			         			resultTransferValue = totalTransferValue * value.valueTransfer;
+			         		}else if(false==value.overTotal && true==value.useRemainingBalance){
+			         			if(saveResult == 0){
+			         				resultTransferValue = totalTransferValue * (value.valueTransfer / 100);
+			         				saveResult = totalTransferValue - resultTransferValue;
+			         			}else{
+			         				resultTransferValue = saveResult * (value.valueTransfer / 100);
+			         				saveResult = saveResult - resultTransferValue;
+			         			}
+			         			
+			         		}else if(true==value.overTotal && true==value.useRemainingBalance){
+			         			resultTransferValue = totalTransferValue * (value.valueTransfer / 100);
+			         		}
+			         		
+							trHTML+='<div class="row m-t-30 m-b-20 col-md-12" id="duplicate_'+countExpense+'">';
+							
+							trHTML+='<div class="col-md-1 mb-3">';
+							trHTML+='<input type="hidden" class="form-control text-center" id="documentNumber_'+countExpense+'" name="documentNumber_'+countExpense+'" maxlength="20" value="'+documentNumber+'_'+countExpense+'"/>';
+							trHTML+='<a onclick="deleteInstallment(&quot;duplicate_'+countExpense+'&quot;,&quot;'+documentNumber+'_'+countExpense+'&quot;);" style="cursor: pointer;">';
+							trHTML+='<i class="mdi mdi-delete mdi-24px" style="color: red;"></i>';
+							trHTML+='</a>';
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-4 mb-3">';
+							trHTML+='<label for="expenseOriginDestinty_'+countExpense+'">Conta Bancaria</label>';
+							trHTML+='<select class="m-b-20 m-r-10 custom-select expenseOriginSelect" id="expenseOriginDestinty_'+countExpense+'" name="expenseOriginDestinty_'+countExpense+'" required data-bv-notempty-message="Campo obrigat&oacute;rio.">';
+							trHTML+='<option value="">SELECIONE...</option>';
+							for(var i = 0; i < bankAccountAll.length; i++){
+				  				trHTML+= '<option value="'+bankAccountAll[i].value+'" selected="selected">'+bankAccountAll[i].description+'</option>';
+							}
+				  			trHTML+='</select>';
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-3 mb-3">';
+							trHTML+='<label for="paymentExpiryDate_'+countExpense+'">Vencimento</label>';
+							trHTML+='<div class="input-group date">';
+							trHTML+='<input type="text" class="form-control custom-select dateDuplicate text-center" id="paymentExpiryDate_'+countExpense+'" name="paymentExpiryDate_'+countExpense+'" maxlength="10" value="'+newDate.format('DD/MM/YYYY')+'"/>';
+							trHTML+='<span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>';
+							trHTML+='</div>';
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-2 mb-3">';
+							trHTML+='<label for="documentValue_'+countExpense+'">Valor</label>';
+							trHTML+='<input type="text" class="form-control  custom-select moneyDuplicate text-center" id="documentValue_'+countExpense+'" name="documentValue_'+countExpense+'" maxlength="15" value="'+resultTransferValue+'"/>';
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-2 mb-3">';
+							trHTML+='<label for="expenseDocumentStatus_'+countExpense+'">Status</label>';
+							trHTML+='<select class="m-b-20 m-r-10 custom-select duplicateSelect" name="expenseDocumentStatus_'+countExpense+'" id="expenseDocumentStatus_'+countExpense+'">';
+							trHTML+='<option value="2" selected="selected">Baixado</option><option value="1">Aberto</option>';
+							trHTML+='</select>';			
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-4 mb-3">';
+							trHTML+='<label for="provider_'+countExpense+'">Fornecedor</label>';
+							trHTML+='<select class="m-b-20 m-r-10 custom-select providerSelect" name="provider_'+countExpense+'" id="provider_'+countExpense+'">';
+							trHTML+= '<option value="'+key+'">'+value.providerName+' ('+key+')</option>';
+							trHTML+= '</select>';
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-4 mb-3">';
+							trHTML+='<label for="financialGroup_'+countExpense+'">Grupo Financeiro</label>';
+							trHTML+='<select class="m-b-20 m-r-10 custom-select financialGroupSelect" name="financialGroup_'+countExpense+'" id="financialGroup'+countExpense+'">';
+							trHTML+='<option value="" selected="selected">SELECIONE...</option>';
+							for(var i = 0; i < financialGroupsAll.length; i++){
+								trHTML+= '<option value="'+financialGroupsAll[i].value+'">'+financialGroupsAll[i].description+' ('+financialGroupsAll[i].value+')</option>';
+				  			}
+							trHTML+='</select>';
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-4 mb-3">';
+							trHTML+='<label for="financialSubGroup_'+countExpense+'">Sub-Grupo Financeiro</label>';
+							trHTML+='<select class="m-b-20 m-r-10 custom-select financialSubGroupSelect" name="financialSubGroup_'+countExpense+'" id="financialSubGroup_'+countExpense+'"></select>';
+							trHTML+='</div>';
+							
+							trHTML+='<div class="col-md-12 mb-4">';
+							trHTML+='<label for="documentNote_'+countExpense+'" class="control-label">Nota:</label>';
+							trHTML+='<textarea class="form-control custom-select" id="documentNote_'+countExpense+'" name="documentNote_'+countExpense+'" rows="1" cols="30"></textarea>';
+							trHTML+='</div>';
+							trHTML+='<hr class="hr-admin"/>';
+							trHTML+='</div>';
+							
+							resultTransferValue=0;
+			            });
+				    });
+				});
+				}else{
+					trHTML+='<div class="row m-t-30 m-b-20 col-md-12" id="duplicate_'+countExpense+'">';
+					
+					trHTML+='<div class="col-md-1 mb-3">';
+					trHTML+='<input type="hidden" class="form-control text-center" id="documentNumber_'+countExpense+'" name="documentNumber_'+countExpense+'" maxlength="20" value="'+documentNumber+'_'+countExpense+'"/>';
+					trHTML+='<a onclick="deleteInstallment(&quot;duplicate_'+countExpense+'&quot;,&quot;'+documentNumber+'_'+countExpense+'&quot;);" style="cursor: pointer;">';
+					trHTML+='<i class="mdi mdi-delete mdi-24px" style="color: red;"></i>';
+					trHTML+='</a>';
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-4 mb-3">';
+					trHTML+='<label for="expenseOriginDestinty_'+countExpense+'">Conta Bancaria</label>';
+		
+					trHTML+='<select class="m-b-20 m-r-10 expenseOriginSelect" id="expenseOriginDestinty_'+countExpense+'" name="expenseOriginDestinty_'+countExpense+'" required data-bv-notempty-message="Campo obrigat&oacute;rio.">';
+					for(var i = 0; i < bankAccountAll.length; i++){
+		  				trHTML+= '<option value="'+bankAccountAll[i].value+'" selected="selected">'+bankAccountAll[i].description+'</option>';
+		  			}
+					trHTML+='</select>';
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-3 mb-3">';
+					trHTML+='<label for="paymentExpiryDate_'+countExpense+'">Vencimento</label>';
+					trHTML+='<div class="input-group date">';
+					trHTML+='<input type="text" class="form-control dateDuplicate text-center" id="paymentExpiryDate_'+countExpense+'" name="paymentExpiryDate_'+countExpense+'" maxlength="10" value="'+newDate.format('DD/MM/YYYY')+'"/>';
+					trHTML+='<span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>';
+					trHTML+='</div>';
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-2 mb-3">';
+					trHTML+='<label for="documentValue_'+countExpense+'">Valor</label>';
+					trHTML+='<input type="text" class="form-control  moneyDuplicate text-center" id="documentValue_'+countExpense+'" name="documentValue_'+countExpense+'" maxlength="15"/>';
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-2 mb-3">';
+					trHTML+='<label for="expenseDocumentStatus_'+countExpense+'">Status</label>';
+					trHTML+='<select class="m-b-20 m-r-10 duplicateSelect" name="expenseDocumentStatus_'+countExpense+'" id="expenseDocumentStatus_'+countExpense+'">';
+					trHTML+='<option value="2" selected="selected">Baixado</option><option value="1">Aberto</option>';
+					trHTML+='</select>';			
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-4 mb-3">';
+					trHTML+='<label for="provider_'+countExpense+'">Fornecedor</label>';
+					trHTML+='<select class="m-b-20 m-r-10 providerSelect" name="provider_'+countExpense+'" id="provider_'+countExpense+'"></select>';
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-4 mb-3">';
+					trHTML+='<label for="financialGroup_'+countExpense+'">Grupo Financeiro</label>';
+					trHTML+='<select class="m-b-20 m-r-10 financialGroupSelect" name="financialGroup_'+countExpense+'" id="financialGroup'+countExpense+'">';
+					trHTML+='<option value="" selected="selected">SELECIONE...</option>';
+					for(var i = 0; i < financialGroupsAll.length; i++){
+						trHTML+= '<option value="'+financialGroupsAll[i].value+'">'+financialGroupsAll[i].description+' ('+financialGroupsAll[i].value+')</option>';
+		  			}
+					trHTML+='</select>';
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-4 mb-3">';
+					trHTML+='<label for="financialSubGroup_'+countExpense+'">Sub-Grupo Financeiro</label>';
+					trHTML+='<select class="m-b-20 m-r-10 financialSubGroupSelect" name="financialSubGroup_'+countExpense+'" id="financialSubGroup_'+countExpense+'"></select>';
+					trHTML+='</div>';
+					
+					trHTML+='<div class="col-md-12 mb-4">';
+					trHTML+='<label for="documentNote_'+countExpense+'" class="control-label">Nota:</label>';
+					trHTML+='<textarea class="form-control" id="documentNote_'+countExpense+'" name="documentNote_'+countExpense+'" rows="1" cols="30"></textarea>';
+					trHTML+='</div>';
+					trHTML+='<hr class="hr-admin"/>';
+					trHTML+='</div>';
+				}
+			$('div#divExpenseDuplicates').append(trHTML);
+			
+	          $(".moneyDuplicate").inputmask({'alias': 'numeric', allowMinus: true, digits: 2, rightAlign: true});
+			
+			$('.dateDuplicate').datepicker({
+	            autoclose: true,
+	            todayHighlight: true,
+	            toggleActive: true,
+	            format: 'dd/mm/yyyy',
+	            language: 'pt-BR'
+	        });
+			
+			$('.duplicateSelect')
+	        .select2({ 
+	            width: '100%',
+	            theme: "bootstrap",
+	            language: 
+	            {
+	                noResults: function (params) 
+	                {
+	                    return "Nenhum registro encontrado.";
+	                }
+	            }
+	        }); 
+	        
+			  $('.expenseOriginSelect')
+		        .select2({ 
+		            width: '100%',
+		            theme: "bootstrap",
+		  			placeholder: "SELECIONE...",
+		            allowClear: true,
+		            language: 
+		            {
+		                noResults: function (params) 
+		                {
+		                    return "Nenhum registro encontrado.";
+		                }
+		            }
+		        }); 
+			  
+			  $('.providerSelect')
+		        .select2({
+		        	width: '100%',
+		  			theme: "bootstrap",
+		  			placeholder: "SELECIONE...",
+				    allowClear: true,
+			    	language: {
+			        	noResults: function (params) {
+			            return "Nenhum registro encontrado.";
+			          },
+			          searching: function ()
+			          {
+			              return 'Buscando...';
+			          },
+			          loadingMore: function () {
+			              return 'Carregando mais resultados...';
+			          },
+			          errorLoading: function () {
+			              return 'Os resultados nao puderam ser carregados.';
+			          },
+			          inputTooLong: function (args) {
+			              var overChars = args.input.length - args.maximum;
+
+			              var message = 'Apague ' + overChars + ' caracter';
+
+			              if (overChars != 1) {
+			                message += 'es';
+			              }
+
+			              return message;
+			            },
+			            inputTooShort: function (args) {
+			              var remainingChars = args.minimum - args.input.length;
+
+			              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+			              return message;
+			            }
+			        },
+		  			ajax: {
+		  				url : $('form#formAutocomplete').attr('action'),
+		                type : "POST",
+		  	            dataType: 'json',
+		  	            delay: 250,
+		  	            data: function (params)
+		  	            {
+		  	                return {
+		  	                	description: params.term, // search term
+		  	                	inactive: '0',
+		  	                	objectType: 'FOR',
+		  	                	personType: 'F'
+		  	                };
+		  	            },
+		  	            processResults: function (data, params) {
+		  	                //console.log(data);
+		  	                var results = $.map(data.report, function (value, key)
+		  	                {
+		  	                    return {
+		  	                    	id: value.key,
+		  	                        text: value.value + ' (' + value.key + ')',
+		  	                      	financialGroupId: value.key1, 
+		  	                      	financialSubGroupId: value.key2
+		  	                    };
+		  	                });
+		  	               //console.log(results);
+		  	                return {
+		  	                    results: results
+		  	                };
+		  	            },
+		  	            cache: true
+		  	        },
+		  	        minimumInputLength: 3,
+		  	        templateSelection: formatRepoSelection
+		  	    }).on('change', function (data)
+		  		{
+		  	    	
+		  	    	//searchProvider('form#formNewDocument');
+		  			//$(this).valid();
+		  		  	//console.log(this.value);
+		  		}).on('select2:close', function (e) 
+		  		{
+		  			const dataArray = $(this).select2('data');
+		  			if(dataArray != null && dataArray.length > 0){
+		  			    const providerSelected = dataArray[0];
+						
+		  			    if(providerSelected != null){
+		  			    	$('.financialGroupSelect').val(providerSelected.financialGroupId).trigger('change');	
+		  			    }
+		  			}
+		  			
+		  		});
+			  
+			  $('.financialGroupSelect')
+		        .select2({ 
+		        	//tags : true,
+		            width: '100%',
+		            theme: "bootstrap",
+		            placeholder: "SELECIONE...",
+				    allowClear: true,
+		            language: {
+		                noResults: function() {
+		               return `<button style="width: 100%" type="button"
+		               class="btn btn-primary btn-sm" 
+		               onClick="saveNewFinancialGroup('formNewDocument')">+ Adicionar Grupo Financeiro</button>
+		               </li>`;
+		               }
+		            },
+		          
+		           escapeMarkup: function (markup) {
+		               return markup;
+		           }
+		        }).on('change', function (e)
+		        {
+		        	if(isSetFinancialGroup)
+		        	{
+		        		 isSetFinancialGroup = false;
+		        		 return;
+		        	}
+		        	if(''!=this.value && !isNaN(this.value))
+					{
+			        	$('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+			        	searchFinancialSubGroup('formNewDocumentTransfDest');
+					}
+		        });
+
+		        $('.financialSubGroupSelect')
+		        .select2({ 
+		            width: '100%',
+		            theme: "bootstrap",
+		            placeholder: "SELECIONE...",
+				    allowClear: true,
+		            language: {
+		                noResults: function() {
+		               return `<button style="width: 100%" type="button"
+		               class="btn btn-primary btn-sm" 
+		               onClick="saveNewFinancialSubGroup('formNewDocument')">+ Adicionar Sub-Grupo Financeiro</button>
+
+		               </li>`;
+		               }
+		            },
+		          
+		           escapeMarkup: function (markup) {
+		               return markup;
+		           }
+		        });
+			 
+			  $('form#formNewDocumentTransfDest input#countExpense').val(countExpense);
+			}
+			
+			*/
+  		
+  		
+  		function clearDataChangeAccount(){
+			dataSource.data([]);//clear out old data
+			dataSource.sync();//refresh grid
+			$('div#divExpenseDuplicates').html('');
+			$('div#divButtonExpenseTransf').show();
+			countExpense = 0;
+		}
+        
+        function clearFormNewDocumentTransf()
+        {
+        	dataSource.data([]);//clear out old data
+			dataSource.sync();//refresh grid
+			
+			//$('form#formNewDocumentTransf select#companyTransf').empty().trigger('change');
+			//$('form#formNewDocumentTransf select#bankAccountTransf').val('').trigger('change');
+			
+			//$('form#formNewDocumentTransf select#companyTransfDest').empty().trigger('change');
+			$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+			
+			$('form#formNewDocumentTransf select#financialSubGroupTransf').empty().trigger('change');
+			$('form#formNewDocumentTransf textarea#documentNoteTransf').val('');
+			$('form#formNewDocumentTransf select#movementTypeTransf').val('0').trigger('change');
+			$('form#formNewDocumentTransf select#installmentTransf').val('1').trigger('change');
+			$('form#formNewDocumentTransf select#documentStatusTransf').val('2').trigger('change');	
+			$('form#formNewDocumentTransf input#documentValueTransf').val('');
+			$('form#formNewDocumentTransf input#paymentDateTransf').val('');
+			$('form#formNewDocumentTransf select#paymentStatusTransf').val('2').trigger('change');
+        	$('form#formNewDocumentTransf input#documentIdTransf').val('');
+			$('form#formNewDocumentTransf input#documentParentIdTransf').val('');
+			$('form#formNewDocumentTransf input#documentTypeTransf').val('');
+			$('form#formNewDocumentTransf input#bankAccountValueTransf').val('');
+			$('form#formNewDocumentTransf select#financialCostCenterId').val('').trigger('change');
+			$('form#formNewDocumentTransf select#expenseTransf').val('0').trigger('change');
+
+			
+			$('form#formNewDocumentTransf select#financialSubGroupTransfDest').empty().trigger('change');
+			$('form#formNewDocumentTransf textarea#documentNoteTransfDest').val('');  	
+			$('form#formNewDocumentTransf input#bankAccountValueTransfDest').val('');
+			$('form#formNewDocumentTransf input#paymentValueTransf').val('');
+			$('form#formNewDocumentTransf input#expenseValueTransf').val('');
+			$('form#formNewDocumentTransf input#expenseValueTransfDest').val('');
+        }        
+
+	    function clearDataFormNewDocumentTransf()
+	    {
+	    	$('form#formNewDocumentTransf select#companyTransf').empty().trigger('change');
+	    	//$('form#formNewDocumentTransf select#providerTransf').empty().trigger('change');
+	    	//$('form#formNewDocumentTransf select#financialGroupTransf').val('').trigger('change');
+	    	$('form#formNewDocumentTransf select#financialSubGroupTransf').empty().trigger('change');
+	    	$('form#formNewDocumentTransf select#movementTypeTransf').val('D').trigger('change');
+	    	$('form#formNewDocumentTransf input#documentNumberTransf').val('');
+	    	$('form#formNewDocumentTransf input#documentValueTransf').val('');
+	    	$('form#formNewDocumentTransf input#documentDateTransf').val('');
+	    	$('form#formNewDocumentTransf select#paymentTypeTransf').val('1').trigger('change');
+	    	$('form#formNewDocumentTransf input#paymentDateTransf').val('');
+	    	$('form#formNewDocumentTransf select#bankAccountTransf').val('').trigger('change');
+	    	$('form#formNewDocumentTransf input#documentNoteTransf').text('');
+	    	$('form#formNewDocumentTransf input#countDuplicatesTransf').val('0');
+	    	$('form#formNewDocumentTransf input#orderValueTransf').val('');
+			$('form#formNewDocumentTransf select#financialCostCenterId').val('').trigger('change');
+	    	
+	    	$('form#formNewDocumentTransf select#companyTransfDest').empty().trigger('change');
+	    	//$('form#formNewDocumentTransf select#providerTransfDest').empty().trigger('change');
+	    	//$('form#formNewDocumentTransf select#financialGroupTransfDest').val('').trigger('change');
+	    	$('form#formNewDocumentTransf select#financialSubGroupTransfDest').empty().trigger('change');
+	    	$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+	    	$('form#formNewDocumentTransf input#documentNoteTransfDest').text('');
+	    	$('form#formNewDocumentTransf input#countDuplicatesTransfDest').val('0');
+	    	$('form#formNewDocumentTransf input#orderValueTransfDest').val('');
+	    	$('form#formNewDocumentTransf input#documentNumberTransfDest').val('');
+	    	$('form#formNewDocumentTransf input#paymentValueTransf').val('');
+
+	    }
+	    
+	    function validateTotalExpense(){
+			
+			let isValid = true;
+			
+			const dataExpenses = dataSource.data();
+			
+			const totalExpenses = dataExpenses.reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+	        const totalTransfer = removeDoteValue($('form#formNewDocumentTransf input#paymentValueTransf').val());
+	        
+	        if((totalTransfer - totalExpenses) < 0){
+				isValid = false;
+			}
+			
+			return isValid;
+		}
+	    
+	    function saveNewDocumentTransf()
+		{
+	    	var bootstrapValidator = $('form#formNewDocumentTransf').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			
+			if (bootstrapValidator.isValid() === false) 
+			{
+				return;
+	        }
+	        
+	        const dataExpenses = dataSource.data();
+	        
+	        const totalExpenses = dataExpenses.reduce((total, item) => total + parseFloat(removeDoteValue(item.documentValueExpense)),0);
+	        const totalTransfer = removeDoteValue($('form#formNewDocumentTransf input#paymentValueTransf').val());
+	        
+	        if(!validateTotalExpense()){
+				showSweetalertWarning('Alerta!', 'Total de despesas n\u00f5o pode ser maior que o total transferido.','30000'); 
+				return;
+			}
+	        
+	        
+			$('form#formNewDocumentTransf input#documentNoteEncodedTransf').val(encodeURIComponent($('form#formNewDocumentTransf textarea#documentNoteTransf').val()));
+			$('form#formNewDocumentTransf input#documentNoteEncodedTransfDest').val(encodeURIComponent($('form#formNewDocumentTransf textarea#documentNoteTransfDest').val()));
+			$('form#formNewDocumentTransf input#countExpense').val(countExpense);
+  				
+  			$('form#formNewDocumentTransf input#countExpense').val();
+ 
+			const documentResult = {
+				paymentExpiryDateTransf: $('form#formNewDocumentTransf input#paymentExpiryDateTransf').val(),
+				paymentValueTransf : removeDoteValue($('form#formNewDocumentTransf input#paymentValueTransf').val()),
+				
+				companyDescriptionTransf: $('form#formNewDocumentTransf select#companyTransf option:selected').text(),
+				companyTransf: $('form#formNewDocumentTransf select#companyTransf option:selected').val(),
+				bankAccountTransf: $('form#formNewDocumentTransf select#bankAccountTransf option:selected').val(),
+				documentNoteTransf: $('form#formNewDocumentTransf input#documentNoteEncodedTransf').val(),
+				
+				companyDescriptionTransfDest: $('form#formNewDocumentTransf select#companyTransfDest option:selected').text(),
+				companyTransfDest: $('form#formNewDocumentTransf select#companyTransfDest option:selected').val(),
+				bankAccountTransfDest: $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected').val(),
+				documentNoteTransfDest: $('form#formNewDocumentTransf input#documentNoteEncodedTransfDest').val(),
+				
+				movementTypeTransfDest: $('form#formNewDocumentTransf input#movementTypeTransf').val(),
+				
+				launchType: 2,
+				
+				documentStatusTransf: 2,
+				paymentStatusTransfDest: 2,
+				countExpense: countExpense,
+				
+				expenses: []
+			}
+			
+			if(countExpense > 0){
+				Array.prototype.forEach.call(
+				  dataExpenses,
+				  (item) => {
+					  documentResult.expenses.push({
+						  	"bankAccountDescription": item.bankAccountDescription,
+							"bankAccountExpense": item.bankAccountExpense,
+							"companyId": item.companyId,
+							"documentNoteExpense": encodeURIComponent(item.documentNoteExpense),
+							"documentStatusExpense": item.documentStatusExpense == 'BA' ? 2 : 1,
+							"documentValueExpense": removeDoteValue(item.documentValueExpense),
+							"financialGroupDescription": item.financialGroupDescription,
+							"financialGroupExpense": item.financialGroupExpense,
+							"financialSubGroupDescription": item.financialSubGroupDescription,
+							"financialSubGroupExpense": item.financialSubGroupExpense,
+							"id": item.id,
+							"paymentExpiryDateExpense": item.paymentExpiryDateExpense,
+							"providerDescription": item.providerDescription,
+							"providerExpense": item.providerExpense,
+							"launchType": item.launchType,
+							"uid": item.uid
+					  })
+				  }
+				);
+			}
+			
+			const jsonString = JSON.stringify(documentResult);
+		
+			$('form#formNewDocumentTransf input#jsonDataRequest').val(jsonString);
+			
+			var form = $('form#formNewDocumentTransf');
+			
+			Swal.fire({
+			  title: 'Alerta',
+			  text: 'Confirma a grava\u00e7\u00e3o do(s) Documento(s).',
+			  icon: 'question',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'Confirma',
+			  cancelButtonText: 'Cancelar'
+			}).then((result) => 
+			{
+			  if (result.value)
+			  {
+				  processSaveDocumentTransf(form);
+			  }
+			});
+		}
+	    
+	    function processSaveDocumentTransf(form)
+	    {
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					countExpense=0;
+            		clearFormNewDocumentTransf();           		
+        			showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'30000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','30000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+        
+	    (function() {
+	    'use strict';
+	    $('.collapse').collapse('show');
+		    
+	    $('form#formNewDocumentTransf select#financialCostCenterId')
+        .select2({ 
+        	//tags : true,
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: {
+                noResults: function() {
+               return `<button style="width: 100%" type="button"
+               class="btn btn-primary btn-sm" 
+               onClick="saveNewCostCenter('formNewDocumentTransf')">+ Adicionar Grupo Financeiro</button>
+               </li>`;
+               }
+            },
+          
+           escapeMarkup: function (markup) {
+               return markup;
+           }
+        }).on('change', function (e)
+        {
+        
+        });
+	    
+        $('form#formNewDocumentTransf select#movementTypeTransf')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocumentTransf select#companyTransf')
+        .select2({
+  			theme: "bootstrap",
+  			placeholder: "SELECIONE...",
+		    allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'COM'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  			//$(this).valid();
+  		  	//console.log(this.value);
+  		  	clearDataChangeAccount();
+  	    	searchBankAccountByCompany('form#formNewDocumentTransf');
+  		}).on('select2:close', function (e) 
+  		{
+  			//console.log(this.value);
+  		});
+	
+        $('form#formNewDocumentTransf select#bankAccountTransf')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        }).on('change', function (e)
+        {
+        	if(isSetFinancialGroup)
+        	{
+        		 isSetFinancialGroup = false;
+        		 return;
+        	}
+        	
+        	clearDataChangeAccount();
+        	
+        	const optionSelected = $('form#formNewDocumentTransf select#bankAccountTransf option:selected');
+        	if(optionSelected)
+			{
+        		const optionSelectedAttrib = optionSelected.attr('data-bankBalanceAvailable');
+        		if(optionSelectedAttrib){
+        			$('form#formNewDocumentTransf input#bankAccountValueTransf').val(optionSelectedAttrib);
+        		}
+			}			
+        });
+
+        $('form#formNewDocumentTransf select#paymentTypeTransf').change(function() 
+        {
+        	var optionSelected = $('form#formNewDocumentTransf select#paymentTypeTransf').val();
+        	
+        	if("2" == optionSelected)
+        	{
+        		$(function() {
+        		    $('form#formNewDocumentTransf input#paymentDateTransf').datepicker({ maxDate: 0});
+        		});
+        	}
+        });
+               
+        $('form#formNewDocumentTransf select#movementTypeTransf')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+
+        $('form#formNewDocumentTransf select#documentStatusTransf')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocumentTransf select#paymentStatusTransf')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocumentTransf select#installmentTransf')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        }).on('change', function (e)
+        {
+        	if('1'!=this.value)
+        	{
+        		$('form#formNewDocumentTransf select#paymentStatusTransf').val('3').trigger('change');
+        		$('div#divDuplicatesTransf').html('');
+    			$('div#divDuplicatesTransf').show();
+    			$('div#divButtonInstallmentTransf').show();
+    			$('div#divInstallmentTypeTransf').show();  
+    			//$('div#divPaymentExpiryDate').hide();
+    			$('div#divNoteTransf').removeClass('col-md-4').addClass('col-md-4');
+        	}
+        	else
+        	{
+    			$('div#divDuplicates').hide();
+    			$('div#divButtonInstallment').hide();
+    			$('div#divInstallmentType').hide();
+    			$('div#divPaymentExpiryDate').show();
+    			$('div#divNote').removeClass('col-md-4').addClass('col-md-7');
+        	}
+        });
+        
+        $('form#formNewDocumentTransf select#installmentTypeTransf')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        });
+        
+        $('form#formNewDocumentTransf input#paymentExpiryDateTransf').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            toggleActive: true,
+            width: '100%',
+            format: 'dd/mm/yyyy',
+            language: 'pt-BR'
+        });
+        
+        $('form#formNewDocumentTransf input#paymentDateTransf').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            toggleActive: true,
+            format: 'dd/mm/yyyy',
+            language: 'pt-BR'
+        });
+        
+	    $('form#formNewDocumentTransf input#documentNumberTransf').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13')
+            {
+            	if(''==$.trim($('form#formNewDocument input#documentNumberTransf').val()))
+            	{
+                	$('form#formNewDocumentTransf input#documentNumberTransf').val(moment().format('YYYYMMDDHHmmss'));  
+                	$('form#formNewDocumentTransf').bootstrapValidator('revalidateField', 'documentNumberTransf');
+                	$('form#formNewDocumentTransf input#documentValueTransf').focus();            		
+            	}
+            }
+            event.stopPropagation();
+        });
+	    
+	    $('form#formNewDocumentTransf').bootstrapValidator({
+            excluded: ':disabled',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            }
+        });
+	    
+	    $('form#formNewDocumentTransf input#paymentExpiryDateTransf')
+		    .on('changeDate show', function(e) {
+		        // Revalidate the date when user change it
+		         $('form#formNewDocumentTransf').bootstrapValidator('revalidateField', 'paymentExpiryDateTransf');
+		});
+	    	    
+	    $('form#formNewDocumentTransf select#companyTransfDest')
+        .select2({
+  			theme: "bootstrap",
+  			placeholder: "SELECIONE...",
+		    allowClear: true,
+	    	language: {
+	        	noResults: function (params) {
+	            return "Nenhum registro encontrado.";
+	          },
+	          searching: function ()
+	          {
+	              return 'Buscando...';
+	          },
+	          loadingMore: function () {
+	              return 'Carregando mais resultados...';
+	          },
+	          errorLoading: function () {
+	              return 'Os resultados nao puderam ser carregados.';
+	          },
+	          inputTooLong: function (args) {
+	              var overChars = args.input.length - args.maximum;
+
+	              var message = 'Apague ' + overChars + ' caracter';
+
+	              if (overChars != 1) {
+	                message += 'es';
+	              }
+
+	              return message;
+	            },
+	            inputTooShort: function (args) {
+	              var remainingChars = args.minimum - args.input.length;
+
+	              var message = 'Digite ' + remainingChars + ' ou mais caracteres';
+
+	              return message;
+	            }
+	        },
+  			ajax: {
+  				url : $('form#formAutocomplete').attr('action'),
+                type : "POST",
+  	            dataType: 'json',
+  	            delay: 250,
+  	            data: function (params)
+  	            {
+  	                return {
+  	                	description: params.term, // search term
+  	                	inactive: '0',
+  	                	objectType: 'COM'
+  	                };
+  	            },
+  	            processResults: function (data, params) {
+  	                //console.log(data);
+  	                var results = $.map(data.report, function (value, key)
+  	                {
+  	                    return {
+  	                    	id: value.key,
+  	                        text: value.value + ' (' + value.key + ')' 
+  	                    };
+  	                });
+  	                //console.log(results);
+  	                return {
+  	                    results: results
+  	                };
+  	            },
+  	            cache: true
+  	        },
+  	        minimumInputLength: 3,
+  	        templateSelection: formatRepoSelection
+  	    }).on('change', function (data)
+  		{
+  			//$(this).valid();
+  		  	//console.log(this.value);
+  		  	clearDataChangeAccount();
+  	    	searchBankAccountByCompany('formNewDocumentTransfDest');
+  		}).on('select2:close', function (e) 
+  		{
+  			//console.log(this.value);
+  		})
+
+  		$('form#formNewDocumentTransf input#documentNumberTransfDest').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13')
+            {
+            	if(''==$.trim($('form#formNewDocument input#documentNumberTransfDest').val()))
+            	{
+                	$('form#formNewDocumentTransf input#documentNumberTransfDest').val(moment().format('YYYYMMDDHHmmss'));  
+                	$('form#formNewDocumentTransf').bootstrapValidator('revalidateField', 'documentNumberTransfDest');
+                	$('form#formNewDocumentTransf textarea#documentNoteTransfDest').focus();   
+            	}
+            }
+            event.stopPropagation();
+        });
+        
+        $('form#formNewDocumentTransf select#bankAccountTransfDest')
+        .select2({ 
+            width: '100%',
+            theme: "bootstrap",
+            placeholder: "SELECIONE...",
+		    allowClear: true,
+            language: 
+            {
+                noResults: function (params) 
+                {
+                    return "Nenhum registro encontrado.";
+                }
+            }
+        }).on('change', function (e)
+        {
+        	var bankAccountOrigin = 0;
+        	var bankAccountDestinty = 0;
+        	if(isSetFinancialGroup)
+        	{
+        		 isSetFinancialGroup = false;
+        		 return;
+        	}
+        	
+        	clearDataChangeAccount();
+        	
+        	const optionSelected = $('form#formNewDocumentTransf select#bankAccountTransfDest option:selected');
+        	
+        	if(isNumber(this.value))
+			{
+        		const optionSelectedAttrib = optionSelected.attr('data-bankBalanceAvailable');
+        		if(optionSelectedAttrib){
+        			const paymentValueTransf = $('form#formNewDocumentTransf input#paymentValueTransf').val();
+    				if(paymentValueTransf == null || paymentValueTransf == ''){
+    					showSweetalertWarning('Alerta!', 'Favor inserir o valor do Pagamento.','5000');
+    					$('form#formNewDocumentTransf select#bankAccountTransfDest').val('').trigger('change');
+    					return;
+    				}
+        			$('form#formNewDocumentTransf input#bankAccountValueTransfDest').val(optionSelectedAttrib);
+        		}
+			}
+        	 bankAccountOrigin = $('form#formNewDocumentTransf select#bankAccountTransf').val();
+        	 bankAccountDestinty = $('form#formNewDocumentTransf select#bankAccountTransfDest').val();
+        	if(bankAccountOrigin > 0 && bankAccountDestinty > 0){
+        		configTransfer();
+        	}
+        });
+	
+	    
+		  	$(document).on('keypress', 'input.only-number', function(e) {
+			    const $this = $(this);
+			    const key = (window.event)?event.keyCode:e.which;
+			    const dataAcceptDot = $this.data('accept-dot');
+			    const dataAcceptComma = $this.data('accept-comma');
+			    const acceptDot = (typeof dataAcceptDot !== 'undefined' && (dataAcceptDot == true || dataAcceptDot == 1)?true:false);
+			    const acceptComma = (typeof dataAcceptComma !== 'undefined' && (dataAcceptComma == true || dataAcceptComma == 1)?true:false);
+			    
+			    const str = $this.val();
+			    if(str){
+					 const contemsDot = str.includes(".");
+					 if(contemsDot && key == 46){
+						 return false;
+					 }
+				}
+	
+		
+				if((key > 47 && key < 58)
+			      || (key == 46 && acceptDot)
+			      || (key == 44 && acceptComma)) {
+			    	return true;
+			  	} else {
+			 			return (key == 8 || key == 0)?true:false;
+			 	}
+		  	});
+	  	
+	  		$(document).on('keypress', 'input.only-number', function(e) {
+			    const $this = $(this);
+			    const key = (window.event)?event.keyCode:e.which;
+			    const dataAcceptDot = $this.data('accept-dot');
+			    const dataAcceptComma = $this.data('accept-comma');
+			    const acceptDot = (typeof dataAcceptDot !== 'undefined' && (dataAcceptDot == true || dataAcceptDot == 1)?true:false);
+			    const acceptComma = (typeof dataAcceptComma !== 'undefined' && (dataAcceptComma == true || dataAcceptComma == 1)?true:false);
+			    
+			    const str = $this.val();
+			    if(str){
+					 const contemsComma = str.includes(",");
+					 if(contemsComma && key == 44){
+						 return false;
+					 }
+				}
+		
+				if((key > 47 && key < 58)
+			      || (key == 46 && acceptDot)
+			      || (key == 44 && acceptComma)) {
+			    	return true;
+			  	} else {
+			 			return (key == 8 || key == 0)?true:false;
+			 	}
+		  	});
+		  	
+		  	$("input.only-number").on('blur', function() {
+				let paymentValue = this.value; 
+				paymentValue = paymentValue.replaceAll('.', '');
+				const commaIndex = paymentValue.indexOf(',');
+				const paymentValueLength = paymentValue.length;
+				
+				if(paymentValueLength > 0){
+					if(commaIndex > -1){
+						if((commaIndex + 1) == paymentValueLength){
+							paymentValue = paymentValue + '00';
+						} else if((commaIndex + 2) == paymentValueLength){
+							paymentValue = paymentValue + '0';
+						}					
+					} else {
+						paymentValue = paymentValue + ',00'
+					}
+					paymentValue = paymentValue.replace(',', '.');
+					
+					
+					$("input#"+$(this).attr('id')).val(Number(paymentValue).format(2, 3, '.', ','));
+				}		
+	        });
+	    
+	    
+	    	$('.collapse').collapse('hide');
+	    	prepareFormDocumentTransf();
+	    	
+	    	
+	    	$("#grid").kendoGrid({
+			dataSource: dataSource,
+			pageable: true,
+			height: 180,
+			columns: [
+				    {
+		                field : "",
+		                title : "",
+		                width: 50,
+		                template: "<input type='checkbox' class='sel' />",
+		                attributes: { style: "text-align: left" }
+	                },
+					{ field: "bankAccountDescription", title: "Conta", width: 170, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" }},
+					{ field: "paymentExpiryDateExpense", title: "Vencimento", width: 110, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: center" }},
+					{ field: "documentValueExpense", title: "Vator", width: 110, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: right" } },
+					{ field: "documentStatusExpense", title: "Satus", width: 60, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: center" } },
+					{ field: "providerDescription", title: "Fornecedor", width: 170, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } },
+					{ field: "financialGroupDescription", title: "Grupo", width: 300, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } },
+					{ field: "financialSubGroupDescription", title: "Sub-Grupo", width: 300, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } },
+					{ field: "documentNoteExpense", title: "Nota", width: 300, headerAttributes: { "class": "k-text-center !k-justify-content-center" }, attributes: { style: "text-align: left" } }
+             	],
+				editable: false,
+			    selectable: true,
+	    		change: checkCelValue
+			});
+			
+			$('button#buttonExpenseTransf').click(function() 
+		    {
+		    	expenseTransfDocument();
+		    });
+			
+	    })();
+	    </script>
+	</th:block>
+</html>

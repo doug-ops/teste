@@ -1,0 +1,56 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+		<form id="formNextCode" name="formNextCode" th:action="@{/adm/common/nextCode}" method="post" autocomplete="off">		
+			<input type="hidden" id="tableName" name="tableName"/>
+			<input type="hidden" id="initialCode" name="initialCode"/>
+		</form>
+		<form id="formInactive" name="formInactive" th:action="@{/adm/financial-transfer/inactive}" method="post" autocomplete="off">		
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="inactive" name="inactive"/>
+		</form>
+		<form id="formDetail" name="formDetail" th:action="@{/adm/financial-transfer/detail}" method="post" autocomplete="off">		
+			<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+			<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+		</form>	
+		<form id="formEditGroup" name="formEditGroup" th:action="@{/adm/financial-transfer/editGroupTransfer}" method="post" autocomplete="off">		
+			<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+			<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+			<input type="hidden" id="groupId" name="groupId"/>
+		</form>	
+		<form id="formEditGroupItem" name="formEditGroupItem" th:action="@{/adm/financial-transfer/editGroupItemTransfer}" method="post" autocomplete="off">		
+			<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+			<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+			<input type="hidden" id="groupId" name="groupId"/>
+			<input type="hidden" id="groupItemId" name="groupItemId"/>
+		</form>
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off"></form>		
+		<form id="formAutocompleteProducts" name="formAutocompleteProducts" th:action="@{/adm/product/autocomplete}" method="post" autocomplete="off"></form>
+		<form id="formCopyTransfer" name="formCopyTransfer" th:action="@{/adm/financial-transfer/clone}" method="post" autocomplete="off">		
+			<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+			<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+		</form>
+		<form id="formFilterProducts" name="formFilterProducts" th:action="@{/adm/product/getAllProducts}" method="post" autocomplete="off">
+			<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+			<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+		</form>		
+		<form id="formSaveFinancialGroup" name="formSaveFinancialGroup" th:action="@{/adm/financial-group/save}" method="post" autocomplete="off">
+			<input type="hidden" id="id" name="id"/>
+			<input type="hidden" id="description" name="description"/>
+			<input type="hidden" id="active" name="active"value="on"/>
+			<input type="hidden" id="descriptionSubGroup_1" name="descriptionSubGroup_1"/>
+			<input type="hidden" id="idSubgroup_1" name="idSubgroup_1"/>
+			<input type="hidden" id="revenueSource_1" name="revenueSource_1" value ="4"/>
+			<input type="hidden" id="revenueType_1" name="revenueType_1" value ="1"/>
+			<input type="hidden" id="isSaveDynamic" name="isSaveDynamic" value ="0"/>
+		</form>
+		<form id="formAutocompleteSubGroup" name="formAutocompleteSubGroup" th:action="@{/adm/product-sub-group/autocomplete}" method="post" autocomplete="off">		
+			<input type="hidden" id="productGroup" name="productGroup"/>
+		</form>
+		<form id="formSaveFinancialCostCenter" name="formSaveFinancialCostCenter" th:action="@{/financial/financialCostCenter/save}" method="post" autocomplete="off">
+			<input type="hidden" id="description" name="description"/>
+		</form>
+		<form id="formAutocompleteFinancialSubGroup" name="formAutocompleteFinancialSubGroup" th:action="@{/adm/financial-sub-group/autocomplete}" method="post" autocomplete="off">		
+			<input type="hidden" id="financialGroup" name="financialGroup"/>
+		</form>
+	</th:block>
+</html>

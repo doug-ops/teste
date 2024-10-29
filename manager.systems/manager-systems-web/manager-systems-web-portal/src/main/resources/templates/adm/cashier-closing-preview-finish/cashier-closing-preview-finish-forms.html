@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+        <form id="formSavePreview" name="formSavePreview" th:action="@{/cashierClosingPreview/cashier-closing/saveCashierClosing}" method="post">
+			<input type="hidden" id="jsonData" name="jsonData"/>
+			<input type="hidden" id=weekValue name="weekValue"/>
+		</form>
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off">		
+		</form>
+		<form id="formFilterCasingClosingLaunchByUser" name="formFilterCasingClosingLaunchByUser" th:action="@{/cashierClosingPreviewFinish/cashier-closing-finish/filterCasingClosingLaunchByUser}" method="post">
+			<input type="hidden" id="userChildrensParentCombobox" name="userChildrensParentCombobox"/>
+		</form>
+		<form id="formGetBankAccounts" name="formGetBankAccounts" th:action="@{/adm/bank-account/getAllComoboboxByPerson}" method="post" autocomplete="off">
+			<input type="hidden" id="inactive" name="inactive" value="0"/>
+			<input type="hidden" id="personsId" name="personsId"/>
+			<input type="hidden" id="objectType" name="objectType" value="COM"/>
+		</form>
+		<form id="formConfigTransfer" name="formConfigTransfer" th:action="@{/adm/financial-transfer/detail}" method="post" autocomplete="off">		
+			<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+			<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+		</form>
+	</th:block>
+</html>

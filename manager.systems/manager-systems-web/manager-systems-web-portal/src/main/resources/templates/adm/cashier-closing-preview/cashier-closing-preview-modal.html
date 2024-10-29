@@ -1,0 +1,93 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="modal">
+	<!-- ============================================================== -->
+    <!--Cashing Close Modal-->
+    <!-- ============================================================== -->
+    <div id="new-document-modal" class="modal long-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable full-screen" style="max-width: 1140px;">
+           <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-12">
+                    	<h4 class="modal-title" id="titleModalDocument">Lan&ccedil;amentos Fechamaneto de Caixa</h4>
+                    	<div style="float: left;">
+							<span style="font-size: 20px;color: red;">SALDO: </span>
+							<span style="background-color: #e9ecef;opacity: 1;font-size: 20px;" id="balanceCashingClose"></span>		                    	                    
+                        </div>
+                        <div style="float: right;">
+		                    <a type="button" class="btn btn-success waves-effect waves-light" id="btnSaveNewDocument" href="javascript:processSaveCashierClosing();">Gravar</a>
+		                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">Cancelar</button>
+		                    <!--
+		                    <button type="button" class="btn btn-success btn-circle" onclick="openUpload();"><i class="fa fa-link"></i> </button>
+		                    -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" style="height:100%;">
+                    <form id="formNewDocumentTransfDest" name="formNewDocumentTransfDest" th:action="@{/cashierClosingPreviewFinish/cashier-closing-finish/saveCashierClosing}" method="post" autocomplete="off">
+						<!-- enctype="multipart/form-data" -->
+                        <input type="hidden" id="jsonData" name="jsonData"/>
+                        <input type="hidden" id="jsonDataRequest" name="jsonDataRequest"/>
+                        <input type="hidden" id="cashierClosingId" name="cashierClosingId"/>
+                        <input type="hidden" id="bankAccountOriginId" name="bankAccountOriginId" th:value="${bankAccountOrigin}"/>
+						<div id="divExpenseDuplicates">
+							
+                    	</div>
+                    	<div class="row" id="divDuplicates" style="width: 100%;">
+
+						</div>
+                    	<div id="grid">
+							
+						</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!--End Cashing Close Modal-->
+    <!-- ============================================================== -->
+    		
+    <!-- ============================================================== -->
+        <!--Report Pdf Modal 16/02/2022--> 
+    <!-- ============================================================== -->
+     <div id="new-report-Pdf-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="vcenter" style="height:100%;">
+     	<div class="modal-dialog modal-dialog-centered">
+           <div class="modal-content" style="border-radius:5px;">
+              <div class="modal-header">
+                 <div class="col-md-12">
+					<h4 class="modal-title" id="titleModal">Escolha os filtros para impress&atilde;o</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+				</div>
+                </div>
+                <div class="modal-body" style="height:170px;">
+                     <form id="formReportPdf" name="" th:action="@{/cashierClosingPreview/cashier-closing/filterReport}" target="_blank" method="post">
+						<input type="hidden" id="jsonData" name="jsonData"/>
+						<input type="hidden" id=weekValue name="weekValue"/>
+						<input type="hidden" id=weekDescription name="weekDescription"/>
+						<input type="hidden" id="userChildrensParent" name="userChildrensParent"/>
+						<input type="hidden" id="companys" name="companys"/>
+					 	<div class="row">
+							<div class="col-md-12" id="divAnalitic">
+								<div class="form-analitic">
+									<label for="analitic">Analitico/Sintetico:</label> 
+									<select class="m-b-20 m-r-10 custom-select" id="analitic" name="analitic" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+							        	<option value="0">Analitico</option>
+							        	<option value="1" selected="selected">Sintetico</option>
+							        </select>
+							   	</div>            
+							</div>
+						</div>
+					</form>  
+				</div>                                          
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-warning" id="btnCancReportPdf" data-dismiss="modal">Fechar</button>
+			        <button type="button" class="btn btn-primary" id="btnReportPdf" onclick="confirmPreview();">Imprimir</button>
+                </div>
+             </div>
+     	  </div>  
+       </div>
+    <!-- ============================================================== -->
+    <!--End Report Pdf Modal-->
+    <!-- ============================================================== -->
+	</th:block>
+</html>

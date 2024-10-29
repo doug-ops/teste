@@ -1,0 +1,602 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts-adm">
+		<link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet">
+	    <link th:href="@{/assets/libs/datatables/novo/css/responsive.bootstrap4.min.css}" rel="stylesheet" type="text/css" >
+	    <link th:href="@{/assets/libs/datatables/novo/css/buttons.dataTables.min.css}" rel="stylesheet" type="text/css">
+	    
+		<!-- data-table js -->
+		<script th:src="@{/assets/libs/datatables/novo/js/jquery.dataTables.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.buttons.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/jszip.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/pdfmake.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/vfs_fonts.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.flash.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.colVis.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.print.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.html5.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.bootstrap4.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.responsive.min.js}"></script>
+	    <script th:src="@{/assets/libs/datatables/novo/js/responsive.bootstrap4.min.js}"></script>
+	    
+	    <!-- Select2 -->
+	    <link th:href="@{/assets/libs/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+  	    <link th:href="@{/assets/libs/select2/dist/css/select2-bootstrap.css}" rel="stylesheet" type="text/css"/>
+	    <script th:src="@{/assets/libs/select2/dist/js/select2.full.min.js}"></script>
+    	<script th:src="@{/assets/libs/select2/dist/js/select2.min.js}"></script>    
+ 
+ 		<!-- SweetAlert -->   	
+    	<link th:href="@{/assets/libs/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet"/>
+    	<script th:src="@{/assets/libs/sweetalert2/dist/sweetalert2.all.min.js}"></script>
+    	
+ 		<!-- Jquery Mask -->
+    	<script th:src="@{/assets/libs/jquery.mask/jquery.mask.min.js}"></script>
+    	
+    	<!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+			
+			table.dataTable > tbody > tr.child ul.dtr-details {
+			    display: inline-block;
+			    list-style-type: none;
+			    margin: 0;
+			    padding: 0;
+			    width: 100%;
+			}
+		</style>
+		
+	    <script>	    
+	    var tabId = 'tabReport';
+	    var isDetail = false;
+	    
+		function newRegister()
+		{
+			clearDataFormSave();
+			$('a#tabCreate').trigger('click');
+			setTimeout(function(){ 
+				$('form#formSave input#id').focus(); 
+			}, 1000);
+		}
+
+		function saveForm()
+		{		 
+			var bootstrapValidator = $('form#formSave').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			
+			if (bootstrapValidator.isValid() === false) 
+			{
+				return;
+	        }
+
+			var form = $('form#formSave'); 			
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		clearDataFormSave();           		
+        			showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+
+		function detail(id, objectType)
+	    {	   
+			$('form#formDetail input#id').val(id);
+			$('form#formDetail input#objectType').val(objectType);
+			
+			let systemId=0;
+			if('COM'==objectType){
+				systemId=1;
+			}else if('FOR'==objectType){
+				systemId=2;
+			}else if('USU'==objectType){
+				systemId=3;
+			}else if('PRO'==objectType){
+				systemId=4;
+			}
+
+	  		var form = $('form#formDetail');        
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Carregando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+        			populateFormSave(data);   
+        			$('form#formLogSystemFilter input#systemId').val(systemId);
+        			$('form#formLogSystemFilter input#objectId').val(id);
+        			searchLog();
+             	}
+             	else
+             	{
+            		if('PRO'==objectType){
+            			if(true == data.productNotUser){
+    	            		showSweetalertWarning('Alerta!', data.message,'5000');	
+    	            		clearDataFormSave();            				
+            			}
+            		} else if('COM'==objectType){
+            			if(true == data.companyNotToUser){
+    	            		showSweetalertWarning('Alerta!', data.message,'5000');	
+    	            		clearDataFormSave();            				
+            			}
+            		}            		
+             	}
+        		hideLoading();
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function inactive(id, inactive)
+	    {
+			$('form#formInactive input#id').val(id);
+			$('form#formInactive input#inactive').val(inactive);
+			
+	    	var form = $('form#formInactive');        
+	  		var dataForm = form.serializeArray();
+
+			if('true'==inactive.toString())
+			{
+				showLoading("Inativando registro... Por favor aguarde...");
+			}
+			else
+			{
+				showLoading("Ativando registro... Por favor aguarde...");
+			}
+
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					if(!inactive)
+					{
+		   				$('a#btnInativar_'+id).attr('onclick','inactive('+id+','+true+')');
+		   				$('i#iconInativar_'+id).attr('class', 'fas fa-check text-success');
+		   				$('a#btnInativar_'+id).tooltip('hide').attr('data-original-title', 'Inativar');
+					}
+					else
+					{
+		   				$('a#btnInativar_'+id).attr('onclick','inactive('+id+','+false+')');
+		   				$('i#iconInativar_'+id).attr('class', 'fas fa-minus text-danger');
+		   				$('a#btnInativar_'+id).tooltip('hide').attr('data-original-title', 'Ativar');
+					}
+					showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar registro.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	    
+	    function search()
+	    {	   
+	  		var formFilter = $('form#formFilter');        
+	  		var dataForm = formFilter.serializeArray();
+	  		
+	  		showLoading("Carregando dados... Por favor aguarde...");
+	  		
+	  		$('div#report-table').html('');	    	
+	  		
+			$.ajax({
+	            url : formFilter.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					hideLoading();
+					
+        			populateTable(data);
+            		createTableReport();
+            		goToScrollTop('div#report-table');
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function createTableReport()
+	    {
+	        $('table#table-report').DataTable({
+	            destroy: true,
+			        select:'single',
+			        'paging': false,
+				   	'displayLength': 500,
+		   		 	'responsive': true,
+				   	'order': [ [ 2, 'asc' ] ],
+				   	'autoWidth': false,
+					'scrollCollapse': true,
+					'language': {
+				           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+				           'zeroRecords': 'Nenhum registro encontrado',
+				           'info': 'Mostrando _TOTAL_ registro(s)',
+				           'infoEmpty': 'Nenhum registro encontrado',
+				           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+				           'search': 'Filtrar:',
+				           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+				           "decimal": ",",
+				           "thousands": ".",
+				           'paginate': {
+				               'next': 'Proximo',
+				               'previous': 'Anterior'
+				             }
+				    },
+					dom: 'Bfrtip',
+					buttons: [
+					{
+						extend: 'copyHtml5',
+						text: 'Copiar',
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					{
+						extend: 'excelHtml5',
+						text: 'Excel',
+						title: 'Relatorio',
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					{
+						extend: 'pdfHtml5',
+						text: 'PDF',
+						title: 'Relatorio',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						pageMargins: [ 0, 0, 0, 0 ], // try #1 setting margins
+						margin: [ 0, 0, 0, 0 ], // try #2 setting margins
+						key: { // press E for export PDF
+							key: 'e',
+							altKey: true
+						},
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					{
+						text: 'JSON',
+						action: function(e, dt, button, config) 
+						{
+							var data = dt.buttons.exportData();
+							$.fn.dataTable.fileSave(new Blob([JSON.stringify(data)]), 'Relatorio.json');
+						}
+					},
+					'colvis']
+	        });
+	        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .dt-button').addClass('btn btn-primary mr-1');
+	    }
+	    
+	    function nextCode()
+	    {	   
+	    	var initialCode = $('form#formSave input#id').val();
+	    	if(''==initialCode)
+	    	{
+	    		initialCode = '0';
+	    	}
+	    	
+	    	var objectType = $('form#formFilter input#objectType').val(); 
+	    	if('COM'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('company');	
+	    	}
+	    	else if('USU'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('user');	
+	    	}
+	    	else if('FOR'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('provider');	
+	    	}
+	    	else if('BANKAC'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('bank_account');	
+	    	}
+	    	else if('FINGRU'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('financial_group');	
+	    	}
+	    	else if('FINSUBGRU'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('financial_sub_group');	
+	    	}
+	    	else if('PROGRU'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('product_sub_group');	
+	    	}
+	    	else if('PROSUBGRU'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('product_sub_group');	
+	    	}
+	    	else if('PRO'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('product');	
+	    	}
+	    	else if('ACCESSPROFILE'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('access_profile');	
+	    	}
+	    	else if('FINCOSTCENTER'==objectType)
+	    	{
+	    		$('form#formNextCode input#tableName').val('financial_cost_center');	
+	    	}
+	    	else
+	    	{
+	    		return;	
+	    	}
+	    	$('form#formNextCode input#initialCode').val(initialCode);
+			
+			
+	  		var formNextCode = $('form#formNextCode');        
+	  		var dataForm = formNextCode.serializeArray();
+	    	
+			$.ajax({
+	            url : formNextCode.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		clearDataFormSave();
+            		$('form#formSave input#id').val(data.nextCode);
+            		if('COM'==objectType || 'USU'==objectType || 'FOR'==objectType)
+        	    	{
+	            		$('form#formSave input#name').focus();
+        	    	}
+            		else if('BANKAC'==objectType || 'FINGRU'==objectType || 'FINSUBGRU'==objectType || 'PROGRU' == objectType || 'PROSUBGRU' == objectType || 'PRO' == objectType)
+        	    	{
+            			$('form#formSave input#description').focus();
+        	    	}
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar pro\u00f3ximo c\u00f3digo livre.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function seachByZipCode()
+	    {	   	    
+	    	var zipCode = $('form#formSave input#addressZipCode').val();
+	    	if(''==zipCode)
+	    	{
+	    		return;	
+	    	}
+	    	
+	    	$('form#formAddress input#zipCode').val(zipCode);
+	    	
+	  		var formAddress = $('form#formAddress');        
+	  		var dataForm = formAddress.serializeArray();
+	    	
+			$.ajax({
+	            url : formAddress.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+	           		$('form#formSave input#addressZipCodeSide').val(data.address.complemento);
+	           		$('form#formSave input#addressStreet').val(data.address.logradouro);
+	           		$('form#formSave input#addressDistrict').val(data.address.bairro);
+	           		$('form#formSave input#addressStateIbge').val(data.address.estadoIbge);
+	           		$('form#formSave input#addressState').val(data.address.uf);
+	           		$('form#formSave input#addressCityIbge').val(data.address.ibge);
+	           		$('form#formSave input#addressCity').val(data.address.localidade);
+            		$('form#formSave input#addressStreetNumber').focus();
+             	}
+             	else
+             	{
+					$('form#formAddress input#zipCode').val('');
+					$('form#formAddress input#zipCode').focus();
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000', 'input#zipCode');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados de endere\u00e7o.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    (function() {
+	        'use strict';
+		
+			/** Force input numeric only */
+			$('.force-numeric-only').ForceNumericOnly();
+			
+			$('.money').mask("#.##0,00", {reverse: true});
+			
+			$('form#formFilter select#inactive')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	language: {
+		        	noResults: function (params) {
+		            	return "Nenhum registro encontrado.";
+		          }
+		        } 
+			});
+			
+		    $('.nav-tabs a').click(function(e){
+		    	  tabId = this.id;
+		    	  if('tabCreate'==tabId)
+		    	  {
+		    		  $('a#btnFilter').hide();
+		    		  $('a#btnNew').show();
+		    		  $('a#btnClear').show();
+		    		  $('a#btnView').hide();
+		    	  }
+		    	  else
+		          {
+		    		  $('a#btnFilter').show();
+		    		  $('a#btnNew').show();
+		    		  $('a#btnClear').show();
+		    		  $('a#btnView').show();
+		    		  search();
+		          }
+		    });
+		    
+		    $('button#btnNew').click(function() 
+			{
+		    	if('tabReport'==tabId)
+		    	{
+					$('.customtab2 a[href="#tabCreate"]').trigger('click');
+		    	}
+				setTimeout(function() 
+				{ 
+					$('form#formFilter input#personId').focus(); 
+				}, 1000);	
+			});
+
+			$('form#formSave input#id').focusout(function ()
+	   		{
+				var id = $('form#formSave input#id').val();
+				if(true==isNaN(id)){
+					$('form#formSave input#id').val('');
+					id = '';
+				}
+				var objectType = $('form#formSave input#objectType').val();
+				if(''!=id &&''!=objectType)
+				{
+					detail(id, objectType);
+				}
+			});
+
+			$('form#formSave input#id').keypress(function() 
+			{
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+	            if(keycode == '13')
+	            {
+					$('form#formSave input#name').focus();
+				}
+			});
+		    
+		    $(document).keypress(function(event)
+		    {
+	            var keycode = (event.keyCode ? event.keyCode : event.which);
+	            if(keycode == '13')
+	            {
+	            	if('tabReport'==tabId)
+	  	    	  	{
+	            		search();
+	  	    	  	}
+	            }
+	        });
+		    
+		    $('form#formSave').bootstrapValidator({
+	            excluded: ':disabled',
+	            feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            }
+	        });
+	    })();
+	    </script>
+	</th:block>
+</html>

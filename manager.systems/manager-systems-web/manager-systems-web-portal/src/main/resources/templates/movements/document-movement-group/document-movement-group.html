@@ -1,0 +1,294 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+		<div class="col-12">
+			<div class="card">
+	            <div class="card-body" style="padding: 5px;">
+	                   <h4 class="p-20 text-center">Gerenciamento de Documentos</h4>    
+	                <div class="col-md-12">
+	                    <div style="float: right;">
+	                        <a id="btnFilter" name="btnFilter" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="ti-filter" style="font-size: 14px;"></i></a>
+	                        <!--
+	                        <div class="btn-group">
+	                            <button type="button" class="btn waves-effect waves-light btn-outline-info m-t-10" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="ti-settings"></i></button>
+	                            <div class="dropdown-menu">
+	                                <a type="button" class="btn waves-effect waves-light btn-outline-secondary" style="width: 100%;"><i class="mdi mdi-printer"></i>&nbsp;Imprimir</a>
+	                            </div>
+	                        </div>
+	                        -->    
+	                        <a id="btnView" href="javascript: searchDocumentMovement();" name="btnView" type="button" class="btn waves-effect waves-light btn-outline-success m-t-10">Visualizar</a>
+	                        <!--
+	                        <a id="btnReport" href="javascript:onclick:showModalReportPdf();" name="btnReport" type="button" class="btn waves-effect waves-light btn-outline-warning m-t-10">Imprimir</a>
+	                        -->
+	                    </div>
+	                </div>
+	                <!-- Nav tabs -->
+	                <ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+	                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" id="tabReport" href="#report" role="tab"><span class="hidden-sm-up"><i class="fas fa-list"></i></span> <span class="hidden-xs-down">Relat&oacute;rio</span></a> </li>
+	                </ul>
+	                <!-- Tab panes -->
+	                <div class="tab-content tabcontent-border">
+	                    <div class="tab-pane active" id="report" role="tabpanel">
+	                        <div class="row">
+	                            <div class="col-12">
+	                                <!-- Filter -->
+	                                <div class="collapse" id="collapseFilter">
+	                                <!-- Filter Form -->
+	                                    <form id="formFilter" name="formFilter" th:action="@{/movement/document-movement/filterGroup}" method="post" autocomplete="off">
+	                                        <input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>													
+	                                        <input type="hidden" id="mainCompanyId" name="mainCompanyId" th:value="${session.user?.mainCompanyId}"/>	
+	                                        <input type="hidden" id="mainCompanyDescription" name="mainCompanyDescription" th:value="${session.user?.mainCompanyDescription}"/>
+	                                        <input type="hidden" id=mainCompanyBankAccountId name="mainCompanyBankAccountId" th:value="${session.user?.mainCompanyBankAccountId}"/>
+	                                        <input type="hidden" id=mainCompanyBankAccountDescription name="mainCompanyBankAccountDescription" th:value="${session.user?.mainCompanyBankAccountDescription}"/>
+	                                        <!-- Card -->
+	                                        <div class="card">
+	                                            <!-- Card Body -->
+	                                            <div class="card-body">
+	                                                <!-- Row Title Filter -->
+	                                                <div class="row">
+	                                                    <div class="col-12">
+	                                                        <h4 class="card-title text-center font-weight-bold" style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+	                                                    </div>
+	                                                </div>
+	                                                <!--/ Row Title Filter -->
+	                                                <!-- Row Fields Filter -->					
+	                                                <div class="row">
+	                                                	<div class="col-md-3 mb-3">
+	                                                        <label for="filterData">Data</label>
+	                                                        <div class="input-group">
+	                                                            <input type="text" class="form-control timeseconds text-center" id="date" name="date" />
+	                                                            <div class="input-group-append">
+	                                                                <span class="input-group-text">
+	                                                                    <span class="ti-calendar"></span>
+	                                                                </span>
+	                                                            </div>
+	                                                        </div>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="company">Empresa</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="companyId" name="companyId">																
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="bankAccount">Conta Banc&aacute;ria</label><span class="form-control text-center" id="bankBalanceAvailableSpan" name="bankBalanceAvailableSpan" style="width: 100px; border-width: 0px; display: inline; float: right;"></span>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="bankAccountId" name="bankAccountId">
+	                                                            <option value="" selected="selected">TODOS...</option>
+						                                        <option th:each="item : ${bankAccounts}" th:value="${item.key}" th:text="${item.valueKeyConcact}" data:data-bankBalanceAvailable="${item.key1}"></option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="provider">Fornecedor</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="providerId" name="providerId">
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="financialGroup">Grupo Financeiro</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="financialGroupId" name="financialGroupId">
+	                                                        	<option value="" selected="selected">TODOS...</option>
+																<option th:each="item : ${financialGroups}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="financialSubGroup">Sub-Grupo Financeiro</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="financialSubGroupId" name="financialSubGroupId" multiple="multiple">
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="documentType">Tipo de Documento</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="documentType" name="documentType">
+	                                                            <option value="" selected="selected">TODOS...</option>
+	                                                            <option value="1">Duplicata</option>
+	                                                            <option value="2">Nota Fiscal</option>
+	                                                            <option value="3">Movimento Maquina</option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="documentNumber">N&uacute;mero de Documento</label>
+                                                            <input type="text" class="form-control" id="documentNumber" name="documentNumber" maxlength="200" placeholder="N&uacute;mero de Documento" aria-describedby="inputGroupPrepend">
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="movementType">Tipo de Movimento</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="movementTypeId" name="movementTypeId" multiple>
+	                                                            <!--0 - Debito, 1 - Credito, 2 - Baixado, 3 - Aberto, 4 - Transferencias, 5 - Lancamentos, 6 - Input, 7 - Output, 8 - Duplicatas Movimentos, 9 - Transferencias, 10 - Excluidos, 11 - HAB   -->
+	                                                           	<option value="0" selected>D&eacute;bito</option>
+	                                                            <option value="1" selected>Cr&eacute;dito</option>
+	                                                            <option value="2" selected>Baixados</option>	   
+	                                                            <option value="3">Abertos</option>
+	                                                            <option value="4">Transfer&ecirc;ncias</option>
+	                                                            <option value="5">Lan&ccedil;amentos</option>
+	                                                            <!--
+	                                                            <option value="6">IN Produtos</option>
+	                                                            <option value="7">OUT Produtos</option>
+	                                                            <option value="8">Duplicatas</option>
+	                                                            -->
+	                                                            <option value="9">Exclu&iacute;do</option>
+	                                                            <option value="10">Tranf. HAB</option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="productGroup">Grupo Produto</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="productGroup" name="productGroup">
+	                                                        	<option value="" selected="selected">TODOS...</option>
+																<option th:each="item : ${productGroups}" th:value="${item.key}" th:text="${item.key + ' - ' + item.valueKeyConcact}"></option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="productSubGroup">Sub-Grupo Produto</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="productSubGroup" name="productSubGroup">
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-3">
+							                                <div class="form-group">
+							                                    <label for="filterFinancialCostCenter">Centro de Custo</label>
+							                                    <select class="m-b-20 m-r-10 custom-select" id="filterFinancialCostCenter" name="filterFinancialCostCenter">
+							                                    	<option value="" selected="selected">TODOS...</option>
+							                                    	<option th:each="item : ${financialCostCenters}"
+																			th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+							                                    </select>
+							                                </div>                
+							                            </div>
+	                                                    <div class="col-md-3 mb-3">
+	                                                        <label for="filterData">Filtrar Data por</label>
+	                                                        <select class="m-b-20 m-r-10 custom-select" id="filterDate" name="filterDate">
+	                                                            <option value="1">Inclus&atilde;o</option>
+	                                                            <option value="2">Pagamento</option>
+	                                                            <option value="3" selected>Vencimento</option>
+	                                                        </select>
+	                                                    </div>
+	                                                    <div class="col-md-9 mb-3">
+	                                                   		<div class="form-group" style="width: 300px; height: 13px;">
+																<div
+																	class="form-check custom-control custom-checkbox mr-sm-2">
+																	<input type="checkbox"
+																		class="custom-control-input form-check-input"
+																		id="selectAllCompanys" name="selectAllCompanys" /> <label
+																		class="custom-control-label form-check-label"
+																		for="selectAllCompanys">Selecionar todos os usu&aacute;rios vinculados</label>
+																</div>
+															</div>
+															<select class="m-b-20 m-r-10 custom-select" id="userChildrensParentCombobox"
+																name="userChildrensParentCombobox" multiple="multiple">
+																<option th:each="item : ${userChidrensParent}" th:value="${item.key}"
+																	th:text="${item.value}"></option>
+																<option th:value="${session.user?.id}" selected th:text="${session.user?.name}"></option>
+															</select>
+														</div>
+	                                                </div>													
+	                                                <!--/ Row Fields Filtro -->
+	                                            </div>
+	                                            <!--/ Card Body -->
+	                                        </div>
+	                                        <!--/ Card -->
+	                                    </form>
+	                                    <!--/ Form Filter -->
+	                                </div>
+	                                <!--/ Filter -->    
+	                            </div>
+	                        </div>
+	                        <div class="row">
+	                            <!-- Column -->
+	                            <div class="col-lg-4 col-md-4">
+	                                <div class="card">
+	                                    <div class="card-body">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-primary"><i class="mdi mdi-plus"></i></div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalCredit"></h3>
+	                                                <h5 class="text-muted m-b-0">Cr&eacute;dito</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-4 col-md-4">
+	                                <div class="card">
+	                                    <div class="card-body">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-warning"><i class="mdi mdi-minus"></i></div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalDebit"></h3>
+	                                                <h5 class="text-muted m-b-0">D&eacute;bito</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            <!-- Column -->
+	                            <div class="col-lg-4 col-md-4">
+	                                <div class="card">
+	                                    <div class="card-body">
+	                                        <div class="d-flex flex-row">
+	                                            <div class="round round-lg align-self-center round-success"><i class="mdi mdi-bank"></i></div>
+	                                            <div class="m-l-10 align-self-center">
+	                                                <h3 class="m-b-0 font-lgiht" id="totalSaldo"></h3>
+	                                                <h5 class="text-muted m-b-0">Saldo</h5></div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            
+	                            <!-- Column -->
+	                            <div class="col-lg-2 col-md-2">
+	                                <div class="d-flex flex-row">	                                            
+	                                    <div class="m-l-10 align-self-center">
+	                                        <h3 class="m-b-0 font-lgiht" style="font-size: 18px;" id="countProducts"></h3>
+	                                        <h5 class="text-muted m-b-0">Produtos</h5>
+	                                    </div>
+	                                </div>	                            
+	                            </div>
+	                            <!-- Column -->
+	                            
+	                            <!-- Column -->
+	                            <div class="col-lg-2 col-md-2">
+	                                <div class="d-flex flex-row">	                                            
+	                                    <div class="m-l-10 align-self-center">
+	                                        <h3 class="m-b-0 font-lgiht" style="font-size: 18px;" id="totalInput"></h3>
+	                                        <h5 class="text-muted m-b-0">Input</h5>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            
+	                            <!-- Column -->
+	                            <div class="col-lg-2 col-md-2">
+	                                <div class="d-flex flex-row">	                                            
+	                                    <div class="m-l-10 align-self-center">
+	                                        <h3 class="m-b-0 font-lgiht" style="font-size: 18px;" id="totalOutput"></h3>
+	                                        <h5 class="text-muted m-b-0">Outuput</h5>
+	                                    </div>
+	                                </div>	                            
+	                            </div>
+	                            <!-- Column -->
+	                            
+	                            <!-- Column -->
+	                            <div class="col-lg-2 col-md-2">
+	                                <div class="d-flex flex-row">	                                            
+	                                    <div class="m-l-10 align-self-center">
+	                                        <h3 class="m-b-0 font-lgiht" style="font-size: 18px;" id="sobraInOutput"></h3>
+	                                        <h5 class="text-muted m-b-0">Saldo In/Out</h5>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                            
+	                            <!-- Column -->
+	                            <div class="col-lg-2 col-md-2">
+	                                <div class="d-flex flex-row">	                                            
+	                                    <div class="m-l-10 align-self-center">
+	                                        <h3 class="m-b-0 font-lgiht" style="font-size: 18px;" id="totalExpense"></h3>
+	                                        <h5 class="text-muted m-b-0">Despesas</h5>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <!-- Column -->
+	                        </div>
+	                        <div class="col-12" id="treelistParent">
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</th:block>
+</html>

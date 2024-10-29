@@ -1,0 +1,370 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts-adm">
+		<link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet">
+	    <link th:href="@{/assets/libs/datatables/novo/css/responsive.bootstrap4.min.css}" rel="stylesheet" type="text/css" >
+	    <link th:href="@{/assets/libs/datatables/novo/css/buttons.dataTables.min.css}" rel="stylesheet" type="text/css">
+	    
+		<!-- data-table js -->
+		<script th:src="@{/assets/libs/datatables/novo/js/jquery.dataTables.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.buttons.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/jszip.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/pdfmake.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/vfs_fonts.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.flash.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.colVis.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.print.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.html5.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.bootstrap4.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.responsive.min.js}"></script>
+	    <script th:src="@{/assets/libs/datatables/novo/js/responsive.bootstrap4.min.js}"></script>
+	    
+	    <!-- Select2 -->
+	    <link th:href="@{/assets/libs/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+  	    <link th:href="@{/assets/libs/select2/dist/css/select2-bootstrap.css}" rel="stylesheet" type="text/css"/>
+	    <script th:src="@{/assets/libs/select2/dist/js/select2.full.min.js}"></script>
+    	<script th:src="@{/assets/libs/select2/dist/js/select2.min.js}"></script>    
+ 
+ 		<!-- SweetAlert -->   	
+    	<link th:href="@{/assets/libs/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet"/>
+    	<script th:src="@{/assets/libs/sweetalert2/dist/sweetalert2.all.min.js}"></script>
+    	
+ 		<!-- Jquery Mask -->
+    	<script th:src="@{/assets/libs/jquery.mask/jquery.mask.min.js}"></script>
+    	
+    	<!-- Boostrap Validator -->
+    	<link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+		<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+    	<script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+    	
+    	<!-- Css Boostrap Validator Select2 -->
+    	<style type="text/css">
+			.was-validated .custom-select:invalid + .select2 .select2-selection{
+			    border-color: #f62d51!important;
+				padding-right: 2.0625rem;
+				background-repeat: no-repeat;
+				background-position: center right calc(6.0625rem / 4);
+				background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+				background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+			}
+			.was-validated .custom-select:valid + .select2 .select2-selection{
+				border-color: #36bea6!important;
+				padding-right: 3.29688rem;
+				background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+			}
+			*:focus{
+			  outline:0px;
+			}
+		</style>
+		
+	    <script>	    
+	    var tabId = 'tabReport';
+	    var isDetail = false;
+
+		function newRegister()
+		{
+			clearDataFormSave();
+			$('a#tabCreate').trigger('click');
+			setTimeout(function(){ 
+				$('form#formSave input#id').focus(); 
+			}, 1000);
+		}
+
+		function saveForm()
+		{
+			var bootstrapValidator = $('form#formSave').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			
+			if (bootstrapValidator.isValid() === false) 
+			{
+				return;
+	        }
+
+			var form = $('form#formSave'); 			
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		clearDataFormSave();           		
+        			showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function inactive(id, inactive)
+	    {
+			$('form#formInactive input#id').val(id);
+			$('form#formInactive input#inactive').val(inactive);
+			$('form#formInactive input#objectType').val($('form#formFilter input#objectType').val());
+			
+	    	var form = $('form#formInactive');        
+	  		var dataForm = form.serializeArray();
+
+			if('true'==inactive.toString())
+			{
+				showLoading("Inativando registro... Por favor aguarde...");
+			}
+			else
+			{
+				showLoading("Ativando registro... Por favor aguarde...");
+			}
+
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					if(!inactive)
+					{
+		   				$('a#btnInativar_'+id).attr('onclick','inactive('+id+','+true+')');
+		   				$('i#iconInativar_'+id).attr('class', 'fas fa-check text-success');
+		   				$('a#btnInativar_'+id).tooltip('hide').attr('data-original-title', 'Inativar');
+					}
+					else
+					{
+		   				$('a#btnInativar_'+id).attr('onclick','inactive('+id+','+false+')');
+		   				$('i#iconInativar_'+id).attr('class', 'fas fa-minus text-danger');
+		   				$('a#btnInativar_'+id).tooltip('hide').attr('data-original-title', 'Ativar');
+					}
+					showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar registro.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+	    }
+	    
+	    function search()
+	    {	   
+			$('form#formFilter input#bankAccountOrigin').val($('form#formFilter select#filterBankAccountOrigin option:selected').val());
+			$('form#formFilter input#bankAccountDestiny').val($('form#formFilter select#filterBankAccountDestiny option:selected').val());
+			
+	  		var formFilter = $('form#formFilter');        
+	  		var dataForm = formFilter.serializeArray();
+	  		
+	  		showLoading("Carregando dados... Por favor aguarde...");
+	  		
+	  		$('div#report-table').html('');	    	
+	  		
+			$.ajax({
+	            url : formFilter.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					hideLoading();
+					
+        			populateTable(data);
+            		createTableReport();
+            		
+            		goToScrollTop('div#report-table');
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+		}
+	    
+	    function createTableReport()
+	    {
+	        $('table#table-report').DataTable({
+	            destroy: true,
+			        select:'single',
+			        'paging': false,
+				   	'displayLength': 500,
+		   		 	'responsive': true,
+				   	'order': [ [ 2, 'asc' ] ],
+				   	'autoWidth': false,
+					'scrollCollapse': true,
+					'language': {
+				           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+				           'zeroRecords': 'Nenhum registro encontrado',
+				           'info': 'Mostrando _TOTAL_ registro(s)',
+				           'infoEmpty': 'Nenhum registro encontrado',
+				           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+				           'search': 'Filtrar:',
+				           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+				           "decimal": ",",
+				           "thousands": ".",
+				           'paginate': {
+				               'next': 'Proximo',
+				               'previous': 'Anterior'
+				             }
+				    },
+					dom: 'Bfrtip',
+					buttons: [
+					{
+						extend: 'copyHtml5',
+						text: 'Copiar',
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					{
+						extend: 'excelHtml5',
+						text: 'Excel',
+						title: 'Relatorio',
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					{
+						extend: 'pdfHtml5',
+						text: 'PDF',
+						title: 'Relatorio',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						pageMargins: [ 0, 0, 0, 0 ], // try #1 setting margins
+						margin: [ 0, 0, 0, 0 ], // try #2 setting margins
+						key: { // press E for export PDF
+							key: 'e',
+							altKey: true
+						},
+						exportOptions: {
+							columns: ':visible'
+						}
+					}, 
+					{
+						text: 'JSON',
+						action: function(e, dt, button, config) 
+						{
+							var data = dt.buttons.exportData();
+							$.fn.dataTable.fileSave(new Blob([JSON.stringify(data)]), 'Relatorio.json');
+						}
+					},
+					'colvis']
+	        });
+	        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel, .dt-button').addClass('btn btn-primary mr-1');
+	    }
+	    
+	    (function() {
+	        'use strict';
+		
+			/** Force input numeric only */
+			$('.force-numeric-only').ForceNumericOnly();
+			
+			$('.money').mask("#.##0,00", {reverse: true});
+			
+			$('form#formFilter select#inactive')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	language: {
+		        	noResults: function (params) {
+		            	return "Nenhum registro encontrado.";
+		          }
+		        } 
+			});
+			
+		    $('.nav-tabs a').click(function(e){
+		    	  tabId = this.id;
+		    	  if('tabCreate'==tabId)
+		    	  {
+		    		  $('a#btnFilter').hide();
+		    		  $('a#btnClear').hide();
+		    		  $('a#btnView').hide();
+		    	  }
+		    	  else
+		          {
+		    		  $('a#btnFilter').show();
+		    		  $('a#btnClear').show();
+		    		  $('a#btnView').show();
+		          }
+		    });
+		    
+		    $('button#btnNew').click(function() 
+			{
+		    	if('tabReport'==tabId)
+		    	{
+					$('.customtab2 a[href="#tabCreate"]').trigger('click');
+		    	}
+				setTimeout(function() 
+				{ 
+					$('form#formFilter input#personId').focus(); 
+				}, 1000);	
+			});
+
+			$('form#formSave input#id').keypress(function() 
+			{
+				var keycode = (event.keyCode ? event.keyCode : event.which);
+	            if(keycode == '13')
+	            {
+					$('form#formSave input#name').focus();
+				}
+			});
+		    
+		    $(document).keypress(function(event)
+		    {
+	            var keycode = (event.keyCode ? event.keyCode : event.which);
+	            if(keycode == '13')
+	            {
+	            	if('tabReport'==tabId)
+	  	    	  	{
+	            		search();
+	  	    	  	}
+	            }
+	        });
+		    
+		    $('form#formSave').bootstrapValidator({
+	            excluded: ':disabled',
+	            feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+	            }
+	        });
+	    })();
+	    </script>
+	</th:block>
+</html>

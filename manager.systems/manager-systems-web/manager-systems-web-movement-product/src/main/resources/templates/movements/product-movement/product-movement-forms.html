@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+	    <form id="formGetAllProductsByCompany" name="formGetAllProductsByCompany" th:action="@{/product-movement/getAllProductsByCompany}" method="post" autocomplete="off">		
+	        <input type="hidden" id="companyId" name="companyId"/>
+	    </form>
+	    <form id="formGetAllDataProduct" name="formGetAllDataProduct" th:action="@{/product-movement/getDataProduct}" method="post" autocomplete="off">		
+	        <input type="hidden" id="companyId" name="companyId"/>
+	        <input type="hidden" id="productId" name="productId"/>
+	    </form>
+		<form id="formSincBravo" name="formSincBravo" th:action="@{/bravo-movement/getMovement}" method="post" autocomplete="off">	
+			<input type="hidden" id="companyId" name="companyId"/>
+		</form>
+		<form id="formProcessCompany" name="formProcessCompany" th:action="@{/company-movement/open}" method="get" autocomplete="off">	
+			<input type="hidden" id="selectedCompany" name="selectedCompany"/>
+		</form>		
+		<form id="formPrintPdfMovement" name="formPrintPdfMovement" th:action="@{/company-movement/reportCompanyMovementPdf}" method="get" autocomplete="off">	
+			<input type="hidden" id="companyId" name="companyId"/>
+			<input type="hidden" id="documentParentId" name="documentParentId"/>	
+	    </form>
+	</th:block>
+</html>

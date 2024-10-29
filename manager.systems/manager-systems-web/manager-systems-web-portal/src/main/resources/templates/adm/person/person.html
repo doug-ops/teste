@@ -1,0 +1,654 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="content">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body" style="padding: 5px;">
+				<h4 class="p-20 text-center"
+					th:text="${labelsPage.get('pageTitle')}"></h4>
+				<div class="col-md-12">
+					<div style="float: right;">
+						<a id="btnFilter" name="btnFilter" type="button"
+							class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle"
+							data-toggle="collapse" data-target="#collapseFilter"
+							aria-expanded="false" aria-controls="collapseFilter"><i
+							class="ti-filter" style="font-size: 14px;"></i></a> <a id="btnNew"
+							href="javascript: newRegister();" name="btnNew" type="button"
+							class="btn waves-effect waves-light btn-info m-t-10">Novo</a> <a
+							id="btnClear" href="javascript: clearForms();" name="btnClear"
+							type="button"
+							class="btn waves-effect waves-light btn-warning m-t-10">Limpar</a>
+						<a id="btnView" href="javascript: search();" name="btnView"
+							type="button"
+							class="btn waves-effect waves-light btn-success m-t-10">Visualizar</a>
+					</div>
+				</div>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+					<li class="nav-item"><a class="nav-link active"
+						data-toggle="tab" id="tabReport" href="#report" role="tab"><span
+							class="hidden-sm-up"><i class="fas fa-list"></i></span> <span
+							class="hidden-xs-down">Relat&oacute;rio</span></a></li>
+					<li class="nav-item"><a class="nav-link" data-toggle="tab"
+						id="tabCreate" href="#create" role="tab"><span
+							class="hidden-sm-up"><i class="far fa-edit"></i></span> <span
+							class="hidden-xs-down">Cadastro</span></a></li>
+				</ul>
+				<!-- Tab panes -->
+				<div class="tab-content tabcontent-border">
+					<div class="tab-pane active" id="report" role="tabpanel">
+						<div class="row">
+							<div class="col-12">
+								<!-- Filter -->
+								<div class="collapse" id="collapseFilter">
+									<!-- Filter Form -->
+									<form id="formFilter" name="formFilter" th:action="@{/adm/person/filter}" method="post" autocomplete="off">
+										<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}" />
+										<input type="hidden" id="clientId" name="clientId" th:value="${session.user?.clientId}"/>
+										<input type="hidden" id="userSessionId" name="userSessionId" th:value="${session.user?.id}"/>
+										<!-- Card -->
+										<div class="card">
+											<!-- Card Body -->
+											<div class="card-body">
+												<!-- Row Title Filter -->
+												<div class="row">
+													<div class="col-12">
+														<h4 class="card-title text-center font-weight-bold"
+															style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+													</div>
+												</div>
+												<!--/ Row Title Filter -->
+												<!-- Row Fields Filter -->
+												<div class="row">
+													<div class="col-md-2" id="divPersonId">
+														<h5 class="m-t-30 m-b-10">C&oacute;digo</h5>
+														<div class="input-group">
+															<input type="text"
+																class="form-control force-numeric-only"
+																style="text-align: center;" id="personIdFrom"
+																name="personIdFrom" maxlength="14" /> <span
+																class="input-group-addon bg-info p-t-10 p-l-10 p-r-10 text-white"
+																style="padding-top: 7px;">&nbsp;&nbsp;at&eacute;&nbsp;&nbsp;</span>
+															<input type="text"
+																class="form-control force-numeric-only"
+																style="text-align: center;" id="personIdTo"
+																name="personIdTo" maxlength="14" />
+														</div>
+													</div>
+													<div class="col-md-1">
+														<h5 class="m-t-30 m-b-10">Ativo</h5>
+														<select class="m-b-20 m-r-10 select2-bootstrap-select"
+															id="inactive" name="inactive">
+															<option value="0" selected="selected">Sim</option>
+															<option value="1">N&#227;o</option>
+															<option value="2">Todos</option>
+														</select>
+													</div>
+													<div class="col-md-2" id="divFilterPersonType">
+														<h5 class="m-t-30 m-b-10">Tipo Fornecedor</h5>
+														<select class="m-b-20 m-r-10 selectPersonTypeClass"
+															id="filterPersonType" name="filterPersonType">
+															<option value="F" selected="selected">Fornecedor</option>
+															<option value="C">Cliente</option>
+															<option value="O">Operador</option>
+															<option value="P">Principal</option>
+															<option value="T">Todos</option>
+														</select>
+													</div>
+													<div class="col-md-2" id="divFilterPersonTypeId">
+														<h5 class="m-t-30 m-b-10">Tipo Empresa</h5>
+														<select class="m-b-20 m-r-10 selectPersonTypeClass"
+															id="filterPersonTypeId" name="filterPersonTypeId">
+															<option value="" selected="selected">SELECIONE...</option>
+															<option value="0">TODOS</option>
+															<option th:each="item : ${personTypes}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+														</select>
+													</div>
+													<div class="col-md-2" id="divFilterEstablishmentTypeId">
+														<h5 class="m-t-30 m-b-10">Tipo Estabelecimento</h5>
+														<select class="m-b-20 m-r-10 selectPersonTypeClass"
+															id="filterEstablishmentTypeId" name="filterEstablishmentTypeId">
+															<option value="" selected="selected">SELECIONE...</option>
+															<option value="0">TODOS</option>
+						                                    <option th:each="item : ${establishmentTypes}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+														</select>
+													</div>
+													<div class="col-md-5" id="divDescription">
+														<h5 class="m-t-30 m-b-10">Descri&#231;&#227;o</h5>
+														<div class="input-group">
+															<input type="text" class="form-control uppercase-text"
+																id="description" name="description" maxlength="100" />
+														</div>
+													</div>
+												</div>
+												<div class="row" style="margin-top: 20px;">
+													<div class="col-md-12" id="divFilterUsersChildren">
+														<div class="form-group" style="width: 300px; height: 13px;">
+															<div
+																class="form-check custom-control custom-checkbox mr-sm-2">
+																<input type="checkbox"
+																	class="custom-control-input form-check-input"
+																	id="selectAllUsersFilter" name="selectAllUsersFilter"
+																	checked="checked" /> <label
+																	class="custom-control-label form-check-label"
+																	for="selectAllUsersFilter">Selecionar todos os
+																	usu&aacute;rios vinculados</label>
+															</div>
+														</div>
+														<select class="m-b-20 m-r-10 custom-select"
+															id="userChildrensParentComboboxFilter"
+															name="userChildrensParentComboboxFilter" multiple="multiple">
+															<option th:value="${session.user?.id}"
+																th:text="${session.user?.name}" selected></option>
+															<option th:each="item : ${userChildrensParent}"
+																th:value="${item.key}" th:text="${item.value}" selected></option>
+														</select> 
+													</div>
+												</div>
+												<!--/ Row Fields Filtro -->
+											</div>
+											<!--/ Card Body -->
+										</div>
+										<!--/ Card -->
+									</form>
+									<!--/ Form Filter -->
+								</div>
+								<!--/ Filter -->
+							</div>
+						</div>
+						<div class="row" id="divCountsCompany">
+							<div class="col-lg-12 col-md-12" style="text-align: center;"> 
+								<span class="text-muted m-b-0" style="font-size: 16px;">EMPRESAS:</span>
+								<span class="m-b-0 font-lgiht" style="font-size: 17px; margin-left: 5px;" id="countCompanys"></span>
+								<span class="text-muted m-b-0" style="margin-left: 25px; font-size: 16px;">PRODUTOS:</span>
+								<span class="m-b-0 font-lgiht" style="font-size: 17px; margin-left: 5px;" id="countProducts"></span>
+							</div>
+						</div>
+						<div class="col-12">	                        
+							<div id="report-table" class="table-responsive">
+								<table id="table-relatorio"
+									class="table table-striped table-bordered display">
+
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane" style="padding: 15px;" id="create"
+						role="tabpanel">
+						<form class="was-validated" novalidate id="formSave" name="formSave" th:action="@{/adm/person/save}" method="post" autocomplete="off">
+							<input type="hidden" id="companyDestiny" name="companyDestiny" value="0"/>
+							<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}" /> 
+							<input type="hidden" id="clientId" name="clientId" th:value="${session.user?.clientId}"/>
+							<input type="hidden" id="userSessionId" name="userSessionId" th:value="${session.user?.id}"/>								
+							<div class="form-row">
+								<hr class="hr-admin">
+								<h4 class="card-title">Dados Principais</h4>
+								<hr class="hr-admin">
+								<div class="col-md-2 mb-3">
+									<label for="id">C&oacute;digo</label> <a
+										href="javascript:nextCode();" type="button"
+										class="btn btn-sm btn-outline-primary">Pr&oacute;ximo</a>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text" id="inputGroupPrepend"><i
+												class="fas fa-key"></i></span>
+										</div>
+										<input type="text" class="form-control force-numeric-only"
+											id="id" name="id" maxlength="8" placeholder="C&oacute;digo"
+											aria-describedby="inputGroupPrepend" required
+											data-bv-notempty-message="Campo obrigat&oacute;rio.">
+									</div>
+								</div>
+								<div class="col-md-5 mb-3" id="divAliasRazaoSocial">
+									<label for="name" id="labelName">Raz&atilde;o Social</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text" id="inputGroupPrepend"><i
+												class="far fa-user"></i></span>
+										</div>
+										<input type="text" class="form-control uppercase-text"
+											id="name" name="name" maxlength="100"
+											placeholder="Raz&atilde;o Social"
+											aria-describedby="inputGroupPrepend" required
+											data-bv-notempty-message="Campo obrigat&oacute;rio.">
+									</div>
+								</div>
+								<div class="col-md-5 mb-3" id="divAliasName">
+									<label for="aliasName">Nome Fantasia</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text" id="inputGroupPrepend"><i
+												class="far fa-user"></i></span>
+										</div>
+										<input type="text" class="form-control uppercase-text"
+											id="aliasName" name="aliasName" maxlength="100"
+											placeholder="Nome Fantasia"
+											aria-describedby="inputGroupPrepend">
+									</div>
+								</div>
+								<div class="col-md-2 mb-2" id="divPersonType">
+									<label for="personType">Tipo Pessoa</label> <select 
+										class="m-b-20 m-r-10 custom-select" id="personType"
+										name="personType">
+									</select>
+								</div>
+								<div class="col-md-3 mb-3" id="divCpfCnpj">
+									<label for="cpfCnpj">Cpf/Cnpj</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i
+												class="fas fa-address-card"></i></span>
+										</div>
+										<input type="text" class="form-control force-numeric-only"
+											id="cpfCnpj" name="cpfCnpj" maxlength="20"
+											placeholder="Cpf/Cnpj">
+									</div>
+								</div>
+								<div class="col-md-4 mb-4" id="divEmail">
+									<label for="email">Email</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i class="fas fa-at"></i></span>
+										</div>
+										<input type="text" class="form-control lowercase-text"
+											id="email" name="email" maxlength="100" placeholder="Email">
+									</div>
+								</div>
+								<div class="col-md-2 mb-2" id="divPersonTypeId">
+                                    <label for="personTypeId">Tipo Empresa</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="personTypeId" name="personTypeId">
+	                                    <option value="" selected="selected">SELECIONE...</option>
+                                        <option th:each="item : ${personTypes}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                    </select>          
+                            	</div>
+								<div class="col-md-2 mb-2" id="divEstablishmentTypeId">
+                                    <label for="establishmentTypeId">Tipo Estabelecimento</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="establishmentTypeId" name="establishmentTypeId">
+	                                    <option value="" selected="selected">SELECIONE...</option>
+                                        <option th:each="item : ${establishmentTypes}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                    </select>          
+                            	</div>
+                            	
+								<!-- 
+								<div class="col-md-4 mb-3">
+	                                 <label for="filterData">Hor&aacute;rios</label>
+	                                 <div class="input-group">
+	                                     <input type="text" class="form-control timeseconds text-center" id="date" name="date" />
+	                                      <div class="input-group-append">
+		                                      <span class="input-group-text">
+		                                       	<span class="ti-calendar"></span>
+		                            		  </span>
+	                            		  </div>
+	                            	 </div>
+	                            </div>
+	                            -->
+								<div class="col-md-1 mb-1" id="divActive">
+									<div class="form-group">
+										<div class="form-check custom-control custom-checkbox mr-sm-2">
+											<input type="checkbox"
+												class="custom-control-input form-check-input"
+												checked="checked" id="active" name="active" /> <label
+												class="custom-control-label form-check-label" for="active">Ativo</label>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-2 mb-3" id="divCashingClosingMaxDiscount">
+									<label for="cashingClosingMaxDiscount">F. Caixa Desc Max</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-dollar-sign"></i></span>
+										</div>
+										<input type="text" class="form-control money" id="cashingClosingMaxDiscount" name="cashingClosingMaxDiscount" maxlength="8" placeholder="Valor maximo" aria-describedby="inputGroupPrepend">
+									</div>
+								</div>
+								<div class="col-md-1 mb-3" id="divBlocked">
+									<div class="form-group">
+										<div
+											class="form-check custom-control custom-checkbox mr-sm-2">
+											<input type="checkbox"
+												class="custom-control-input form-check-input"
+												id="blocked" name="blocked" /> <label
+												class="custom-control-label form-check-label"
+												for="blocked">Bloquear</label>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 mb-3" id="divUsersCompany">
+									<label for="usersCompanyCombobox">Vincular Usu&aacute;rios</label>
+									<select class="m-b-20 m-r-10 custom-select" id="usersCompanyCombobox" name="usersCompanyCombobox" multiple="multiple">
+										<option th:each="item : ${users}" th:value="${item.key}" th:text="${item.value}"></option>
+									</select>
+								</div>
+								<div class="form-row" id="divFinancy" style="width: 100%;">
+									<hr class="hr-admin">
+									<h4 class="page-title">Dados Financeiros</h4>
+									<hr class="hr-admin">
+									<div class="col-md-3 mb-3">
+										<label for="bankAccount">Conta Banc&aacute;ria
+											Principal</label> <select class="m-b-20 m-r-10 custom-select"
+											id="bankAccount" name="bankAccount">
+											<option value="" selected="selected">Selecione...</option>
+											<option th:each="item : ${bankAccounts}"
+												th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label for="bankAccount">Fornecedor Cr&eacute;dito</label> <select
+											class="m-b-20 m-r-10 custom-select" id="creditProvider"
+											name="creditProvider">
+										</select>
+									</div>
+									<div class="col-md-4 mb-3">
+										<label for="bankAccount">Fornecedor D&eacute;bito</label> <select
+											class="m-b-20 m-r-10 custom-select" id="debitProvider"
+											name="debitProvider">
+										</select>
+									</div>
+									<div class="col-md-1 mb-3" id="divNegativeClose">
+										<div class="form-group">
+											<div
+												class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox"
+													class="custom-control-input form-check-input"
+													id="negativeClose" name="negativeClose" /> <label
+													class="custom-control-label form-check-label"
+													for="negativeClose">Fecha Negativo</label>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-5 mb-3" id="divBankAccountOthers">
+										<label for="products">Outras Contas Banc&aacute;rias</label> <select
+											class="m-b-20 m-r-10 custom-select" id="bankAccountOthers"
+											name="bankAccountOthers" multiple="multiple"></select>
+									</div>
+									<div class="col-md-2 mb-3" id="divRegisterType">
+										<label for="registerType">Tipo Registro</label> <select
+											class="m-b-20 m-r-10 custom-select" id="registerType"
+											name="registerType">
+											<option value="0" selected="selected">Cliente</option>
+											<option value="1">Transf. Contas</option>
+										</select>
+									</div>
+									<div class="col-md-4" id="divFinancialCostCenterId">
+										<div class="form-group">
+											<label for="financialCostCenterId">Centro de Custo</label>
+											<select class="m-b-20 m-r-10 custom-select" id="financialCostCenterId"
+												name="financialCostCenterId">
+												<option value="" selected="selected">SELECIONE...</option>
+												<option th:each="item : ${financialCostCenters}" th:value="${item.key}"
+													th:text="${item.valueKeyConcact}"></option>
+											</select>
+										</div>
+									</div>
+									<div class="col-md-1 mb-3" id="divEnableMovementAutomatic">
+										<div class="form-group">
+											<div
+												class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox"
+													class="custom-control-input form-check-input"
+													id="movementAutomatic" name="movementAutomatic" /> <label
+													class="custom-control-label form-check-label"
+													for="movementAutomatic">Movimento Autom&aacute;tico</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-row" id="divFinancyProvider"
+									style="width: 100%;">
+									<hr class="hr-admin">
+									<h4 class="page-title">Dados Financeiros</h4>
+									<hr class="hr-admin">
+									<div class="col-md-6 mb-6">
+										<label for="financialGroup">Grupo Financeiro</label> <select
+											class="m-b-20 m-r-10 custom-select" id="financialGroupId"
+											name="financialGroupId">
+											<option value="" selected="selected">Selecione...</option>
+											<option th:each="item : ${financialGroups}"
+												th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+										</select>
+									</div>
+									<div class="col-md-6 mb-6">
+										<label for="financialSubGroup">Sub-Grupo Financeiro</label> <select
+											class="m-b-20 m-r-10 custom-select" id="financialSubGroupId"
+											name="financialSubGroupId">
+										</select>
+									</div>
+								</div>
+								<div class="form-row" id="divUserCompany" style="width: 100%;">
+									<hr class="hr-admin">
+									<h4 class="page-title">Dados de Acesso</h4>
+									<hr class="hr-admin">
+									<div class="col-md-4 mb-3">
+										<label for="accessDataUser">Usu&aacute;rio de Acesso</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="inputGroupPrepend"><i
+													class="fas fa-at"></i></span>
+											</div>
+											<input type="email" class="form-control lowercase-text"
+												id="accessDataUser" name="accessDataUser" maxlength="50"
+												placeholder="Usu&aacute;rio de Acesso"
+												aria-describedby="inputGroupPrepend" required
+												data-bv-notempty-message="Campo inv&aacute;lido.">
+										</div>
+									</div>
+									<div class="col-md-3 mb-3">
+										<label for="accessDataPassword">Senha de Acesso</label>
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text" id="inputGroupPrepend"><i
+													class="fas fa-key"></i></span>
+											</div>
+											<input type="password" class="form-control"
+												id="accessDataPassword" name="accessDataPassword"
+												maxlength="8" placeholder="Senha de Acesso"
+												aria-describedby="inputGroupPrepend" required
+												data-bv-notempty-message="Campo obrigat&oacute;rio.">
+										</div>
+									</div>
+									<div class="col-md-2 mb-6">
+										<label for="accessProfile">Perfil acesso</label> <select
+											class="m-b-20 m-r-10 custom-select" id="accessProfile"
+											name="accessProfile">
+											<option th:each="item : ${accessProfiles}"
+												th:value="${item.key}" th:text="${item.value}"></option>
+										</select>
+									</div>
+									 <div class="col-md-3 mb-3">
+                                        <label for="mainCompanyBankAccountId">Empresa Principal</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="mainCompanyBankAccountId" name="mainCompanyBankAccountId">
+											<option value="0" selected="selected">Selecione...</option>
+											<option th:each="item : ${companies}" th:value="${item.key}" th:text="${item.valueKeyConcact}"></option>
+                                        </select>
+                                    </div>       
+									<div class="col-md-12 mb-3">
+										<div class="form-group">
+											<div
+												class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox"
+													class="custom-control-input form-check-input"
+													id="selectAllCompanys" name="selectAllCompanys" /> <label
+													class="custom-control-label form-check-label"
+													for="selectAllCompanys">Vincular todas as Empresas ao Usu&aacute;rio</label>
+											</div>
+										</div>
+										<select class="m-b-20 m-r-10 custom-select" id="company" name="company" multiple="multiple">
+											<option th:each="item : ${companies}" th:value="${item.key}" th:text="${item.value}"></option>
+										</select>
+									</div>
+									<div class="col-md-12 mb-3">
+										<div class="form-group">
+											<div
+												class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox" class="custom-control-input form-check-input" id="selectAllBankAccountCompanys" name="selectAllBankAccountCompanys" /> 
+												<label class="custom-control-label form-check-label" for="selectAllBankAccountCompanys">Vincular todas as Contas ao Usu&aacute;rio</label>
+											</div>
+										</div>
+										<select class="m-b-20 m-r-10 custom-select" id="bankAccountsCompany" name="bankAccountsCompany" multiple="multiple">
+											<option th:each="item : ${bankAccountsCompanyPermission}" th:value="${item.key}" th:text="${item.value}"></option>
+										</select>
+									</div>
+									<div class="col-md-12 mb-3">
+										<div class="form-group">
+											<div
+												class="form-check custom-control custom-checkbox mr-sm-2">
+												<input type="checkbox"
+													class="custom-control-input form-check-input"
+													id="selectAllUsers" name="selectAllUsers" /> <label
+													class="custom-control-label form-check-label"
+													for="selectAllUsers">Vincular Usu&aacute;rios</label>
+											</div>
+										</div>
+										<select class="m-b-20 m-r-10 custom-select" id="userChildrensParentCombobox"
+											name="userChildrensParentCombobox" multiple="multiple">
+											<option th:each="item : ${users}" th:value="${item.key}"
+												th:text="${item.value}"></option>
+										</select>
+									</div>
+								</div>
+								<hr class="hr-admin">
+								<h4 class="page-title">Dados de Endere&ccedil;o</h4>
+								<hr class="hr-admin">
+								<div class="col-md-2 mb-3">
+									<label for="addressZipCode">Cep</label>
+									<div class="input-group">
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i
+												class="fas fa-map-pin"></i></span>
+										</div>
+										<input type="hidden" id="addressZipCodeSide"
+											name="addressZipCodeSide" value="A" /> <input type="text"
+											class="form-control force-numeric-only" id="addressZipCode"
+											name="addressZipCode" maxlength="9" placeholder="Cep" />
+									</div>
+								</div>
+								<div class="col-md-4 mb-3">
+									<label for="addressStreet">Rua</label> <input type="text"
+										class="form-control uppercase-text" id="addressStreet"
+										name="addressStreet" maxlength="100" placeholder="Rua"
+										readonly="readonly" />
+								</div>
+								<div class="col-md-2 mb-3">
+									<label for="addressStreetNumber">N&uacute;mero</label> <input
+										type="text" class="form-control uppercase-text"
+										id="addressStreetNumber" name="addressStreetNumber"
+										maxlength="20" placeholder="N&uacute;mero" />
+								</div>
+								<div class="col-md-4 mb-3">
+									<label for="addressDistrict">Bairro</label> <input type="text"
+										class="form-control uppercase-text" id="addressDistrict"
+										name="addressDistrict" maxlength="100" placeholder="Bairro"
+										readonly="readonly" />
+								</div>
+								<div class="col-md-5 mb-3">
+									<label for="addressCity">Cidade</label> <input type="hidden"
+										id="addressCityIbge" name="addressCityIbge"
+										readonly="readonly" /> <input type="text"
+										class="form-control" id="addressCity" name="addressCity"
+										maxlength="100" placeholder="Cidade" readonly="readonly" />
+								</div>
+								<div class="col-md-2 mb-3">
+									<label for="addressState">Estado</label> <input type="hidden"
+										id="addressStateIbge" name="addressStateIbge"
+										readonly="readonly" /> <input type="text"
+										class="form-control" id="addressState" name="addressState"
+										placeholder="Estado" readonly="readonly" />
+								</div>
+								<div class="col-md-2 mb-3">
+									<label for="addressCountry">Pa&iacute;s</label> <select
+										class="m-b-20 m-r-10 custom-select" id="addressCountry"
+										name="addressCountry" required>
+										<option th:each="item : ${session.addressCountries}"
+											th:value="${item.key}" th:text="${item.value}"></option>
+									</select>
+									<div class="invalid-feedback">Campo obrigat&oacute;rio.</div>
+								</div>
+								<div class="col-md-3 mb-3">
+									<label for="addressStreetComplement">Complemento</label> <input
+										type="text" class="form-control uppercase-text"
+										id="addressStreetComplement" name="addressStreetComplement"
+										maxlength="50" placeholder="Complemento" />
+								</div>
+								<div class="form-row" id="divIntegration" style="width: 100%;">
+									<hr class="hr-admin">
+									<h4 class="page-title">Dados de Integra&ccedil;&atilde;o</h4>
+									<hr class="hr-admin">
+									<div class="col-md-2 mb-3">
+										<label for="integrationSystem">Sistema</label> <select
+											class="m-b-20 m-r-10 select2-bootstrap-select"
+											id="integrationSystem" name="integrationSystem">
+											<option value="" selected="selected">Selecione...</option>
+											<option th:each="item : ${integrationSystems}"
+												th:value="${item.key}" th:text="${item.value}"></option>
+										</select>
+									</div>
+									<div class="col-md-2 mb-3">
+										<label for="legacyId">C&oacute;digo</label> <input type="text"
+											class="force-numeric-only form-control" id="legacyId"
+											name="legacyId" maxlength="20" placeholder="C&oacute;digo" />
+									</div>
+									<div class="col-md-1 mb-3" style="margin-top: auto;">
+										<button type="button" id="btnAddIntegrationValue"
+											name="btnAddIntegrationValue" class="btn btn-info btn-circle" 
+											style="width: 30px; height: 30px; line-height: 0px;">
+											<i class="fa fa-plus"></i>
+										</button>
+									</div>
+									<div class="col-md-7 mb-3">
+										<label for="integrationSystemValues">Dados</label> <select
+											class="m-b-20 m-r-10 select2-bootstrap-select"
+											style="height: 36px; width: 100%;"
+											id="integrationSystemValues" name="integrationSystemValues"
+											multiple="multiple">
+										</select>
+									</div>
+								</div>
+								<hr class="hr-admin">
+								<h4 class="page-title">Dados de Altera&ccedil;&atilde;o</h4>
+								<hr class="hr-admin">
+								<div class="col-md-4 mb-3" id="divChangeDate">
+									<label for="changeDate">Data</label> <input type="text"
+										class="form-control" id="changeDate" name="changeDate"
+										maxlength="100" placeholder="Data Altera&ccedil;&atilde;o"
+										readonly="readonly" />
+								</div>
+								<div class="col-md-8 mb-3" id="divChangeUser">
+									<label for="changeUser">Usu&aacute;rio</label> <input
+										type="text" class="form-control" id="changeUser"
+										name="changeUser" maxlength="100" placeholder="Usu&aacute;rio"
+										readonly="readonly" />
+								</div>
+								<!-- Table Log -->
+								<div class="col-12" id="divTableLog">
+									<div class="table-responsive" id="report_table-logs">
+										<table id="table-log" class="table table-striped table-bordered display">
+								        	<thead>
+								            	<tr>
+								            	<th class="text-center">Usuario</th>
+								             	<th class="text-center">Data</th>						                                        </tr>
+								        	</thead>
+								            <tbody>
+								            	<tr id="6" class="gradeA">
+									            	<td class="text-center"></td>
+									             	<td class="text-center"></td>
+								                </tr>
+								            </tbody>
+								        </table>
+									</div>
+								</div>
+							</div>
+							<hr style="width: 100%">
+							<div class="action-form">
+								<div class="form-group m-b-0 text-right">
+									<a href="javascript: saveForm();" class="btn btn-success"
+										type="button">Gravar</a> <a href="javascript: cancelForm();"
+										class="btn btn-danger" type="button">Cancelar</a>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</th:block>
+</html>

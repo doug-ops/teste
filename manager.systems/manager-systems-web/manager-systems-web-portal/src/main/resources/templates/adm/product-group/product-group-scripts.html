@@ -1,0 +1,158 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+	    <script>
+	
+		function clearForms()
+		{
+			clearDataFormSave();
+			$('form#formFilter input#idFrom').val('');
+			$('form#formFilter input#idTo').val('');
+			$('form#formFilter input#description').val('');
+			$('form#formFilter select#inactive').val('0').trigger('change');
+			$('div#report-table').html('');
+		}
+
+		function clearDataFormSave()
+		{
+			$('form#formSave input#id').val('');
+			$('form#formSave input#description').val('');
+			$('form#formSave input#active').prop("checked", true);
+			$('form#formSave input#changeDate').val('');
+			$('form#formSave input#changeUser').val('');
+			$('form#formSave select#integrationSystemValues').empty().trigger('change');
+			$('form#formSave input#transferHab').val('0,00');
+		}
+
+		function cancelForm()
+		{
+			clearDataFormSave();
+			$('a#tabReport').trigger('click');
+			search();
+		}
+
+		function populateFormSave(data)
+		{
+			clearDataFormSave();
+
+			$('form#formSave input#id').val(data.productGroup.id);
+			$('form#formSave input#description').val(data.productGroup.description);
+			$('form#formSave input#active').prop("checked", (data.productGroup.inactive ? false : true));
+			$('form#formSave input#changeDate').val(data.productGroup.changeData.changeDateString);
+			$('form#formSave input#changeUser').val(data.productGroup.changeData.usernameChange);
+			$('form#formSave input#transferHab').val(data.productGroup.transferHab.toFixed(2));
+			
+			$('form#formSave select#integrationSystemValues').empty().trigger('change');
+			
+			$.each(data.productGroup.integrationSystemsValues, function(key, value)
+    	   	{
+				var optionKey = value.legacyId+';'+value.integrationSystemId;
+				var optionValue = value.legacyId + ' - ' + value.description;
+
+				var newOption = new Option(optionValue, optionKey, true, true);
+                $('form#formSave select#integrationSystemValues').append(newOption).trigger('change');	
+				
+    	   	});
+			
+			$('a#tabCreate').trigger('click');
+			setTimeout(function(){ 
+				$('form#formSave input#description').focus(); 
+			}, 1000);		
+		}
+
+	    function populateTable(data)
+	    {
+	    	var trHTML = '<table id="table-report" class="table table-striped table-bordered display">';
+			trHTML += '<thead>';
+			trHTML += '<tr>';
+			trHTML += '<th style="text-align: center;" data-priority="1">A&ccedil;&otilde;es</th>';
+			trHTML += '<th style="text-align: center;" data-priority="4">Ativo</th>';
+			trHTML += '<th style="text-align: center;" data-priority="3">C&oacute;digo</th>';
+			trHTML += '<th style="text-align: center;" data-priority="2">Descri&ccedil;&atilde;o</th>'; 		
+			trHTML += '</tr>';
+			trHTML += '</thead>';
+			trHTML += '<tbody>';
+
+    		$.each(data.report.productGroups, function(key, value)
+    	   	{
+    			trHTML += '<tr role="row" class="odd">';
+        		trHTML += '<td class="text-center"><a href="#" data-toggle="tooltip" data-original-title="Editar" onclick="detail('+value.id+',&quot;'+data.report.objectType+'&quot;)" style="cursor: pointer;"> <i class="fas fa-pencil-alt text-primary"></i></a></td>'
+        		if(false==value.inactive)
+        		{
+        			trHTML += '<td class="text-center"><a id="btnInativar_'+value.id+'" data-toggle="tooltip" data-original-title="Inativar" onclick="inactive('+value.id+', true);" style="cursor: pointer;"><i class="fas fa-check text-success" id="iconInativar_'+value.id+'"></i></a></td>';
+        		}
+        		else
+        		{
+        			trHTML += '<td class="text-center"><a id="btnInativar_'+value.id+'" data-toggle="tooltip" data-original-title="Ativar" onclick="inactive('+value.id+', false);" style="cursor: pointer;"><i class="fas fa-minus text-danger" id="iconInativar_'+value.id+'"></i></a></td>';
+        		}
+        		trHTML += '<td class="text-center">'+value.id+'</td>';
+        		trHTML += '<td class="text-left">'+value.description.toUpperCase()+'</td>';		
+        		trHTML += '</tr>';
+    	   	});
+    		trHTML += '<tbody>';
+			trHTML += '</table>';
+
+			$('div#report-table').html(trHTML);
+	    }
+	    
+	    (function() 
+	    {
+	        'use strict';
+	        
+	        $('form#formSave select#integrationSystem')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+	        
+	        $('form#formSave select#integrationSystemValues')
+	  		.select2({ 
+		    	width: '100%',
+		    	theme: "bootstrap",
+		    	language: 
+		    	{
+		        	noResults: function (params) 
+		        	{
+		            	return "Nenhum registro encontrado.";
+		          	}
+		        }
+			});
+		    
+			$('button#btnFilter').click(function() 
+			{
+				setTimeout(function() 
+				{ 
+					$('form#formFilter input#idFrom').focus(); 
+				}, 1000);	
+			});
+			
+			$('button#btnAddIntegrationValue').click(function() 
+			{
+				var key = $('form#formSave input#legacyId').val();
+				var value = $('form#formSave select#integrationSystem').val();
+				if(''!=key && ''!=value)
+				{
+					var optionKey = key+';'+value;
+					var optionValue = key + ' - ' + $('form#formSave select#integrationSystem option:selected').text();
+					
+					if($('form#formSave select#integrationSystemValues option[value="'+optionKey+'"]').length == 0 )
+					{
+						var newOption = new Option(optionValue, optionKey, true, true);
+		                $('form#formSave select#integrationSystemValues').append(newOption).trigger('change');	
+					}					
+				}
+				$('form#formSave input#legacyId').val('');
+				$('form#formSave select#integrationSystem').val('').trigger('change');
+			});
+			
+			search();
+	    })();
+	    </script>
+	</th:block>
+</html>

@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="forms">
+        <form id="formSavePreview" name="formSavePreview" th:action="@{/cashierClosingPreview/cashier-closing/saveCashierClosing}" method="post">
+			<input type="hidden" id="jsonData" name="jsonData"/>
+			<input type="hidden" id=weekValue name="weekValue"/>
+		</form>
+		<form id="formAutocomplete" name="formAutocomplete" th:action="@{/adm/person/autocomplete}" method="post" autocomplete="off">		
+		</form>
+		<form id="formConfigTransfer" name="formConfigTransfer" th:action="@{/adm/financial-transfer/detail}" method="post" autocomplete="off">		
+			<input type="hidden" id="bankAccountOrigin" name="bankAccountOrigin"/>
+			<input type="hidden" id="bankAccountDestiny" name="bankAccountDestiny"/>
+		</form>	
+	</th:block>
+</html>

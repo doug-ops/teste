@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon.ico">
+    <title>Movement Product</title>
+    <!-- Custom CSS -->
+    <link href="dist/css/style.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                <div class="navbar-header">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                    <!-- ============================================================== -->
+                    <!-- Logo -->
+                    <!-- ============================================================== -->
+                    <a class="navbar-brand" th:href="@{/home}">
+		                <!-- Logo text -->
+		                <span class="logo-text" style="font-weight: 900;">    
+		                    MOVEMENT PRODUCT
+		               </span>
+		            </a>
+                    <!-- ============================================================== -->
+                    <!-- End Logo -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- ============================================================== -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i class="ti-more"></i></a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-left mr-auto">
+                        <li class="nav-item d-none d-md-block"><a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a></li>
+                    </ul>
+                    <!-- ============================================================== -->
+                    <!-- Right side toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav float-right">
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="assets/images/users/1.jpg" alt="user" class="rounded-circle" width="31"></a>
+                            <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
+                                <span class="with-arrow"><span class="bg-primary"></span></span>
+                                <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
+                                    <div class=""><img src="assets/images/users/1.jpg" alt="user" class="img-circle" width="60"></div>
+                                    <div class="m-l-10">
+                                        <h4 class="mb-0" th:text="${session.user?.name}"></h4>
+	                                    <p class=" mb-0" th:text="${session.user?.contactData?.email}"></p>
+                                    </div>
+                                </div>
+                                <a class="dropdown-item" th:href="@{/logout}"><i class="fa fa-power-off m-r-5 m-l-5"></i> Sair</a>
+                            </div>
+                        </li>
+                        <!-- ============================================================== -->
+                        <!-- User profile and search -->
+                        <!-- ============================================================== -->
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <!-- User Profile-->
+                        <li>
+                            <!-- User Profile-->
+                            <div class="user-profile d-flex no-block dropdown m-t-20">
+                                <div class="user-pic"><img src="assets/images/users/1.jpg" alt="users" class="rounded-circle" width="40" /></div>
+                                <div class="user-content hide-menu m-l-10">
+                                    <a href="javascript:void(0)" class="" id="Userdd" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <h5 class="m-b-0 user-name font-medium">Steave Jobs <i class="fa fa-angle-down"></i></h5>
+                                        <span class="op-5 user-email">varun@gmail.com</span>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="Userdd">
+                                        <a class="dropdown-item" th:href="@{/logout}"><i class="fa fa-power-off m-r-5 m-l-5"></i> Sair</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End User Profile-->
+                        </li>
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="index.html" aria-expanded="false"><i class="ti-loop"></i><span class="hide-menu">Back To Home</span></a></li>
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-notification-clear-all"></i><span class="hide-menu">Multi level dd</span></a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item"><a href="javascript:void(0)" class="sidebar-link"><i class="mdi mdi-octagram"></i><span class="hide-menu"> item 1.1</span></a></li>
+                                <li class="sidebar-item"><a href="javascript:void(0)" class="sidebar-link"><i class="mdi mdi-octagram"></i><span class="hide-menu"> item 1.2</span></a></li>
+                                <li class="sidebar-item"> <a class="has-arrow sidebar-link" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-playlist-plus"></i> <span class="hide-menu">Menu 1.3</span></a>
+                                    <ul aria-expanded="false" class="collapse second-level">
+                                        <li class="sidebar-item"><a href="javascript:void(0)" class="sidebar-link"><i class="mdi mdi-octagram"></i><span class="hide-menu"> item 1.3.1</span></a></li>
+                                        <li class="sidebar-item"><a href="javascript:void(0)" class="sidebar-link"><i class="mdi mdi-octagram"></i><span class="hide-menu"> item 1.3.2</span></a></li>
+                                        <li class="sidebar-item"><a href="javascript:void(0)" class="sidebar-link"><i class="mdi mdi-octagram"></i><span class="hide-menu"> item 1.3.3</span></a></li>
+                                        <li class="sidebar-item"><a href="javascript:void(0)" class="sidebar-link"><i class="mdi mdi-octagram"></i><span class="hide-menu"> item 1.3.4</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item"><a href="javascript:void(0)" class="sidebar-link"><i class="mdi mdi-playlist-check"></i><span class="hide-menu"> item 1.4</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 align-self-center">
+                        <h4 class="page-title">Lan&ccedil;amento movimento produto</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <form class="needs-validation was-validated" novalidate="" id="formSave" name="formSave">
+                                    <div class="action-form m-b-10">
+                                        <div class="form-group m-b-0 text-right">
+                                            <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+                                            <a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+                                        </div>
+                                    </div>     
+                                    <div class="form-row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="companyId">Empresa</label>
+                                            <select class="m-b-20 m-r-10 custom-select" id="companyId" name="companyId" required="required">																
+                                                <option value="">Selecione...</option>
+                                                <option value="1">Ale</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="productId">Produto</label>
+                                            <select class="m-b-20 m-r-10 custom-select" id="productId" name="productId" required="required">																
+                                                <option value="">Selecione...</option>
+                                                <option value="1">Ale</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                        <label for="latestProductRelease">&Uacute;ltimo Lan&ccedil;amento Produto</label>
+                                        <input type="text" class="form-control" id="latestProductRelease" name="latestProductRelease" placeholder="&Uacute;ltimo Lan&ccedil;amento Produto" readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                        <label for="inititalInput">Entrada Inicial</label>
+                                        <input type="text" class="form-control force-numeric-only" id="inititalInput" name="inititalInput" placeholder="Entrada Inicial" value="10" readonly="readonly required="required">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="finalInput">Entrada Final</label>
+                                            <input type="number" class="form-control force-numeric-only" id="finalInput" name="finalInput" placeholder="Entrada Final" oninput="checkFinalInput(this)" required="required">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="initialOutput">Sa&iacute;da Inicial</label>
+                                            <input type="text" class="form-control force-numeric-only" id="initialOutput" name="initialOutput" placeholder="Sa&iacute;da Inicial" value="5" readonly="readonly" required="required">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="finalOutput">Sa&iacute;da Final</label>
+                                            <input type="number" class="form-control force-numeric-only" id="finalOutput" name="finalOutput" placeholder="Sa&iacute;da Final" oninput="checkFinalOutput(this)" required="required">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="initialClock">Rel&oacute;gio Inicial</label>
+                                            <input type="text" class="form-control force-numeric-only" id="initialClock" name="initialClock" placeholder="Sa&iacute;da Inicial" value="5" readonly="readonly" required="required">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="finalClock">Rel&oacute;gio Final</label>
+                                            <input type="number" class="form-control force-numeric-only" id="finalClock" name="finalClock" placeholder="Sa&iacute;da Final" oninput="checkFinalClock(this)" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="action-form m-b-10">
+                                        <div class="form-group m-b-0 text-right">
+                                            <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+                                            <a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+                                        </div>
+                                    </div>  
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Right sidebar -->
+                <!-- ============================================================== -->
+                <!-- .right-sidebar -->
+                <!-- ============================================================== -->
+                <!-- End Right sidebar -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+			       &copy; 2020 - Movement Product
+			</footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- Forms -->
+    <!-- ============================================================== -->
+    <form id="formGetAllProductsByCompany" name="formGetAllProductsByCompany" th:action="@{/product-movement/getAllProductsByCompany}" method="post" autocomplete="off">		
+        <input type="hidden" id="companyId" name="companyId"/>
+    </form>
+    <form id="formGetAllDataProduct" name="formGetAllDataProduct" th:action="@{/product-movement/getAllDataProduct}" method="post" autocomplete="off">		
+        <input type="hidden" id="companyId" name="companyId"/>
+        <input type="hidden" id="productId" name="productId"/>
+    </form>
+    <!-- ============================================================== -->
+    <!-- End Forms -->
+    <!-- ============================================================== -->
+
+
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <script src="dist/js/app.min.js"></script>
+    <script src="dist/js/app.init.overlay.js"></script>
+    <script src="dist/js/app-style-switcher.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="dist/js/custom.min.js"></script>
+    <script src="dist/js/application.js"></script>
+
+     <!-- Select2 -->
+    <link href="assets/libs/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css"/>
+    <link href="assets/libs/select2/dist/css/select2-bootstrap.css" rel="stylesheet" type="text/css"/>
+    <script src="assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="assets/libs/select2/dist/js/select2.min.js"></script>    
+
+    <!-- Jquery Mask -->
+    <script src="assets/libs/jquery.mask/jquery.mask.min.js"></script>
+
+    <!-- Boostrap Validator -->
+    <link href="assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css"  rel="stylesheet" type="text/css"/>
+    <script src="assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
+    <script src="assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js"></script>
+     
+    <!-- Css Boostrap Validator Select2 -->
+    <style type="text/css">
+        .was-validated .custom-select:invalid + .select2 .select2-selection{
+            border-color: #f62d51!important;
+            padding-right: 2.0625rem;
+            background-repeat: no-repeat;
+            background-position: center right calc(6.0625rem / 4);
+            background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+        }
+        .was-validated .custom-select:valid + .select2 .select2-selection{
+            border-color: #36bea6!important;
+            padding-right: 3.29688rem;
+            background: url(../../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+        }
+        *:focus{
+            outline:0px;
+        }
+        
+        table.dataTable > tbody > tr.child ul.dtr-details {
+            display: inline-block;
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        .help-block{
+            color: #f62d51!important;
+        }
+    </style>
+
+    <script>
+        function getAllDataProduct()
+        {
+            var form = $('form#formGetAllDataProduct');        
+            var dataForm = form.serializeArray();
+              
+            clearProductFields();
+	  		
+	  		showLoading("Carregando dados do produto... Por favor aguarde...");	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					hideLoading();
+                    
+                    $('form#formSave input#inititalInput').val(data.product.inititalInput);
+                    $('form#formSave input#finalInput').val(data.product.finalInput);
+                    $('form#formSave input#initialOutput').val(data.product.initialOutput);
+                    $('form#formSave input#finalOutput').val(data.product.finalOutput);
+                    $('form#formSave input#initialClock').val(data.product.initialClock);
+                    $('form#formSave input#finalClock').val(data.product.finalClock);
+                    
+                    var bootstrapValidator = $('form#formSave').data('bootstrapValidator');
+			        bootstrapValidator.validate();
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados de Produto.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+        }
+
+        function getAllProductsByCompany()
+        {
+            var form = $('form#formGetAllProductsByCompany');        
+	  		var dataForm = form.serializeArray();
+	  		
+            clearProductSelect();
+            clearProductFields();
+	  		
+	  		showLoading("Carregando produtos... Por favor aguarde...");	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+					hideLoading();
+					$('form#formSave select#productId').append('<option value="">Selecione...</option>');
+					$.each(data.produtcs, function(key, value)
+		    	   	{
+						$('form#formSave select#productId').append('<option value="'+value.key+'">'+value.value+' ('+value.key+')</option>');
+		    	   	});
+					$('form#formSave select#productId').trigger('change');					
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar produto da Empresa.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+        }
+
+        function saveForm()
+        {
+            var bootstrapValidator = $('form#formSave').data('bootstrapValidator');
+			bootstrapValidator.validate();
+			
+			if (bootstrapValidator.isValid() === false) 
+			{
+				return;
+	        }
+
+			var form = $('form#formSave'); 			
+	  		var dataForm = form.serializeArray();
+	  		
+	  		showLoading("Gravando dados... Por favor aguarde...");  	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		clearDataFormSave();           		
+        			showSweetalertSuccess(data.message);
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao gravar dados.','5000');
+		    }).always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+        }
+
+        function clearForm()
+        {
+            clearProductFields();
+            clearProductSelect();
+            clearCompanySelect();
+        }
+
+        function clearProductFields()
+        {
+            $('form#formSave input#inititalInput').val('');
+            $('form#formSave input#finalInput').val('');
+            $('form#formSave input#initialOutput').val('');
+            $('form#formSave input#finalOutput').val('');
+            $('form#formSave input#initialClock').val('');
+            $('form#formSave input#finalClock').val('');
+        }
+
+        function clearProductSelect()
+        {
+            $('form#formSave select#productId').empty().trigger('change');
+        }
+
+        function clearCompanySelect()
+        {
+            $('form#formSave select#companyId').val('').trigger('change');
+        }
+
+        function checkFinalInput(input) 
+        {
+            var inititalInput = $('form#formSave input#inititalInput').val();
+            if(''==inititalInput)
+            {
+                inititalInput = 0;
+            }
+            if(isNaN(inititalInput))
+            {
+                inititalInput = 0;        
+            }
+            var finalInput = input.value;
+            if(isNaN(finalInput))
+            {
+                input.setCustomValidity('Entrada Final Inv&aacute;lida');
+                return;        
+            }
+            if (Number(inititalInput) > Number(input.value)) 
+            {
+                input.setCustomValidity('Entrada Final Inv&aacute;lida precisa ser maior ou igual a ' + inititalInput);
+            } 
+            else 
+            {
+                // input is fine -- reset the error message
+                input.setCustomValidity('');
+            }
+        }
+
+        function checkFinalOutput(input) 
+        {
+            var inititalOutput = $('form#formSave input#initialOutput').val();
+            if(''==inititalOutput)
+            {
+                inititalOutput = 0;
+            }
+            if(isNaN(inititalOutput))
+            {
+                inititalOutput = 0;        
+            }
+            var finalOutput = input.value;
+            if(isNaN(finalOutput))
+            {
+                input.setCustomValidity('Sa&iacute;da Final Inv&aacute;lida');
+                return;        
+            }
+            if (Number(inititalOutput) > Number(input.value)) 
+            {
+                input.setCustomValidity('Sa&iacute;da Final Inv&aacute;lida precisa ser maior ou igual a ' + inititalOutput);
+            } 
+            else 
+            {
+                // input is fine -- reset the error message
+                input.setCustomValidity('');
+            }
+        }
+
+        function checkFinalClock(input) 
+        {
+            var inititalClock = $('form#formSave input#initialClock').val();
+            if(''==inititalClock)
+            {
+                inititalClock = 0;
+            }
+            if(isNaN(inititalClock))
+            {
+                inititalClock = 0;        
+            }
+            var finalClock = input.value;
+            if(isNaN(finalClock))
+            {
+                input.setCustomValidity('Rel&oacute;gio Final Inv&aacute;lido');
+                return;        
+            }
+            if (Number(inititalClock) > Number(input.value)) 
+            {
+                input.setCustomValidity('Rel&oacute;gio Final Inv&aacute;lido precisa ser maior ou igual a ' + inititalClock);
+            } 
+            else 
+            {
+                // input is fine -- reset the error message
+                input.setCustomValidity('');
+            }
+        }
+        
+	    (function() 
+	    {
+            'use strict';
+            
+            /** Force input numeric only */
+			$('.force-numeric-only').ForceNumericOnly();
+            
+            /**Mask to money*/
+            $('.money').mask("#.##0,00", {reverse: true});
+            
+            $('form#formSave').bootstrapValidator({
+	            excluded: ':disabled',
+	            feedbackIcons: {
+	                valid: 'glyphicon glyphicon-ok',
+	                invalid: 'glyphicon glyphicon-remove',
+	                validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                        'companyId': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Loja n&atilde;o Informada'
+			                    }
+			                }
+			            },
+                        'productId': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Produto n&atilde;o Informado'
+			                    }
+			                }
+			            },
+                        'inititalInput': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Entrada Inicial Inv&aacute;lida'
+			                    },
+                                digits: 
+                                {
+			                        message: 'Entrada Inicial Inv&aacute;lida'
+			                    }
+			                }
+			            },
+                        'finalInput': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Entrada Final Inv&aacute;lida'
+			                    },
+                                digits: 
+                                {
+			                        message: 'Entrada Final Inv&aacute;lida'
+                                },
+                                greaterThan: 
+                                {
+                                    value: $('input#inititalInput').val(),
+                                    message: 'Entrada Final Inv&aacute;lida precisa ser maior ou igual a %s'
+                                }                                
+			                }
+			            },
+                        'initialOutput': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Sa&iacute;da Inicial Inv&aacute;lida'
+			                    },
+                                digits: 
+                                {
+			                        message: 'Sa&iacute;da Inicial Inv&aacute;lida'
+			                    }
+			                }
+			            },
+                        'finalOutput': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Sa&iacute;da Final Inv&aacute;lida'
+			                    },
+                                digits: 
+                                {
+			                        message: 'Sa&iacute;da Final Inv&aacute;lida'
+			                    },
+                                greaterThan: 
+                                {
+                                    value: $('input#initialOutput').val(),
+                                    message: 'Sa&iacute;da Final Inv&aacute;lida precisa ser maior ou igual a %s'
+                                }
+			                }
+                        },
+                        'initialClock': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Rel&oacute;gio Inicial Inv&aacute;lido'
+			                    },
+                                digits: 
+                                {
+			                        message: 'Rel&oacute;gio Inicial Inv&aacute;lido'
+			                    }
+			                }
+			            },
+                        'finalClock': 
+                        {
+                            validators: 
+                            {
+                                notEmpty: 
+                                {
+			                        message: 'Rel&oacute;gio Final Inv&aacute;lido'
+			                    },
+                                digits: 
+                                {
+			                        message: 'Rel&oacute;gio Final Inv&aacute;lido'
+			                    },
+                                greaterThan: 
+                                {
+                                    value: $('input#initialClock').val(),
+                                    message: 'Rel&oacute;gio Final Inv&aacute;lido precisa ser maior ou igual a %s'
+                                }
+			                }
+			            }
+			        }
+            });
+            
+	        $('form#formSave select#companyId')
+            .select2({ 
+                width: '100%',
+                theme: "bootstrap",
+                language: 
+                {
+                    noResults: function (params) 
+                    {
+                        return "Nenhum registro encontrado.";
+                    }
+                }
+            }).on('change', function (e)
+            {
+                $('form#formGetAllProductsByCompany input#companyId').val(this.value);
+                getAllProductsByCompany();
+            });    
+
+            $('form#formSave select#productId')
+            .select2({ 
+                width: '100%',
+                theme: "bootstrap",
+                language: 
+                {
+                    noResults: function (params) 
+                    {
+                        return "Nenhum registro encontrado.";
+                    }
+                }
+            }).on('change', function (e)
+            {
+                if(''!=this.value && !isNaN(this.value))
+                {
+                    $('form#formAutocompleteFinancialSubGroup input#financialGroup').val(this.value);
+                    searchFinancialSubGroup('formFilter');
+                }
+            });    
+
+	    })();
+	</script>
+</body>
+
+</html>

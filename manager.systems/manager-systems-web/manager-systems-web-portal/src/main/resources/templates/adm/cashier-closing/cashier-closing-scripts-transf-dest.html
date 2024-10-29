@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+    	<style type="text/css">
+			.titele-origin.titele-Destination{
+            font-weight: bold;
+            color: black;
+        	}
+		</style>
+			
+	    <script>    
+	    
+	    (function() {
+	    'use strict';
+	    
+  		$('form#formNewDocumentTransf input#documentNumberTransfDest').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13')
+            {
+            	if(''==$.trim($('form#formNewDocument input#documentNumberTransfDest').val()))
+            	{
+                	$('form#formNewDocumentTransf input#documentNumberTransfDest').val(moment().format('YYYYMMDDHHmmss'));  
+                	$('form#formNewDocumentTransf').bootstrapValidator('revalidateField', 'documentNumberTransfDest');
+                	$('form#formNewDocumentTransf textarea#documentNoteTransfDest').focus();   
+            	}
+            }
+            event.stopPropagation();
+        });
+		
+        const openModalQuery = window.location.search;
+        if('?openmodal=1' == openModalQuery){
+        	showModalNewDocument();
+        } else if('?openmodal=2' == openModalQuery){
+        	showModalTransferAccount();
+        }
+	    })();
+	    </script>
+	</th:block>
+</html>

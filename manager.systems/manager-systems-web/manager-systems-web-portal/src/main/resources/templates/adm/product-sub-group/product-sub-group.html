@@ -1,0 +1,203 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="content">
+		<div class="col-12">
+	        <div class="card">
+                <div class="card-body" style="padding: 5px;">
+   	                <h4 class="p-20 text-center">Manuten&ccedil;&atilde;o de Sub-Grupo</h4>    
+                    <div class="col-md-12">
+                        <div style="float: right;">
+                            <a id="btnFilter" name="btnFilter" type="button" class="btn waves-effect waves-light btn-success m-t-10 dropdown-toggle" data-toggle="collapse" data-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter"><i class="ti-filter" style="font-size: 14px;"></i></a>
+                            <a id="btnNew" href="javascript: newRegister();" name="btnNew" type="button" class="btn waves-effect waves-light btn-info m-t-10">Novo</a> 
+                            <a id="btnClear" href="javascript: clearForms();" name="btnClear" type="button" class="btn waves-effect waves-light btn-warning m-t-10">Limpar</a>
+                            <a id="btnView" href="javascript: search();" name="btnView" type="button" class="btn waves-effect waves-light btn-success m-t-10">Visualizar</a>
+                        </div>
+                    </div>
+	                <!-- Nav tabs -->
+	                <ul class="nav nav-tabs" role="tablist" style="margin-top: 60px;">
+	                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" id="tabReport" href="#report" role="tab"><span class="hidden-sm-up"><i class="fas fa-list"></i></span> <span class="hidden-xs-down">Relat&oacute;rio</span></a> </li>
+	                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" id="tabCreate" href="#create" role="tab"><span class="hidden-sm-up"><i class="far fa-edit"></i></span> <span class="hidden-xs-down">Cadastro</span></a> </li>
+	                </ul>
+	                <!-- Tab panes -->
+	                <div class="tab-content tabcontent-border">
+	                    <div class="tab-pane active" id="report" role="tabpanel">
+	                    	<div class="row">
+	                    		<div class="col-12">
+									<!-- Filter -->
+									<div class="collapse" id="collapseFilter">
+									<!-- Filter Form -->
+										<form id="formFilter" name="formFilter" th:action="@{/adm/product-sub-group/filter}" method="post" autocomplete="off">
+											<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>													
+											<!-- Card -->
+											<div class="card">
+												<!-- Card Body -->
+												<div class="card-body">
+													<!-- Row Title Filter -->
+													<div class="row">
+														<div class="col-12">
+															<h4 class="card-title text-center font-weight-bold" style="margin-bottom: 20px;">Filtros de pesquisa</h4>
+														</div>
+													</div>
+													<!--/ Row Title Filter -->
+													<!-- Row Fields Filter -->					
+													<div class="row">
+														<div class="col-md-4">
+															<h5 class="m-t-30 m-b-10">C&oacute;digo</h5>
+															<div class="input-group">
+										         				<input type="text" class="form-control force-numeric-only" style="text-align: center;" id="idFrom" name="idFrom" maxlength="14"/>
+																<span class="input-group-addon bg-info p-t-10 p-l-10 p-r-10 text-white" style="padding-top: 7px;">&nbsp;&nbsp;at&eacute;&nbsp;&nbsp;</span>
+																<input type="text" class="form-control force-numeric-only" style="text-align: center;" id="idTo" name="idTo" maxlength="14"/>
+										                   </div>
+														</div>						
+														<div class="col-md-2">
+															<h5 class="m-t-30 m-b-10">Ativo</h5>
+															<select class="m-b-20 m-r-10 select2-bootstrap-select" id="inactive" name="inactive">
+																<option value="0" selected="selected">Sim</option>
+																<option value="1">N&#227;o</option>
+																<option value="2">Todos</option>
+															</select>
+														</div>						
+														<div class="col-md-6">
+															<h5 class="m-t-30 m-b-10">Descri&#231;&#227;o</h5>
+										                    <div class="input-group">
+										     					<input type="text" class="form-control uppercase-text" id="description" name="description" maxlength="100"/> 
+										                    </div>
+														</div>										                                
+													</div>													
+													<!--/ Row Fields Filtro -->
+												</div>
+												<!--/ Card Body -->
+											</div>
+											<!--/ Card -->
+										</form>
+										<!--/ Form Filter -->
+									</div>
+									<!--/ Filter -->    
+								</div>
+	                    	</div>
+	                        <div class="col-12">
+	                            <div id="report-table" class="table-responsive">
+                                    <table id="table-relatorio" class="table table-striped table-bordered display">
+                                        
+                                    </table>
+                                </div>
+	                        </div>
+	                    </div>
+	                    <div class="tab-pane" style="padding: 15px;" id="create" role="tabpanel">
+                            <form class="was-validated" novalidate id="formSave" name="formSave" th:action="@{/adm/product-sub-group/save}" method="post" autocomplete="off">
+                            	<input type="hidden" id="objectType" name="objectType" th:value="${objectTypeAlias}"/>
+                            	<input type="hidden" id="personType" name="personType" value="J"/>
+                                <!-- 
+                                <div class="action-form m-b-10">
+                                    <div class="form-group m-b-0 text-right">
+                                        <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+                                        <a href="javascript: cancelForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+                                    </div>
+ 			                   </div>        
+                                 -->      
+                                <div class="form-row">
+                                    <hr class="hr-admin">
+                                    <h4 class="card-title">Dados Principais</h4>
+                                    <hr class="hr-admin">
+                                    <div class="col-md-2 mb-3">
+                                        <label for="id">C&oacute;digo</label>
+                                        <a href="javascript:nextCode();" type="button" class="btn btn-sm btn-outline-primary">Pr&oacute;ximo</a>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-key"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control force-numeric-only" id="id" name="id" maxlength="8" placeholder="C&oacute;digo" aria-describedby="inputGroupPrepend" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="name" id="description">Descri&ccedil;&atilde;o</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-edit"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control uppercase-text" id="description" name="description" maxlength="100" placeholder="Descri&ccedil;&atilde;o" aria-describedby="inputGroupPrepend" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <div class="form-group">
+                                            <div class="form-check custom-control custom-checkbox mr-sm-2">
+                                                <input type="checkbox" class="custom-control-input form-check-input" id="active" name="active" checked="checked"/>
+                                                <label class="custom-control-label form-check-label" for="active">Ativo</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="bankCode">Grupo</label>
+                                        <select class="m-b-20 m-r-10 custom-select" id="productGroup" name="productGroup">
+											<option value="" selected="selected">Selecione...</option>
+											<option th:each="item : ${productGroups}" th:value="${item.key}" th:text="${item.value}"></option>
+                                        </select>
+                                    </div> 
+                                    <div class="col-md-3 mb-3">
+                                        <label for="salePrice" id="salePrice">Pre&ccedil;o de Venda</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-dollar-sign"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control money" id="salePrice" name="salePrice" placeholder="Pre&ccedil;o de Venda" aria-describedby="inputGroupPrepend" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="conversionFactor" id="conversionFactor">Fator de Convers&atilde;o</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-dollar-sign"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control money" id="conversionFactor" name="conversionFactor" placeholder="Fator de Convers&atilde;o" aria-describedby="inputGroupPrepend" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                        </div>
+                                    </div>                  
+                                    <div class="form-row" id="divIntegration" style="width: 100%;">
+	                                    <hr class="hr-admin">
+	                                    <h4 class="page-title">Dados de Integra&ccedil;&atilde;o</h4>
+	                                    <hr class="hr-admin">                                   
+	                                    <div class="col-md-2 mb-3">
+	                                    	<label for="integrationSystem">Sistema</label>
+	                                        <select class="m-b-20 m-r-10 select2-bootstrap-select" id="integrationSystem" name="integrationSystem">
+												<option value="" selected="selected">Selecione...</option>
+												<option th:each="item : ${integrationSystems}" th:value="${item.key}" th:text="${item.value}"></option>
+	                                        </select>
+	                                    </div>
+	                                    <div class="col-md-2 mb-3">
+	                                        <label for="legacyId">C&oacute;digo</label>
+	                                        <input type="text" class="force-numeric-only form-control" id="legacyId" name="legacyId" maxlength="20" placeholder="C&oacute;digo"/>
+	                                    </div>
+	                                    <div class="col-md-1 mb-3">
+		                                    <button type="button" id="btnAddIntegrationValue" name="btnAddIntegrationValue" class="btn btn-info btn-circle"><i class="fa fa-plus"></i> </button>
+		                                </div>
+	                                    <div class="col-md-7 mb-3">
+	                                    	<label for="integrationSystemValues">Dados</label>
+	                                        <select class="m-b-20 m-r-10 select2-bootstrap-select" style="height: 36px;width: 100%;" id="integrationSystemValues" name="integrationSystemValues" multiple="multiple">
+	                                        </select>
+	                                    </div>
+                                    </div>
+                                    <hr class="hr-admin">
+                                    <h4 class="page-title">Dados de Altera&ccedil;&atilde;o</h4>
+                                    <hr class="hr-admin">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="changeDate">Data</label>
+                                        <input type="text" class="form-control" id="changeDate" name="changeDate" maxlength="100" placeholder="Data Altera&ccedil;&atilde;o" readonly="readonly"/>
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="changeUser">Usu&aacute;rio</label>
+                                        <input type="text" class="form-control" id="changeUser" name="changeUser" maxlength="100" placeholder="Usu&aacute;rio" readonly="readonly"/>
+                                    </div>                                    
+                                </div> 
+                                <hr style="width: 100%">                                         
+                                <div class="action-form">
+                                    <div class="form-group m-b-0 text-right">
+                                        <a href="javascript: saveForm();" class="btn btn-success" type="button">Gravar</a>
+                                        <a href="javascript: cancelForm();" class="btn btn-danger" type="button">Cancelar</a>                                        
+                                    </div>
+                                </div>     
+                            </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</th:block>
+</html>

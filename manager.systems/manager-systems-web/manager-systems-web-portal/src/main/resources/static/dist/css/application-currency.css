@@ -1,0 +1,19 @@
+.positive-value 
+{
+	color: #1c6356 !important;
+	background-color: #d7f2ed !important;	
+	border-color: #c7ede6 !important;
+	text-align: right !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}
+
+.negative-value 
+{
+	color: #85621b !important;
+	background-color: #fdd5dc !important;
+	border-color: #fdd5dc !important;
+	text-align: right !important;
+	font-weight: 600 !important;
+	font-size: 14px !important;
+}

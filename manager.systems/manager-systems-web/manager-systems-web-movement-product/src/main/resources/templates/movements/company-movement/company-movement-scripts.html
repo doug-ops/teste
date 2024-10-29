@@ -1,0 +1,543 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="scripts">
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+		
+		<!-- Select2 -->
+	    <link th:href="@{/assets/libs/select2/dist/css/select2.min.css}" rel="stylesheet" type="text/css"/>
+	    <link th:href="@{/assets/libs/select2/dist/css/select2-bootstrap.css}" rel="stylesheet" type="text/css"/>
+	    <script th:src="@{/assets/libs/select2/dist/js/select2.full.min.js}"></script>
+	    <script th:src="@{/assets/libs/select2/dist/js/select2.min.js}"></script>    
+	    
+   		<!-- SweetAlert -->   	
+    	<link th:href="@{/assets/libs/sweetalert2/dist/sweetalert2.min.css}" rel="stylesheet"/>
+    	<script th:src="@{/assets/libs/sweetalert2/dist/sweetalert2.all.min.js}"></script>
+
+	    <!-- Jquery Mask -->
+	    <script th:src="@{/assets/libs/jquery.mask/jquery.mask.min.js}"></script>
+
+	    <!-- Boostrap Validator -->
+	    <link th:href="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css}"  rel="stylesheet" type="text/css"/>
+	    <script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js}"></script>
+	    <script th:src="@{/assets/libs/jquery.bootstrapvalidator/0.5.2/js/language/pt_BR.js}"></script>
+
+		<!-- data-table styles -->	    
+   		<link th:href="@{/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet">
+	    <link th:href="@{/assets/libs/datatables/novo/css/responsive.bootstrap4.min.css}" rel="stylesheet" type="text/css" >
+	    <link th:href="@{/assets/libs/datatables/novo/css/buttons.dataTables.min.css}" rel="stylesheet" type="text/css">
+	    
+		<!-- data-table js -->
+		<script th:src="@{/assets/libs/datatables/novo/js/jquery.dataTables.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.buttons.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/jszip.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/pdfmake.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/vfs_fonts.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.flash.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.colVis.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.print.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/buttons.html5.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.bootstrap4.min.js}"></script>
+		<script th:src="@{/assets/libs/datatables/novo/js/dataTables.responsive.min.js}"></script>
+	    <script th:src="@{/assets/libs/datatables/novo/js/responsive.bootstrap4.min.js}"></script>
+	    
+	    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.10/sorting/datetime-moment.js"></script>
+     
+	    <!-- Css Boostrap Validator Select2 -->
+	    <style type="text/css">
+	        .was-validated .custom-select:invalid + .select2 .select2-selection{
+	            border-color: #f62d51!important;
+	            padding-right: 2.0625rem;
+	            background-repeat: no-repeat;
+	            background-position: center right calc(6.0625rem / 4);
+	            background-size: calc(2.0625rem / 2) calc(2.0625rem / 2);
+	            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23f62d51' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+	        }
+	        .was-validated .custom-select:valid + .select2 .select2-selection{
+	            border-color: #36bea6!important;
+	            padding-right: 3.29688rem;
+	            background: url(../assets/images/custom-select.png) right .75rem center/8px 10px no-repeat,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2336bea6' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") center right 1.75rem/1.03125rem 1.03125rem no-repeat;
+	        }
+	        *:focus{
+	            outline:0px;
+	        }
+	        
+	        table.dataTable > tbody > tr.child ul.dtr-details {
+	            display: inline-block;
+	            list-style-type: none;
+	            margin: 0;
+	            padding: 0;
+	            width: 100%;
+	        }
+	
+	        .help-block{
+	            color: rgb(255, 255, 128)!important;
+	        }
+	    </style>
+
+	    <script>		
+    	function confirmProcessMovement()
+    	{            
+            const companyId = $('form#formPreview select#companyId').val();
+            if(''==companyId || 0==Number(companyId))
+            {
+            	return;
+            }
+            $('form#formProcessMovement input#companyId').val(companyId);   
+            
+            const movementId = $('form#formPreview input#movementId').val();
+            if(''==movementId)
+            {
+            	return;
+            }
+            $('form#formProcessMovement input#movementId').val(movementId);   
+
+            var form = $('form#formProcessMovement');
+            var dataForm = form.serializeArray();            
+	  		
+	  		showLoading("Processando dados... Por favor aguarde...");	
+	  		
+			$.ajax({
+	            url : form.attr('action'),
+	            type : "POST",
+	            data : dataForm,
+	            dataType : "json"
+	    	})
+	    	.done(function(data, textStatus, jqXHR) 
+	    	{	    		
+            	if(true==data.status)
+             	{
+            		$('div#btnHeaderConfirm').html('');
+    				$('div#btnFooterConfirm').html('');
+            		showSweetalertSuccess(data.message);
+            		hideLoading();
+            		const documentParentId = data.documentParentId;
+            		const url = $('form#formPrintPdfMovement').attr('action');
+            		window.open(url+'/'+documentParentId+'/'+companyId, '_blank').focus();
+             	}
+             	else
+             	{
+            		hideLoading();
+        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+             	}
+	    	})
+	    	.fail(function() 
+	      	{
+	    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+		    })
+		    .always(function() 
+		    {
+	      		$('#block1').hide();
+	    		$('#block2').hide();
+		    });
+    	}
+
+	    	function previewProcessMovement()
+	    	{
+	    		$('div#report-movement').html('');
+	    		var form = $('form#formPreview');        
+	            var dataForm = form.serializeArray();
+	            
+	            var companyId = $('form#formPreview select#companyId').val();
+	            if(''==companyId || 0==Number(companyId))
+	            {
+	            	return;
+	            }           
+		  		
+		  		showLoading("Processando dados... Por favor aguarde...");	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+	    	        	$('div#btnHeader').html('');
+	    	        	$('div#btnFooter').html('');
+	    	            clearTable();
+	    	            
+	    	            let trHTMLMov = '';
+	    	            let trHTML = '';
+	    	            trHTML += '<table class="table table-sm m-b-0 table-over" style="width: 100%;">';
+	    	            trHTML += '<thead>';
+	    	            trHTML += '    <tr>';
+	    	            trHTML += '        <th class="table-default" style="text-align: center; font-weight: bold;" data-priority="1" colspan="6">';
+	    	            trHTML += '            RELAT&Oacute;RIO DE LAN&Ccedil;AMENTOS EMPRESA: ' + data.preview.compnayId + ' - ' + data.preview.companyDescription;					
+	    	            trHTML += '        </th>';
+	    	            trHTML += '        <th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">'+moment().format("DD/MM/YYYY")+'</th>';
+	    	            trHTML += '        <th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">'+moment().format('HH:mm:ss')+'</th>';
+	    	            trHTML += '    </tr>';
+	    	            trHTML += '    <tr>';
+	    	            trHTML += '        <th class="table-default" style="text-align: center; font-weight: bold;" data-priority="1" colspan="6">';
+	    	            trHTML += '            &nbsp;';					
+	    	            trHTML += '        </th>';
+	    	            trHTML += '        <th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">';
+	    	            trHTML += '            Documento';					
+	    	            trHTML += '        </th>';
+	    	            trHTML += '        <th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">'+data.preview.documentParentId+'</th>';
+	    	            trHTML += '    </tr>';
+	    	            trHTML += '</thead>';
+	    	            trHTML += '</table>';
+	    	            $.each(data.preview.movementCompany.movementsGroupsList, function(keyGroup, valueGroup){
+	    	            	if(valueGroup.productsMovements.length>0){
+			            		trHTML += '<table class="table table-sm m-b-0 table-over" style="width: 100%;">';
+			    				trHTML += '<thead>';
+			    				trHTML += '<tr>';
+			    				trHTML += '<th class="table-primary" style="text-align: center; font-weight: bold;" data-priority="1" colspan="9">Grupo: ' +valueGroup.groupId+ ' - ' +valueGroup.groupDescription + ' ----> Produtos</th>';
+			    				trHTML += '</tr>';
+			    				trHTML += '<tr>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1" rowspan="2">ID</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1" rowspan="2">Tipo</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1" colspan="2">Iniciais</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1" colspan="2">Finais</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1" colspan="2">Per&iacute;odo</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1" rowspan="2">Saldo</th>';		    				
+			    				trHTML += '</tr>';
+			    				trHTML += '<tr>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Entrada</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Sa&iacute;da</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Entrada</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Sa&iacute;da</th>';		    			
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Entrada</th>';
+			    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Sa&iacute;da</th>';
+			    				trHTML += '</tr>';
+			    				trHTML += '</thead>';
+			    				trHTML += '<tbody>';	    	
+		    	                $.each(valueGroup.productsMovements, function(keyProd, valueProd){
+		    	                	trHTML += '<tr>';
+				    				trHTML += '<td style="text-align: center;">'+valueProd.productId+'</td>';
+				    				trHTML += '<td style="text-align: left;">'+valueProd.productDescription+'</td>';
+				    				trHTML += '<td style="text-align: center;">'+valueProd.creditInInitial+'</td>';
+				    				trHTML += '<td style="text-align: center;">'+valueProd.creditInFinal+'</td>';
+				    				trHTML += '<td style="text-align: center;">'+(valueProd.creditOutInitial + valueProd.creditClockInitial) +'</td>';
+				    				trHTML += '<td style="text-align: center;">'+(valueProd.creditOutFinal + valueProd.creditClockFinal) +'</td>';
+				    				trHTML += '<td style="text-align: right;">'+valueProd.totalCreditIn.format(2, 3, '.', ',')+'</td>';
+				    				trHTML += '<td style="text-align: right;">'+(valueProd.totalCreditOut + valueProd.totalCreditClock).format(2, 3, '.', ',')+'</td>';
+				    				trHTML += '<td style="text-align: right; '+valueProd.cssBalance+'">'+valueProd.balance.format(2, 3, '.', ',')+'</td>';			    				
+				    				trHTML += '</tr>';
+		    	                });
+		    	                trHTML += '</tbody> ';
+		    	                trHTML += '<tfoot> ';
+		    	               	trHTML += '<td class="table-primary" style="text-align: left; font-weight: bold;" data-priority="1" colspan="6">BRUTO (Entradas / Saidas)</td> ';
+		    	                trHTML += '<td class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1">'+valueGroup.totalCreditIn.format(2, 3, '.', ',')+'</td> ';
+		    	                trHTML += '<td class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1">'+valueGroup.totalCreditOut.format(2, 3, '.', ',')+'</td> ';
+		    	                trHTML += '<td class="table-primary" style="text-align: right; font-weight: bold; '+valueGroup.cssBalanceProduct+'" data-priority="1">'+valueGroup.balanceProductMovement.format(2, 3, '.', ',')+'</td> ';
+		    	                trHTML += '</tfoot>';
+		    	                trHTML += '</table>';	    	                	    	            		
+	    	            	}
+		            		trHTML += '<table class="table table-sm m-b-0 table-over" style="width: 100%;">';
+		    				trHTML += '<thead>';
+		    				trHTML += '<tr>';
+		    				trHTML += '<th class="table-primary" style="text-align: center; font-weight: bold;" data-priority="1" colspan="7">Grupo: ' +valueGroup.groupId+ ' - ' +valueGroup.groupDescription + ' ----> Lan&ccedil;amentos</th>';
+		    				trHTML += '<th class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1">SALDO INICIAL</th>';
+		    				trHTML += '<th class="table-primary" style="text-align: right; font-weight: bold; '+valueGroup.cssBalanceProduct+'" data-priority="1">'+valueGroup.initialBalance.format(2, 3, '.', ',')+'</th>';
+		    				trHTML += '</tr>';
+		    				trHTML += '<tr>';
+		    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Data</th>';
+		    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1" colspan="7">Descri&ccedil;&atilde;o</th>';
+		    				trHTML += '<th class="table-success" style="text-align: center; font-weight: bold;" data-priority="1">Valor</th>';
+		    				trHTML += '</tr>';
+		    				trHTML += '</thead>';
+		    				trHTML += '<tbody>';	    	
+	    	                $.each(valueGroup.transferMovements, function(keyTransf, valueTransf){
+	    	                	trHTML += '<tr>';
+			    				trHTML += '<td style="text-align: center;">'+valueTransf.transferDate+'</td>';
+			    				trHTML += '<td style="text-align: left;" colspan="7">'+valueTransf.transferDescription+'</td>';
+			    				trHTML += '<td style="text-align: right;">'+valueTransf.transferValue.format(2, 3, '.', ',')+'</td>';
+			    				trHTML += '</tr>';
+	    	                });
+	    	                trHTML += '</tbody> ';
+	    	                trHTML += '<tfoot> ';
+	    	                trHTML += '<tr>';
+	    	               	trHTML += '<td class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1" colspan="8">FATURADO</td> ';
+	    	                trHTML += '<td class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1">'+valueGroup.balanceTransferMovement.format(2, 3, '.', ',')+'</td> ';
+	    	                trHTML += '</tr>';
+	    	                trHTML += '<tr>';
+	    	               	trHTML += '<td class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1" colspan="8">SALDO FINAL</td> ';
+	    	                trHTML += '<td class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1">'+valueGroup.finalBalance.format(2, 3, '.', ',')+'</td> ';
+	    	                trHTML += '</tr>';
+	    	                trHTML += '</tfoot>';
+	    	                trHTML += '</table>';    	                	    	                
+	    	            });
+	    	            
+	            		trHTML += '<table class="table table-sm m-b-0 table-over" style="width: 100%;">';
+	    				trHTML += '<thead>';
+	    				trHTML += '<tr>';
+	    				trHTML += '<th class="table-primary" style="text-align: right; font-weight: bold;" data-priority="1"  colspan="8">SALDO TRANSFER\u00caNCIA</th>';
+	    				trHTML += '<th class="table-primary" style="text-align: right; font-weight: bold; data-priority="1">'+data.preview.balanceMovement.format(2, 3, '.', ',')+'</th>';
+	    				trHTML += '</tr>';
+	    				trHTML += '</thead>';
+	    				trHTML += '<tbody>';	    	
+    	                trHTML += '</tbody> ';
+    	                trHTML += '<tfoot> ';
+    	                trHTML += '</tfoot>';
+    	                trHTML += '</table>';    	                	    	                
+	    	            
+    	        		
+	    				$('div#report-movement').html(trHTML);
+	    				
+	    				$('div#btnHeaderConfirm').html('<div class="form-group m-b-0 text-right"><a href="javascript: confirmProcessMovement();" class="btn btn-success" style="margin-right: 20px;" type="button">Confirmar</a><a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a></div>');
+	    				$('div#btnFooterConfirm').html('<div class="form-group m-b-0 text-right"><a href="javascript: confirmProcessMovement();" class="btn btn-success" style="margin-right: 20px;" type="button">Confirmar</a><a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a></div>');
+
+						hideLoading();
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+			    })
+			    .always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+	    	}
+	    	
+		    function createTableReport()
+		    {
+		        $('table#table-report').DataTable({
+		            destroy: true,
+				        select:'single',
+				        'paging': false,
+					   	'displayLength': 500,
+			   		 	'responsive': true,
+					   	'order': [ [ 3, 'asc' ] ],
+					   	'autoWidth': false,
+						'scrollCollapse': true,
+						'language': {
+					           'lengthMenu': 'Mostrar _MENU_ registro(s) por pagina',
+					           'zeroRecords': 'Nenhum registro encontrado',
+					           'info': 'Mostrando _TOTAL_ registro(s)',
+					           'infoEmpty': 'Nenhum registro encontrado',
+					           'infoFiltered': '(filtrado de um total de _MAX_ registros)',
+					           'search': 'Filtrar:',
+					           'sLengthMenu': '_MENU_ &nbsp;registro(s) por p&aacute;gina',
+					           "decimal": ",",
+					           "thousands": ".",
+					           'paginate': {
+					               'next': 'Proximo',
+					               'previous': 'Anterior'
+					             }
+					    }
+		        });
+		    }
+		    
+			function createHtmlExpense(data)
+			{
+				let html = '';
+				if(data.finantialGroupTransfer){
+					$.each(data.finantialGroupTransfer.itens, function(key, objectItem)
+           	   		{
+					  $.each(objectItem, function(key, value)
+            		  {
+						html+='<div class="form-row">';
+						html+='<div class="col-12 mb-3">';              
+			            html+='<div class="input-group">';
+			            html+='<input type="text" class="form-control uppercase-text" style="font-size: .775rem; width: 30%;" id="descriptionTransfer_'+value.groupId+'_'+value.id+'" name="descriptionTransfer_'+value.groupId+'_'+value.id+'" maxlength="100" placeholder="Despesa" aria-describedby="inputGroupPrepend" disabled="disabled" value="'+value.description+'">';
+						html+='<div class="input-group-prepend">';
+						html+='<span class="input-group-text" id="inputGroupPrepend"><i class="fas fa-dollar-sign"></i></span>';
+						html+='</div>';
+						html+='<input type="text" class="form-control moneyExpensev" style="text-align: right;" id="valueTransfer_'+value.groupId+'_'+value.id+'" name="valueTransfer_'+value.groupId+'_'+value.id+'" maxlength="10" placeholder="Valor" aria-describedby="inputGroupPrepend" value="'+value.valueTransfer.format(2, 3, '.', ',')+'">';
+						html+='</div>';
+						html+='</div>';
+						html+='</div>';
+					  });
+					});
+				}
+				
+				$('div#divExpensev').html(html);
+				/**Mask to money*/
+	            $('.moneyExpensev').mask("#.##0,00", {reverse: true});
+			}
+		    	    
+	        function getDataCompany()
+	        {
+	            var form = $('form#formGetDataCompany');        
+	            var dataForm = form.serializeArray();
+	              
+	            clearTable();
+	            
+	            var companyId = $('form#formGetDataCompany input#companyId').val();
+	            if(''==companyId || 0==Number(companyId))
+	            {
+	            	return;
+	            }           
+		  		
+		  		showLoading("Carregando dados... Por favor aguarde...");	
+		  		
+				$.ajax({
+		            url : form.attr('action'),
+		            type : "POST",
+		            data : dataForm,
+		            dataType : "json"
+		    	})
+		    	.done(function(data, textStatus, jqXHR) 
+		    	{	    		
+	            	if(true==data.status)
+	             	{
+	            		var trHTML = '<table id="table-report" class="table table-striped table-bordered display">';
+	    				trHTML += '<thead>';
+	    				trHTML += '<tr>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="1">Produto</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="1">Total</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="1">Data Inicial</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="1">Data Final</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="1">Fator</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="2">Entrada<br/>Inicial</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="2">Entrada<br/>Final</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="2">Sa&iacute;da<br/>Inicial</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="2">Sa&iacute;da<br/>Final</th>';
+	    				
+	    				if(data.movementCompany.enableClockMovement){
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="2">3 Rel.<br/>Inicial</th>';
+	    				trHTML += '<th style="text-align: center; font-weight: bold;" data-priority="2">3 Rel.<br/>Final</th>';
+	    				}
+		    			
+	    				trHTML += '</tr>';
+	    				trHTML += '</thead>';
+	    				trHTML += '<tbody>';
+	    	
+	            		let movementId = '';
+	    				let count = 0;
+	    	    		$.each(data.movementCompany.itens, function(key, value)
+	    	    	   	{
+	    	    			if(count>0){
+	    	    				movementId+=',';
+	    	    			}
+	    	    			movementId+=value.movementId;
+	    	    			trHTML += '<tr role="row" class="odd">';
+	    	        		trHTML += '<td class="text-left">'+value.productDescription + ' ('+value.productId+')</td>';
+	    	        		trHTML += '<td class="text-right">'+value.totalMovement.format(2, 3, '.', ',')+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.initialDateString+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.readingDateString+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.conversionFactor+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.initialInput+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.finalInput+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.initialOutput+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.finalOutput+'</td>';
+	    	        		
+	    	        		if(data.movementCompany.enableClockMovement){
+	    	        		trHTML += '<td class="text-center">'+value.initialClock+'</td>';
+	    	        		trHTML += '<td class="text-center">'+value.finalClock+'</td>';
+	    	        		}
+	    	        		
+	    	        		trHTML += '</tr>';
+	    	        		count++;
+	    	    	   	});
+						$('form#formPreview input#movementId').val(movementId);
+	    	    		trHTML += '</tbody>';
+	    	    		trHTML +='<tfoot>';
+    	    			trHTML += '<tr role="row" class="odd">';
+    	        		trHTML += '<td class="text-left">-</td>';
+    	        		trHTML += '<td class="text-right" style="font-weight: bold;">'+data.movementCompany.totalMovement.format(2, 3, '.', ',')+'</td>';
+    	        		trHTML += '<td class="text-center">-</td>';
+    	        		trHTML += '<td class="text-center">-</td>';
+    	        		trHTML += '<td class="text-center">-</td>'
+    	        		trHTML += '<td class="text-center" style="font-weight: bold;">'+data.movementCompany.initialInput+'</td>';
+    	        		trHTML += '<td class="text-center" style="font-weight: bold;">'+data.movementCompany.finalInput+'</td>';
+    	        		trHTML += '<td class="text-center" style="font-weight: bold;">'+data.movementCompany.initialOutput+'</td>';
+    	        		trHTML += '<td class="text-center" style="font-weight: bold;">'+data.movementCompany.finalOutput+'</td>';
+    	        		
+    	        		if(data.movementCompany.enableClockMovement){
+    	        		trHTML += '<td class="text-center" style="font-weight: bold;">'+data.movementCompany.initialClock+'</td>';
+    	        		trHTML += '<td class="text-center" style="font-weight: bold;">'+data.movementCompany.finalClock+'</td>';
+    	        		}
+	    	        	
+    	        		trHTML += '</tr>';
+	    	    		trHTML +='</tfoot>';
+	    				trHTML += '</table>';
+	    	
+	    				$('div#report-table').html(trHTML);
+	    				createTableReport();
+	    				createHtmlExpense(data);
+	    				$('div#btnHeader').html('<div class="form-group m-b-0 text-right"><a href="javascript: previewProcessMovement();" class="btn btn-success" style="margin-right: 20px;" type="button">Processar</a><a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a></div>');
+	    				$('div#btnFooter').html('<div class="form-group m-b-0 text-right"><a href="javascript: previewProcessMovement();" class="btn btn-success" style="margin-right: 20px;" type="button">Processar</a><a href="javascript: clearForm();" class="btn btn-danger" type="button">Cancelar</a></div>');
+						hideLoading();
+	             	}
+	             	else
+	             	{
+	            		hideLoading();
+	        	    	showSweetalertWarning('Alerta!', data.message,'5000');
+	             	}
+		    	})
+		    	.fail(function() 
+		      	{
+		    		showSweetalertWarning('Alerta!', 'Ocorreu um erro ao buscar dados.','5000');
+			    })
+			    .always(function() 
+			    {
+		      		$('#block1').hide();
+		    		$('#block2').hide();
+			    });
+	        }
+		
+	        function clearForm()
+	        {
+	            clearTable();
+	            clearCompanySelect();
+	            clearExpensev();
+	        }
+		
+	        function clearTable()
+	        {
+	        	$('div#btnHeader').html('');
+	        	$('div#btnFooter').html('');
+	        	$('div#btnHeaderConfirm').html('');
+	        	$('div#btnFooterConfirm').html('');
+	        	$('div#report-table').html('');
+	        	$('div#report-movement').html('');
+	        }
+	        
+	        function clearExpensev()
+	        {
+	        	$('div#divExpensev').html('');
+	        }
+	
+	        function clearCompanySelect()
+	        {
+	            $('form#formPreview select#companyId').val('').trigger('change');
+	        }
+	        
+		    (function() 
+		    {
+	            'use strict';
+	            
+	            /** Force input numeric only */
+				$('.force-numeric-only').ForceNumericOnly();
+	            
+	            /**Mask to money*/
+	            $('.money').mask("#.##0,00", {reverse: true});
+	            
+	            
+		        $('form#formPreview select#companyId')
+	            .select2({ 
+	                width: '100%',
+	                theme: "bootstrap",
+	                language: 
+	                {
+	                    noResults: function (params) 
+	                    {
+	                        return "Nenhum registro encontrado.";
+	                    }
+	                }
+	            }).on('change', function (e)
+	            {
+	            	$('form#formGetDataCompany input#companyId').val(this.value);
+	                getDataCompany();
+	            });
+		        
+		        const selectedCompany = $('form#formPreview input#selectedCompany').val();
+                if(selectedCompany !=null && selectedCompany.length > 0){
+                	$('form#formPreview select#companyId').val(selectedCompany).trigger('change');
+                }
+		    })();
+		</script>
+	</th:block>
+</html>

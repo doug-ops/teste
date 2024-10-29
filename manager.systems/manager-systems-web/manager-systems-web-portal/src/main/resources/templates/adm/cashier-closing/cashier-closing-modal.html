@@ -1,0 +1,142 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<th:block th:fragment="modal">
+	<!-- ============================================================== -->
+    <!--Modals-->
+    <!-- ============================================================== -->
+    <div id="new-document-modal" class="modal long-modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="display: none;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable full-screen" style="max-width: 1140px;">
+           <div class="modal-content">
+                <div class="modal-header">
+                    <div class="col-md-12">
+                    	<h4 class="modal-title" id="titleModalDocument">Fechamaneto de Caixa</h4>
+                        <div style="float: right;">
+		                    <a type="button" class="btn btn-success waves-effect waves-light" id="btnSaveNewDocument" href="javascript:processSaveCashierClosing();">Gravar</a>
+		                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body" style="height:100%;">
+                    <form id="formNewDocumentTransfDest" name="formNewDocumentTransfDest" th:action="@{/cashierClosing/cashier-closing/saveCashierClosing}" method="post" autocomplete="off">
+                        <input type="hidden" id="jsonData" name="jsonData"/>
+                        <input type="hidden" id="jsonDataRequest" name="jsonDataRequest"/>
+                        <input type="hidden" id="documentNoteEncodedTransfDest" name="documentNoteEncodedTransfDest"/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="companyTransfDest" style="margin-bottom: -0.5rem;">Empresa</label>
+                                    <select class="m-b-20 m-r-10 custom-select" id="companyTransfDest" name="companyTransfDest" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    </select>
+                                </div>                
+                            </div>
+                            <div class="col-md-6 mb-2">
+	                        	<label for="bankAccountTransfDest" style="margin-bottom: -0.5rem;">Conta Banc&aacute;ria</label><span class="form-control text-center" id="bankBalanceAvailableSpan" name="bankBalanceAvailableSpan" style="width: 100px; border-width: 0px; display: inline; float: right; padding: 0px;"></span>
+	                         	<select class="m-b-20 m-r-10 custom-select" id="bankAccountTransfDest" name="bankAccountTransfDest">
+	                           </select>
+	                        </div>
+                            <div class="col-md-2 mb-2">
+                                <label for="movimentTypeTransfDest" style="margin-bottom: -0.5rem;">Tipo Documento</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="movementTypeTransfDest" name="movementTypeTransfDest" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="1" selected>Cr&eacute;dito</option>
+                                   <!-- <option value="0" selected>D&eacute;bito</option>-->
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2" id="divDocumentNumberTransfDest">
+                                <label for="documentNumberTransfDest" style="margin-bottom: -0.5rem;">Num. Documento</label>
+                                <input type="text" class="form-control text-center" id="documentNumberTransfDest" name="documentNumberTransfDest" maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="documentStatusTransfDest" style="margin-bottom: -0.5rem;">Status Documento</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="documentStatusTransfDest" name="documentStatusTransfDest" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="2" selected="selected">Baixado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="paymentType" style="margin-bottom: -0.5rem;">Pagamento</label>
+                                <select class="m-b-20 m-r-10 custom-select" id="paymentStatusTransfDest" name="paymentStatusTransfDest" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+                                    <option value="1" selected>Selecione...</option>
+                                    <option value="2">&Agrave; Vista</option>                                    
+                                    <option value="3">&Agrave; Prazo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-2" id="divPaymentExpiryDateTransfDest">
+                                <label for="paymentExpiryDateTransfDest" style="margin-bottom: -0.5rem;">Data Vencimento</label>
+                                <div class="input-group date">
+                                    <input type="text" class="form-control text-center" id="paymentExpiryDateTransfDest" name="paymentExpiryDateTransfDest" maxlength="20" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                                    <span class="input-group-addon input-group-text"><i class="icon-calender"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-2" id="divDocumentValueTransfDest">
+                                <label for="documentValueTransfDest" style="margin-bottom: -0.5rem;">Valor Total Documento</label>
+                                <input type="text" class="form-control money text-center" readonly="readonly" id="documentValueTransfDest" name="documentValueTransfDest" maxlength="15" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                            </div>   
+                            <div class="col-md-3 mb-2" id="divPaymentValueTransfDest">
+                                <label for="paymentValueTransfDest" style="margin-bottom: -0.5rem;">Valor de Pagamento</label>
+                                <input type="text" class="form-control money text-center" readonly="readonly" id="paymentValueTransfDest" name="paymentValueTransfDest" maxlength="15" required data-bv-notempty-message="Campo obrigat&oacute;rio."/>
+                            </div>   
+                        	<div class="col-md-7 mb-2" id="divNoteTransfDest">
+                            	<label for="documentNoteTransfDest" class="control-label" style="margin-bottom: -0.5rem;">Nota:</label>
+                            	<textarea class="form-control " id="documentNoteTransfDest" rows="1" name="documentNoteTransfDest"></textarea>
+                        	</div>
+                        	<div class="col-md-2 mb-2" style="text-align: center; max-width: 150px;" id="divButtonExpenseTransf">
+                            	<label for="buttonExpenseTransf">Incluir Despesa(s)</label>
+                            	<button type="button" id="buttonExpenseTransf" name="buttonExpenseTransf" class="btn btn-info btn-circle" ><i class="fa fa-plus"></i> </button>
+                            </div>                                 
+                            <hr class="hr-admin"/>                            
+							<div id="divExpenseDuplicates">
+								
+                        	</div>
+                        	<div id="grid">
+								
+							</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+		            <a type="button" class="btn btn-success waves-effect waves-light" id="btnSaveNewDocument" href="javascript:processSaveCashierClosing();">Gravar</a>
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!--End Modals-->
+        <!--Report Pdf Modal 16/02/2022--> 
+    <!-- ============================================================== -->
+     <div id="new-report-Pdf-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="vcenter" style="height:100%;">
+     	<div class="modal-dialog modal-dialog-centered">
+           <div class="modal-content" style="border-radius:5px;">
+              <div class="modal-header">
+                 <div class="col-md-12">
+					<h4 class="modal-title" id="titleModal">Escolha os filtros para impress&atilde;o</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+				</div>
+                </div>
+                <div class="modal-body" style="height:170px;">
+                     <form id="formReportPdf" name="" th:action="@{/cashierClosing/cashier-closing/filterReport}" target="_blank" method="post">
+						<input type="hidden" id="jsonData" name="jsonData"/>
+						<input type="hidden" id="date" name="date"/>
+					 	<div class="row">
+							<div class="col-md-12" id="divAnalitic">
+								<div class="form-analitic">
+									<label for="analitic">Analitico/Sintetico:</label> 
+									<select class="m-b-20 m-r-10 custom-select" id="analitic" name="analitic" required data-bv-notempty-message="Campo obrigat&oacute;rio.">
+							        	<option value="0">Analitico</option>
+							        	<option value="1" selected="selected">Sintetico</option>
+							        </select>
+							   	</div>            
+							</div>
+						</div>
+					</form>  
+				</div>                                          
+                <div class="modal-footer">
+                	<button type="button" class="btn btn-warning" id="btnCancReportPdf" data-dismiss="modal">Fechar</button>
+			        <button type="button" class="btn btn-primary" id="btnReportPdf" onclick="confirmPreview();">Imprimir</button>
+                </div>
+             </div>
+     	  </div>  
+       </div>
+    <!-- ============================================================== -->
+    <!--End Report Pdf Modal-->
+    <!-- ============================================================== -->
+	</th:block>
+</html>
